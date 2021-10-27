@@ -6,7 +6,7 @@ public class Question
     private String prompt;
     private double grade;
     //Java doesn't include structs. Using a class to make MCQ easier.
-    private class choice
+    private class MCQ
     {
         private int nChoices;
         private String[] choices;
