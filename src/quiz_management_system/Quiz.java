@@ -1,14 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package quiz_management_system;
 
-/**
- *
- * @author belsa
- */
+import java.util.Calendar;
+
 public class Quiz
 {
+    private int quizID;
+    private String quizTitle;
+    private int nAttempts, nQuestions;
+    private Calendar openTime, duration;
+    private Question[] questionBank;
     
 }
