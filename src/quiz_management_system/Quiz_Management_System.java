@@ -13,8 +13,8 @@ public class Quiz_Management_System
         Scanner sc = new Scanner(System.in);
         Quiz q1;
         q1 = new Quiz();
-        q1.create();
+        q1.createQuiz();
         
-        q1.display();
+        q1.displayQuizProperties();
     }
 }

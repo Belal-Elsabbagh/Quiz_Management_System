@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 public class Quiz
 {
+    Scanner sc = new Scanner(System.in);
     private static int count = 0;
     private int quizID;
     private String quizTitle;
@@ -13,6 +14,7 @@ public class Quiz
     private int nAttempts, nQuestions;
     private Calendar openTime, duration; //still uncertain of the data type.
     private Question[] questionBank;
+    private int qBankSize;
 
     public class Question
     {
@@ -25,25 +27,45 @@ public class Quiz
         {
             private int nChoices;
             private String[] choices;
-            private String answerKey;
-        
-            public boolean checkAnswer(String inAnswer)
+            private short answerKeyIndex;
+
+            private Choice()
             {
-                boolean result = false;
+                this.nChoices = 0;
+                choices = new String[2];
+            }
+            
+            public void createMCQ()
+            {
+                System.out.println("-----------Creating MCQ------------------");
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Enter number of choices: "); nChoices = sc.nextShort();
+                choices = new String[nChoices];
                 for(int i = 0; i < nChoices; i++)
                 {
-                    if(inAnswer == answerKey)
+                    System.out.println("Enter choice " + i + ": ");
+                    choices[i] = sc.next();
+                }
+                System.out.println("Enter the index of right answer (count starts at 0): "); answerKeyIndex = sc.nextShort();
+            }
+            public boolean checkAnswer(short inAnswer)
+            {
+                boolean result = false;
+                    if(inAnswer == answerKeyIndex)
                     {
                         result = true;
-                        break;
                     }
-                }
                 return result;
             }
         }
-        public Question()
+        public void createQuestion()
         {
-            
+            System.out.println("-----------Creating a new question-----------");
+            System.out.println("Enter prompt: "); prompt = sc.next();
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter grade: "); grade = sc.nextDouble();
+            mcq = new Choice();
+            mcq.createMCQ();
         }
     }
 
@@ -52,7 +74,7 @@ public class Quiz
         this.quizID = ++count;
     }
      
-    public void display()
+    public void displayQuizProperties()
     {
         System.out.println("-----------Displaying quiz properties------------");
         System.out.println("Quiz ID: " + quizID);
@@ -61,18 +83,28 @@ public class Quiz
         System.out.println("Number of attempts: " + nAttempts);
     }
     
-    public void create()
+    public void createQuiz()
     {
-        Scanner sc = new Scanner(System.in);
         System.out.println("-----------Creating a new quiz-------------------");
-        System.out.println("Enter quiz title: "); quizTitle = sc.next();
+        System.out.println("Enter quiz title: "); quizTitle = sc.nextLine();
         System.out.println("Enter number of questions: "); nQuestions = sc.nextInt();
         System.out.println("Enter number of attempts: "); nAttempts = sc.nextInt();
+        System.out.println("Enter size of question bank: "); qBankSize = sc.nextInt();
+        
+        createQuestionBank();
     }
     
     public void createQuestionBank()
     {
-        System.out.println("-----------Question Bank Creator-------------------");
+        questionBank = new Question[qBankSize];
+        Question tempQ;
+        System.out.println("-----------Question Bank Creator-----------------");
+        for(int i = 0; i < qBankSize; i++)
+        {
+            tempQ = new Question();
+            tempQ.createQuestion();
+            questionBank[i] = tempQ;
+        }
         
     }
     public Question[] generateQuizModel()
