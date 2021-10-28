@@ -25,7 +25,6 @@ public class Quiz
         System.out.println("Quiz Title: " + quizTitle);
         System.out.println("Number of questions: " + nQuestions);
         System.out.println("Number of attempts: " + nAttempts);
-        System.out.println("-------------------------------------------------");
     }
     
     public void create()
@@ -37,6 +36,11 @@ public class Quiz
         System.out.println("Enter number of attempts: "); nAttempts = sc.nextInt();
     }
     
+    public void createQuestionBank()
+    {
+        System.out.println("-----------Question Bank Creator-------------------");
+        
+    }
     public Question[] generateQuizModel()
     {
         Question[] newModel;
