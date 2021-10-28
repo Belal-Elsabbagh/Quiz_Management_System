@@ -9,9 +9,43 @@ public class Quiz
     private static int count = 0;
     private int quizID;
     private String quizTitle;
+    private Teacher creator;
     private int nAttempts, nQuestions;
     private Calendar openTime, duration; //still uncertain of the data type.
     private Question[] questionBank;
+
+    public class Question
+    {
+        private int questionID;
+        private String prompt;
+        private double grade;
+        private Choice mcq;
+        //Java doesn't include structs. Using a class to make MCQ easier.
+        private class Choice
+        {
+            private int nChoices;
+            private String[] choices;
+            private String answerKey;
+        
+            public boolean checkAnswer(String inAnswer)
+            {
+                boolean result = false;
+                for(int i = 0; i < nChoices; i++)
+                {
+                    if(inAnswer == answerKey)
+                    {
+                        result = true;
+                        break;
+                    }
+                }
+                return result;
+            }
+        }
+        public Question()
+        {
+            
+        }
+    }
 
     public Quiz()
     {
@@ -84,25 +118,5 @@ public class Quiz
     public void setnQuestions(int nQuestions)
     {
         this.nQuestions = nQuestions;
-    }
-
-    public Calendar getOpenTime()
-    {
-        return openTime;
-    }
-
-    public void setOpenTime(Calendar openTime)
-    {
-        this.openTime = openTime;
-    }
-
-    public Calendar getDuration()
-    {
-        return duration;
-    }
-
-    public void setDuration(Calendar duration)
-    {
-        this.duration = duration;
     }
 }
