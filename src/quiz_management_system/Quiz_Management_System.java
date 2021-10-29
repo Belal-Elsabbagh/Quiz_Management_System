@@ -11,13 +11,14 @@ public class Quiz_Management_System
      */
     public static void main(String[] args)
     {
-
+        testCreateQuiz();
     }
     public static void testCreateQuiz()
     {
         Quiz q1;
         q1 = new Quiz();
-        
+        Teacher activeTeacher = new Teacher();
+        q1.createQuiz(activeTeacher);
         q1.displayQuizProperties();
     }
 }

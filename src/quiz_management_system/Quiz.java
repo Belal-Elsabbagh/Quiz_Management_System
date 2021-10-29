@@ -76,6 +76,8 @@ public class Quiz
         qBankSize = sc.nextInt();
 
         createQuestionBank();
+        
+        System.out.println("Quiz created sucessfully.");
     }
 
     public void createQuestionBank()
@@ -89,6 +91,8 @@ public class Quiz
             tempQ.createQuestion();
             questionBank[i] = tempQ;
         }
+        
+        System.out.println("Question Bank created successfully.");
     }
     
     public Question[] generateQuizModel()
@@ -119,10 +123,15 @@ public class Quiz
             System.out.println("-----------Creating a new question-----------");
             System.out.println("Enter prompt: ");
             prompt = sc.next();
+            
+            sc = new Scanner(System.in);
             System.out.println("Enter grade: ");
             grade = sc.nextDouble();
+            
             mcq = new Choice();
             mcq.createMCQ();
+            
+            System.out.println("Question added successfully.");
         }
                 
         private class Choice
@@ -139,11 +148,14 @@ public class Quiz
 
             public void createMCQ()
             {
-                System.out.println("-----------Creating MCQ------------------");
                 Scanner sc = new Scanner(System.in);
+                
+                System.out.println("-----------Creating MCQ------------------");
                 System.out.println("Enter number of choices: ");
                 nChoices = sc.nextShort();
+                
                 choices = new String[nChoices];
+                
                 for (int i = 0; i < nChoices; i++)
                 {
                     System.out.println("Enter choice " + i + ": ");
@@ -151,6 +163,8 @@ public class Quiz
                 }
                 System.out.println("Enter the index of right answer (count starts at 0): ");
                 answerKeyIndex = sc.nextShort();
+                
+                System.out.println("Choices added successfully.");
             }
 
             public boolean checkAnswer(short inAnswer)
