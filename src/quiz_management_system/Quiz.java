@@ -115,7 +115,7 @@ public class Quiz
         private int questionID;
         private String prompt;
         private double grade;
-        private Choice mcq;
+        protected Choice mcq;
 
         public void createQuestion()
         {
@@ -133,7 +133,43 @@ public class Quiz
             
             System.out.println("Question added successfully.");
         }
-                
+
+        public int getQuestionID()
+        {
+            return questionID;
+        }
+        public String getPrompt()
+        {
+            return prompt;
+        }
+        public double getGrade()
+        {
+            return grade;
+        }
+        public Choice getMcq()
+        {
+            return mcq;
+        }
+
+        public void displayQuestion()
+        {
+            System.out.println(prompt);
+            for (int i = 0; i < mcq.nChoices; i++)
+            {
+                System.out.println( (i+1) + ". " + mcq.choices[i]);
+            }      
+        }
+        
+            public boolean checkAnswer(short inAnswer)
+            {
+                boolean result = false;
+                if (inAnswer == mcq.getAnswerKeyIndex())
+                {
+                    result = true;
+                }
+                return result;
+            }
+                    
         private class Choice
         {
             private int nChoices;
@@ -146,6 +182,16 @@ public class Quiz
                 choices = new String[2];
             }
 
+            public int getnChoices()
+            {
+                return nChoices;
+            }
+
+            public short getAnswerKeyIndex()
+            {
+                return answerKeyIndex;
+            }
+            
             public void createMCQ()
             {
                 Scanner sc = new Scanner(System.in);
@@ -158,24 +204,17 @@ public class Quiz
                 
                 for (int i = 0; i < nChoices; i++)
                 {
-                    System.out.println("Enter choice " + i + ": ");
+                    System.out.println("Enter choice " + (i+1) + ": ");
+                    sc = new Scanner(System.in);
                     choices[i] = sc.next();
                 }
-                System.out.println("Enter the index of right answer (count starts at 0): ");
+                System.out.println("Enter the index of right answer (count starts at 1): ");
                 answerKeyIndex = sc.nextShort();
                 
                 System.out.println("Choices added successfully.");
             }
 
-            public boolean checkAnswer(short inAnswer)
-            {
-                boolean result = false;
-                if (inAnswer == answerKeyIndex)
-                {
-                    result = true;
-                }
-                return result;
-            }
+
         }
     }
 }

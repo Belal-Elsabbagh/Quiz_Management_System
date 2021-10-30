@@ -5,20 +5,18 @@ import java.io.IOException;
 public class Quiz_Management_System
 {
 
-    /**
-     *
-     * @param args
-     */
     public static void main(String[] args)
     {
-        testCreateQuiz();
+        testCreateAndAttemptQuiz();
     }
-    public static void testCreateQuiz()
+    public static void testCreateAndAttemptQuiz()
     {
         Quiz q1;
         q1 = new Quiz();
         Teacher activeTeacher = new Teacher();
         q1.createQuiz(activeTeacher);
-        q1.displayQuizProperties();
+        
+        Student user = new Student();
+        user.startAttempt(q1);
     }
 }
