@@ -19,10 +19,11 @@ public class Student
     {
         private Quiz quiz;
         private Question[] model; 
-<<<<<<< Updated upstream
 
         public Attempt()
-=======
+        {
+            
+        }
         private double result;
         
         public Attempt(Quiz newQuiz)

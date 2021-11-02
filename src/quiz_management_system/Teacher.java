@@ -1,27 +1,12 @@
 package quiz_management_system;
 
-public class Teacher
+public class Teacher extends User
 {
-    private int userID;
-    private String username;
-    private String password;
     private Quiz[] createdQuizzes;
-
-    public String getUsername()
+    
+    Teacher()
     {
-        return username;
-    }
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-    public String getPassword()
-    {
-        return password;
-    }
-    public void setPassword(String password)
-    {
-        this.password = password;
+        super(1);
     }
 
     public void listMainMenu()
