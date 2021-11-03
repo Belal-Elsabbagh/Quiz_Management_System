@@ -6,9 +6,8 @@ package quiz_management_system;
 
 /**
  *
- * @author belsa
+ * @author marma
  */
-class Calendar
-{
+public class Result {
     
 }

@@ -1,7 +1,18 @@
 package quiz_management_system;
 
-public class User
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+public class User implements Serializable
 {
+    //default serialVersion id
+    private static final long serialVersionUID = 1L;
+    
+
     private int userID;
     private String username;
     private String password;
@@ -23,13 +34,20 @@ public class User
         this.accessLevel = -1;
     }
     
+
     public User(String username, String password, short accessLevel)
     {
         this.username = username;
         this.password = password;
         this.accessLevel = accessLevel;
+    }    
+    public User(User og)
+    {
+        this.userID = og.userID;
+        this.username = og.username;
+        this.password = og.password;
+        this.accessLevel = og.accessLevel;
     }
-
     public int getUserID()
     {
         return userID;
@@ -87,5 +105,43 @@ public class User
         Teacher t = new Teacher();
         //load Teacher data;
         return t;
+    }
+    public void writeUserToFile() 
+    {
+        try 
+        {
+            String filepath = "student.txt";
+            FileOutputStream fileOut = new FileOutputStream(filepath);
+            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+            objectOut.writeObject(this);
+            objectOut.close();
+            System.out.println("The Object  was succesfully written to a file");
+ 
+        } 
+        catch (IOException ex) 
+        {
+            ex.printStackTrace();
+        }
+    }
+    public Object readFileInUser()
+    {
+        try 
+        {
+            String filepath = "student.txt";
+            FileInputStream fileIn = new FileInputStream(filepath);
+            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+ 
+            Object obj = objectIn.readObject();
+ 
+            System.out.println("The Object has been read from the file");
+            objectIn.close();
+            return obj;
+ 
+        } 
+        catch (Exception ex) 
+        {
+            ex.printStackTrace();
+            return null;
+        }
     }
 }
