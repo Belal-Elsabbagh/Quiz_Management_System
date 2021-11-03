@@ -35,7 +35,7 @@ public class User implements Serializable
     }
     
 
-    public User(String username, String password, short accessLevel)
+    public User(String username, String password, int accessLevel)
     {
         this.username = username;
         this.password = password;
@@ -48,6 +48,13 @@ public class User implements Serializable
         this.password = og.password;
         this.accessLevel = og.accessLevel;
     }
+
+    @Override
+    public String toString()
+    {
+        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", accessLevel=" + accessLevel + '}';
+    }
+    
     public int getUserID()
     {
         return userID;
@@ -105,43 +112,5 @@ public class User implements Serializable
         Teacher t = new Teacher();
         //load Teacher data;
         return t;
-    }
-    public void writeUserToFile() 
-    {
-        try 
-        {
-            String filepath = "student.txt";
-            FileOutputStream fileOut = new FileOutputStream(filepath);
-            ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-            objectOut.writeObject(this);
-            objectOut.close();
-            System.out.println("The Object  was succesfully written to a file");
- 
-        } 
-        catch (IOException ex) 
-        {
-            ex.printStackTrace();
-        }
-    }
-    public Object readFileInUser()
-    {
-        try 
-        {
-            String filepath = "student.txt";
-            FileInputStream fileIn = new FileInputStream(filepath);
-            ObjectInputStream objectIn = new ObjectInputStream(fileIn);
- 
-            Object obj = objectIn.readObject();
- 
-            System.out.println("The Object has been read from the file");
-            objectIn.close();
-            return obj;
- 
-        } 
-        catch (Exception ex) 
-        {
-            ex.printStackTrace();
-            return null;
-        }
     }
 }

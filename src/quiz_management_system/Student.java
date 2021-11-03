@@ -34,30 +34,32 @@ public class Student
             model = quiz.generateQuizModel();
             result = 0;
         }  
-    }
         
-    public void doAttempt()
-    {
-        Scanner sc = new Scanner(System.in);
-        short answerIndex;
-        
-        System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
-        
-        for(int i = 0; i < quiz.getnQuestions(); i++)
+        public void doAttempt()
         {
-            model[i].displayQuestion();
-            answerIndex = sc.nextShort();
+            Scanner sc = new Scanner(System.in);
+            short answerIndex;
+        
+            System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
+        
+            for(int i = 0; i < quiz.getnQuestions(); i++)
+            {
+                model[i].displayQuestion();
+                answerIndex = sc.nextShort();
             
-            if(model[i].checkAnswer(answerIndex))
-                result += model[i].getGrade();
+                if(model[i].checkAnswer(answerIndex))
+                    result += model[i].getGrade();
+            }
         }
     }
-    
     public void startAttempt(Quiz newQuiz)
     {
         Attempt newAttempt = new Attempt(newQuiz);
         newAttempt.doAttempt();
     }
+
+        
+
 
     public String getUsername()
     {

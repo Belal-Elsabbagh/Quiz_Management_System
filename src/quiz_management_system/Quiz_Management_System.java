@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
+import static quiz_management_system.FileHandler.readFileInObject;
+import static quiz_management_system.FileHandler.writeObjectToFile;
 
 public class Quiz_Management_System
 {
@@ -16,8 +18,8 @@ public class Quiz_Management_System
     {
         User newUser;
         newUser = new User("Hilary", "LingLing", 1);
-        newUser.writeUserToFile();
-        newUser = new User((User) newUser.readFileInUser());
+        writeObjectToFile(newUser, "student.txt");
+        newUser = (User) readFileInObject("student.txt");
         System.out.println(newUser.toString());
 
     }
