@@ -1,11 +1,7 @@
 package quiz_management_system;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Scanner;
-import static quiz_management_system.FileHandler.readFileInObject;
-import static quiz_management_system.FileHandler.writeObjectToFile;
 
 public class Quiz_Management_System
 {
@@ -14,26 +10,9 @@ public class Quiz_Management_System
      *
      * @param args
      */
-    public static void main(String[] args) throws ClassNotFoundException
+    public static void main(String[] args)
     {
-        User newUser;
-        newUser = new User("Hilary", "LingLing", 1);
-        writeObjectToFile(newUser, "student.txt");
-        newUser = (User) readFileInObject("student.txt");
-        System.out.println(newUser.toString());
-
-    }
-    public static void testCreateQuiz()
-    {
-        Quiz q1;
-        q1 = new Quiz();
-        Teacher activeTeacher = new Teacher();
-        q1.createQuiz(activeTeacher);
-        System.out.println(q1.toString());
-    }
-
-    public void login()
-    {
+        testCreateQuiz();
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
         
@@ -60,5 +39,13 @@ public class Quiz_Management_System
                 Teacher activeTeacher = newUser.convert2Teacher();
             }
         }
+    }
+    public static void testCreateQuiz()
+    {
+        Quiz q1;
+        q1 = new Quiz();
+        Teacher activeTeacher = new Teacher();
+        q1.createQuiz(activeTeacher);
+        q1.displayQuizProperties();
     }
 }

@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package quiz_management_system;
-import java.util.Scanner;
 import quiz_management_system.Quiz.Question;
 
 /**
@@ -15,14 +14,12 @@ public class Student
     private int userID;
     private String username;
     private String password;
-    protected Attempt attempted; 
-            
+    
     class Attempt
     {
         private Quiz quiz;
         private Question[] model; 
         private double result;
-
         public Attempt()
         {
             
@@ -34,33 +31,15 @@ public class Student
             model = quiz.generateQuizModel();
             result = 0;
         }  
+        }
         
         public void doAttempt()
         {
-            Scanner sc = new Scanner(System.in);
-            short answerIndex;
-        
-            System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
-        
-            for(int i = 0; i < quiz.getnQuestions(); i++)
-            {
-                model[i].displayQuestion();
-                answerIndex = sc.nextShort();
-            
-                if(model[i].checkAnswer(answerIndex))
-                    result += model[i].getGrade();
-            }
+            //loop through model
+            //display each question
+            //take answer
+            //if answer is right, get question grade and add to result
         }
-    }
-    public void startAttempt(Quiz newQuiz)
-    {
-        Attempt newAttempt = new Attempt(newQuiz);
-        newAttempt.doAttempt();
-    }
-
-        
-
-
     public String getUsername()
     {
         return username;

@@ -1,18 +1,7 @@
 package quiz_management_system;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
-public class User implements Serializable
+public class User
 {
-    //default serialVersion id
-    private static final long serialVersionUID = 1L;
-    
-
     private int userID;
     private String username;
     private String password;
@@ -34,27 +23,13 @@ public class User implements Serializable
         this.accessLevel = -1;
     }
     
-
-    public User(String username, String password, int accessLevel)
+    public User(String username, String password, short accessLevel)
     {
         this.username = username;
         this.password = password;
         this.accessLevel = accessLevel;
-    }    
-    public User(User og)
-    {
-        this.userID = og.userID;
-        this.username = og.username;
-        this.password = og.password;
-        this.accessLevel = og.accessLevel;
     }
 
-    @Override
-    public String toString()
-    {
-        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", accessLevel=" + accessLevel + '}';
-    }
-    
     public int getUserID()
     {
         return userID;

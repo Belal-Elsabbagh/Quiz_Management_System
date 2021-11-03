@@ -12,9 +12,8 @@ public class Teacher extends User
     public void listMainMenu()
     {
         System.out.println("----------Teacher Operations Main Menu-----------");
-        System.out.println("1. List my quizzes.");
-        System.out.println("2. Create new quiz.");
-        System.out.println("3. edit quiz.");
-        System.out.println("4. remove quiz.");
+        System.out.println("1. Open Quiz.");
+        System.out.println("2. List my quizzes.");
+        System.out.println("3. Create new quiz.");
     }
 }
