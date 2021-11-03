@@ -1,13 +1,12 @@
 package quiz_management_system;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Quiz
 {
-
-    private static int count = 0;
     private int quizID;
     private String quizTitle;
     private Teacher creator;
@@ -18,7 +17,7 @@ public class Quiz
 
     public Quiz()
     {
-        this.quizID = ++count;
+        
     }
 
     public String getQuizTitle()
@@ -51,13 +50,10 @@ public class Quiz
         this.nQuestions = nQuestions;
     }
 
-    public void displayQuizProperties()
+    @Override
+    public String toString()
     {
-        System.out.println("-----------Displaying quiz properties------------");
-        System.out.println("Quiz ID: " + quizID);
-        System.out.println("Quiz Title: " + quizTitle);
-        System.out.println("Number of questions: " + nQuestions);
-        System.out.println("Number of attempts: " + nAttempts);
+        return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nAttempts=" + nAttempts + ", nQuestions=" + nQuestions + ", qBankSize=" + qBankSize + '}';
     }
 
     public void createQuiz(Teacher author)
