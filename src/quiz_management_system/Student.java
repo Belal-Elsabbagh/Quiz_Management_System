@@ -19,21 +19,18 @@ public class Student
     {
         private Quiz quiz;
         private Question[] model; 
-<<<<<<< Updated upstream
-
-        public Attempt()
-=======
         private double result;
+        public Attempt()
+        {
+            
+        }
         
         public Attempt(Quiz newQuiz)
->>>>>>> Stashed changes
         {
             model = new Question[quiz.getnQuestions()];
             model = quiz.generateQuizModel();
-<<<<<<< Updated upstream
-        }  
-=======
             result = 0;
+        }  
         }
         
         public void doAttempt()
@@ -43,8 +40,6 @@ public class Student
             //take answer
             //if answer is right, get question grade and add to result
         }
->>>>>>> Stashed changes
-    }
     public String getUsername()
     {
         return username;

@@ -5,8 +5,9 @@
         <group>
             <file>file:/D:/Programming/NetBeansProjects/Quiz_Management_System/src/quiz_management_system/Quiz.java</file>
             <file>file:/D:/Programming/NetBeansProjects/Quiz_Management_System/src/quiz_management_system/Quiz_Management_System.java</file>
+            <file>file:/D:/Programming/NetBeansProjects/Quiz_Management_System/src/quiz_management_system/Student.java</file>
             <file>file:/D:/Programming/NetBeansProjects/Quiz_Management_System/src/quiz_management_system/User.java</file>
-            <file>file:/D:/Programming/NetBeansProjects/Quiz_Management_System/src/quiz_management_system/Question.java</file>
+            <file>file:/D:/Programming/NetBeansProjects/Quiz_Management_System/src/quiz_management_system/Teacher.java</file>
         </group>
     </open-files>
 </project-private>
