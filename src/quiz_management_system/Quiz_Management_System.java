@@ -19,6 +19,7 @@ public class Quiz_Management_System
         newUser.writeUserToFile();
         newUser = new User((User) newUser.readFileInUser());
         System.out.println(newUser.toString());
+
     }
     public static void testCreateQuiz()
     {

@@ -12,6 +12,7 @@ public class User implements Serializable
     //default serialVersion id
     private static final long serialVersionUID = 1L;
     
+
     private int userID;
     private String username;
     private String password;
@@ -33,14 +34,13 @@ public class User implements Serializable
         this.accessLevel = -1;
     }
     
-    public User(String username, String password, int accessLevel)
+
+    public User(String username, String password, short accessLevel)
     {
-        this.userID = 40;
         this.username = username;
         this.password = password;
         this.accessLevel = accessLevel;
-    }
-    
+    }    
     public User(User og)
     {
         this.userID = og.userID;
@@ -48,7 +48,6 @@ public class User implements Serializable
         this.password = og.password;
         this.accessLevel = og.accessLevel;
     }
-    
     public int getUserID()
     {
         return userID;

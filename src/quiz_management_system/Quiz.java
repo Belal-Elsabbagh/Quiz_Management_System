@@ -9,6 +9,7 @@ public class Quiz
 {
     private int quizID;
     private String quizTitle;
+    private String subject;
     private Teacher creator;
     private int nAttempts, nQuestions;
 //    private Calendar openTime, duration; //still uncertain of the data type.

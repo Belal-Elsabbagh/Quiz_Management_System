@@ -21,31 +21,35 @@ public class Student
     {
         private Quiz quiz;
         private Question[] model; 
-        private double grade;
+        private double result;
+
+        public Attempt()
+        {
+            
+        }
         
         public Attempt(Quiz newQuiz)
         {
-            this.quiz = newQuiz;
             model = new Question[quiz.getnQuestions()];
             model = quiz.generateQuizModel();
-            grade = 0;
-        }
+            result = 0;
+        }  
+    }
         
-        public void doAttempt()
+    public void doAttempt()
+    {
+        Scanner sc = new Scanner(System.in);
+        short answerIndex;
+        
+        System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
+        
+        for(int i = 0; i < quiz.getnQuestions(); i++)
         {
-            Scanner sc = new Scanner(System.in);
-            short answerIndex;
+            model[i].displayQuestion();
+            answerIndex = sc.nextShort();
             
-            System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
-            
-            for(int i = 0; i < quiz.getnQuestions(); i++)
-            {
-                model[i].displayQuestion();
-                answerIndex = sc.nextShort();
-                
-                if(model[i].checkAnswer(answerIndex))
-                    grade += model[i].getGrade();
-            }
+            if(model[i].checkAnswer(answerIndex))
+                result += model[i].getGrade();
         }
     }
     
@@ -54,7 +58,7 @@ public class Student
         Attempt newAttempt = new Attempt(newQuiz);
         newAttempt.doAttempt();
     }
-    
+
     public String getUsername()
     {
         return username;
