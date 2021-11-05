@@ -4,23 +4,39 @@
  */
 package quiz_management_system;
 
+import java.io.Serializable;
+
 /**
  *
  * @author belsa
  */
-public class StaticList
+public class StaticList implements Serializable
 {
+    //default serialVersion id
+    private static final long serialVersionUID = 1L;
+    
     static int CAPACITY = 1024;
     /******** Data Members ********/
     private int mySize; // current size of list stored in myArray
     private Object[] myArray;  // array to store list elements
 
+    public int getMySize()
+    {
+        return mySize;
+    }
+    
     /******** Function Members ********/
     /***** Class constructor *****/
     public StaticList()
     {
         this.myArray = new Object[CAPACITY];
         mySize = 0;
+    }
+    
+    public StaticList(StaticList original)
+    {
+        this.myArray = original.myArray;
+        this.mySize = original.mySize;
     }
     /*----------------------------------------------------------------------
      Construct a List object.
@@ -57,6 +73,11 @@ public class StaticList
 		myArray[pos] = item;
 		mySize++;
 	}
+    }
+    public void append(Object item)
+    {
+        myArray[mySize] = item;
+	mySize++;
     }
     /*----------------------------------------------------------------------
      Insert a value into the list at a given position.
@@ -107,4 +128,18 @@ public class StaticList
      Postcondition: The list represented by this List object has been
      inserted into out.
      -----------------------------------------------------------------------*/
+    
+    public Object returnByIndex(int index)
+    {
+        Object out = new Object();
+        for(int i = 0; i < mySize; i++)
+        {
+            if(index == i)
+            {
+                out = myArray[i];
+                break;
+            }
+        }
+        return out;
+    }
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import static quiz_management_system.FileHandler.readFileInObject;
 
 public class User implements Serializable
 {
@@ -49,6 +50,11 @@ public class User implements Serializable
         this.accessLevel = og.accessLevel;
     }
 
+    public void setUserID(int userID)
+    {
+        this.userID = userID;
+    }
+
     @Override
     public String toString()
     {
@@ -78,20 +84,23 @@ public class User implements Serializable
     public int checkLogin()
     {
         int status = 0;
-        //load data into user array;
-        User[] userData;
-        userData = new User[1000];// just for testing. Change when figuring out how to manage files.
+        //load data into StaticList;
+        StaticList userData;
+        userData = (StaticList) readFileInObject("student.txt");
+
         
-        for(User user : userData)
+        for(int i = 0; i < userData.getMySize(); i++)
         {
-            if(username.equals(user.getUsername()))
+            User record;
+            record = (User) userData.returnByIndex(i);
+            if(username.equals(record.getUsername()))
             {
                 status = 1;
-                if(password.equals(user.getPassword()))
+                if(password.equals(record.getPassword()))
                 {
                     status = 2;
-                    this.userID = user.getUserID();
-                    this.accessLevel = user.getAccessLevel();
+                    this.userID = record.getUserID();
+                    this.accessLevel = record.getAccessLevel();
                 }
             }
         }

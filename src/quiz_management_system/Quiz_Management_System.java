@@ -16,12 +16,7 @@ public class Quiz_Management_System
      */
     public static void main(String[] args) throws ClassNotFoundException
     {
-        User newUser;
-        newUser = new User("Hilary", "LingLing", 1);
-        writeObjectToFile(newUser, "student.txt");
-        newUser = (User) readFileInObject("student.txt");
-        System.out.println(newUser.toString());
-
+        login();
     }
     public static void testCreateQuiz()
     {
@@ -31,8 +26,34 @@ public class Quiz_Management_System
         q1.createQuiz(activeTeacher);
         System.out.println(q1.toString());
     }
-
-    public void login()
+    public static void testStructure()
+    {
+        StaticList userData = new StaticList();
+        User u1, u2, u3, u4;
+        u1 = new User("Belal", "123");
+        u2 = new User("Habiba", "456");
+        u3 = new User("Mariam", "789");
+        u4 = new User("Lojain", "101112");
+        
+        u1.setUserID(userData.getMySize() + 1);
+        userData.append(u1);
+        
+        u2.setUserID(userData.getMySize() + 1);
+        userData.append(u2); 
+        
+        u3.setUserID(userData.getMySize() + 1);
+        userData.append(u3);
+        
+        u4.setUserID(userData.getMySize() + 1);
+        userData.append(u4);
+        
+        writeObjectToFile(userData, "student.txt");
+        
+        userData = new StaticList();
+        userData = (StaticList) readFileInObject("student.txt");
+        userData.display();  
+    }
+    public static void login()
     {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
@@ -51,14 +72,15 @@ public class Quiz_Management_System
             System.out.println("Incorrect password.");
         else if(status == 2)
         {
-            if(newUser.getAccessLevel() == 0)
-            {
-                Student activeStudent = newUser.convert2Student();
-            }
-            else if(newUser.getAccessLevel() == 1)
-            {
-                Teacher activeTeacher = newUser.convert2Teacher();
-            }
+//            if(newUser.getAccessLevel() == 0)
+//            {
+//                Student activeStudent = newUser.convert2Student();
+//            }
+//            else if(newUser.getAccessLevel() == 1)
+//            {
+//                Teacher activeTeacher = newUser.convert2Teacher();
+//            }
+            System.out.println("Login Successful");
         }
     }
 }

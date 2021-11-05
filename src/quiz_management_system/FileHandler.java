@@ -24,7 +24,8 @@ public class FileHandler
             ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
             objectOut.writeObject(out);
             objectOut.close();
-            System.out.println("The Object  was succesfully written to a file");
+            fileOut.close();
+            System.out.println("The Object was succesfully written to a file");
  
         } 
         catch (IOException ex) 
@@ -43,6 +44,7 @@ public class FileHandler
  
             System.out.println("The Object has been read from the file");
             objectIn.close();
+            fileIn.close();
             return obj;
  
         } 

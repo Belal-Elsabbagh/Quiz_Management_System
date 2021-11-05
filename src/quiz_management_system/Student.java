@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package quiz_management_system;
+import java.io.Serializable;
 import java.util.Scanner;
 import quiz_management_system.Quiz.Question;
 
@@ -10,8 +11,11 @@ import quiz_management_system.Quiz.Question;
  *
  * @author belsa
  */
-public class Student
+public class Student implements Serializable
 {
+    //default serialVersion id
+    private static final long serialVersionUID = 1L;
+    
     private int userID;
     private String username;
     private String password;

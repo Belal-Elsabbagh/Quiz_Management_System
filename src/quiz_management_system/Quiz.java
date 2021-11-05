@@ -5,14 +5,8 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.Scanner;
 
-<<<<<<< HEAD
-public class Quiz {
-
-    private static int count = 0;
-=======
 public class Quiz
 {
->>>>>>> 62f7d2a0542bc805c7c544b26562343953bd5773
     private int quizID;
     private String quizTitle;
     private String subject;
@@ -22,14 +16,9 @@ public class Quiz
     private Question[] questionBank;
     private int qBankSize;
 
-
-    public Quiz() {
-        this.quizID = ++count;
-
     public Quiz()
     {
         
-
     }
 
     public String getQuizTitle() {
@@ -63,14 +52,17 @@ public class Quiz
         System.out.println("Quiz Title: " + quizTitle);
         System.out.println("Number of questions: " + nQuestions);
         System.out.println("Number of attempts: " + nAttempts);
-
+    }
+    
+    @Override
     public String toString()
     {
         return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nAttempts=" + nAttempts + ", nQuestions=" + nQuestions + ", qBankSize=" + qBankSize + '}';
 
     }
 
-    public void createQuiz(Teacher author) {
+    public void createQuiz(Teacher author) 
+    {
         Scanner sc = new Scanner(System.in);
         creator = author;
 
@@ -78,7 +70,8 @@ public class Quiz
         System.out.println("Enter quiz title: ");
         quizTitle = sc.nextLine();
 
-        try {
+        try 
+        {
             System.out.println("Enter number of questions: ");
             nQuestions = sc.nextInt();
 
@@ -94,7 +87,9 @@ public class Quiz
                     continue;
                 }
             }
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             System.out.println("Error: Invailed input");
             return;
         }
@@ -158,10 +153,6 @@ public class Quiz
 
         }
 
-
-        private class Choice {
-
-
         public int getQuestionID()
         {
             return questionID;
@@ -188,37 +179,33 @@ public class Quiz
             }      
         }
         
-            public boolean checkAnswer(short inAnswer)
-            {
-                boolean result = false;
-                if (inAnswer == mcq.getAnswerKeyIndex())
-                {
-                    result = true;
-                }
-                return result;
-            }
-                    
-        private class Choice
+        public boolean checkAnswer(short inAnswer)
         {
+            boolean result = false;
+            if (inAnswer == mcq.getAnswerKeyIndex())
+            {
+                result = true;
+            }
+            return result;
+        }
+    }      
+    private class Choice
+    {
+         private int nChoices;
+         private String[] choices;
+         private int answerKeyIndex;
 
-            private int nChoices;
-            private String[] choices;
-            private int answerKeyIndex;
-
-            private Choice() {
-                this.nChoices = 0;
+         private Choice() {
+            this.nChoices = 0;
                 choices = new String[2];
             }
-
-
-            public void createMCQ() {
 
             public int getnChoices()
             {
                 return nChoices;
             }
 
-            public short getAnswerKeyIndex()
+            public int getAnswerKeyIndex()
             {
                 return answerKeyIndex;
             }
@@ -240,33 +227,32 @@ public class Quiz
                 choices = new String[nChoices];
 
 
-                for (int i = 0;
-                        i < nChoices;
-                        i++) {
+                for (int i = 0; i < nChoices; i++) {
                     System.out.println("Enter choice " + i + ": ");
                     choices[i] = sc.next();
                 }
 
                 answerKeyIndex = nChoices;
-                try{
-                while (answerKeyIndex > nChoices
-                        - 1) {
-                    System.out.println("Enter the index of right answer (count starts at 0): ");
-                    answerKeyIndex = sc.nextShort();
-                    if (answerKeyIndex > nChoices - 1) {
-                        System.out.println("Error: The number of choice doesn't exist");
-                    } else {
-                        continue;
-                    }
-
+                try
+                {
+                    while (answerKeyIndex > nChoices - 1) 
+                    {
+                        System.out.println("Enter the index of right answer (count starts at 0): ");
+                        answerKeyIndex = sc.nextShort();
+                        if (answerKeyIndex > nChoices - 1)
+                            System.out.println("Error: The number of choice doesn't exist");    
+                         else 
+                        {
+                            continue;
+                        }
+                    } 
                 }
 
-                System.out.println(
-                        "Choices added successfully.");
-            } catch (Exception e) {
+                catch (Exception e) {
                     System.out.println("Error: Invailed input");
                     return;
                 }
+                System.out.println("Choices added successfully.");
             }
 
             public boolean checkAnswer(short inAnswer) {
@@ -278,24 +264,3 @@ public class Quiz
             }
         }
     }
-
-}
-
-                
-                for (int i = 0; i < nChoices; i++)
-                {
-                    System.out.println("Enter choice " + (i+1) + ": ");
-                    sc = new Scanner(System.in);
-                    choices[i] = sc.next();
-                }
-                System.out.println("Enter the index of right answer (count starts at 1): ");
-                answerKeyIndex = sc.nextShort();
-                
-                System.out.println("Choices added successfully.");
-            }
-
-
-        }
-    }
-}
-
