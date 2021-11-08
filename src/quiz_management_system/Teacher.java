@@ -1,9 +1,12 @@
 package quiz_management_system;
 
+import java.util.ArrayList;
+
 public class Teacher extends User
 {
-    private Quiz[] createdQuizzes;
-    
+
+    ArrayList<Quiz> createdQuizzes;
+
     Teacher()
     {
         super(1);
@@ -16,5 +19,21 @@ public class Teacher extends User
         System.out.println("2. Create new quiz.");
         System.out.println("3. edit quiz.");
         System.out.println("4. remove quiz.");
+    }
+
+    public void listQuizzes()
+    {
+        for (Quiz i : createdQuizzes)
+        {
+            i.displayQuizProperties();
+        }
+    }
+
+    public void createNewQuiz()
+    {
+        Quiz newQuiz = new Quiz();
+        newQuiz.createQuiz(this);
+
+        createdQuizzes.add(newQuiz);
     }
 }

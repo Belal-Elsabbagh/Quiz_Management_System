@@ -3,6 +3,7 @@ package quiz_management_system;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
 import static quiz_management_system.FileHandler.readFileInObject;
 import static quiz_management_system.FileHandler.writeObjectToFile;
@@ -16,7 +17,7 @@ public class Quiz_Management_System
      */
     public static void main(String[] args) throws ClassNotFoundException
     {
-        login();
+        testStructure();
     }
     public static void testCreateQuiz()
     {
@@ -28,30 +29,31 @@ public class Quiz_Management_System
     }
     public static void testStructure()
     {
-        StaticList userData = new StaticList();
+        ArrayList<User> userData = new ArrayList();
         User u1, u2, u3, u4;
         u1 = new User("Belal", "123");
         u2 = new User("Habiba", "456");
         u3 = new User("Mariam", "789");
         u4 = new User("Lojain", "101112");
         
-        u1.setUserID(userData.getMySize() + 1);
-        userData.append(u1);
+        u1.setUserID(userData.size() + 1);
+        userData.add(u1);
         
-        u2.setUserID(userData.getMySize() + 1);
-        userData.append(u2); 
+        u2.setUserID(userData.size() + 1);
+        userData.add(u2); 
         
-        u3.setUserID(userData.getMySize() + 1);
-        userData.append(u3);
+        u3.setUserID(userData.size() + 1);
+        userData.add(u3);
         
-        u4.setUserID(userData.getMySize() + 1);
-        userData.append(u4);
+        u4.setUserID(userData.size() + 1);
+        userData.add(u4);
         
         writeObjectToFile(userData, "student.txt");
         
-        userData = new StaticList();
-        userData = (StaticList) readFileInObject("student.txt");
-        userData.display();  
+        userData = new ArrayList();
+        userData = (ArrayList <User>) readFileInObject("student.txt");
+        for(User i : userData)
+            System.out.println(i.toString());
     }
     public static void login()
     {

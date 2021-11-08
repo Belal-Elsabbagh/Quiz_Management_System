@@ -16,7 +16,7 @@ import java.io.ObjectOutputStream;
  */
 public class FileHandler
 {
-        public static void writeObjectToFile(Object out, String filepath) 
+    public static void writeObjectToFile(Object out, String filepath) 
     {
         try 
         {
@@ -54,5 +54,4 @@ public class FileHandler
             return null;
         }
     }
-
 }

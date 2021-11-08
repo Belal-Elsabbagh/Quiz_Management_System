@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import static quiz_management_system.FileHandler.readFileInObject;
 
 public class User implements Serializable
@@ -85,22 +86,21 @@ public class User implements Serializable
     {
         int status = 0;
         //load data into StaticList;
-        StaticList userData;
-        userData = (StaticList) readFileInObject("student.txt");
+        ArrayList<User> userData;
+        userData = new ArrayList();
+        userData = (ArrayList <User>) readFileInObject("student.txt");
 
         
-        for(int i = 0; i < userData.getMySize(); i++)
+        for(User i : userData)
         {
-            User record;
-            record = (User) userData.returnByIndex(i);
-            if(username.equals(record.getUsername()))
+            if(username.equals(i.getUsername()))
             {
                 status = 1;
-                if(password.equals(record.getPassword()))
+                if(password.equals(i.getPassword()))
                 {
                     status = 2;
-                    this.userID = record.getUserID();
-                    this.accessLevel = record.getAccessLevel();
+                    this.userID = i.getUserID();
+                    this.accessLevel = i.getAccessLevel();
                 }
             }
         }
