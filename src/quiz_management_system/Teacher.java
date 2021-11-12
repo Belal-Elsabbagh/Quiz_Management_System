@@ -9,7 +9,12 @@ public class Teacher extends User
 
     Teacher()
     {
-        super(1);
+        super(2);
+    }
+
+    public Teacher(String username, String password, int accessLevel)
+    {
+        super(username, password, accessLevel);
     }
 
     public void listMainMenu()

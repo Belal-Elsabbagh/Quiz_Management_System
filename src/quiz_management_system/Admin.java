@@ -4,6 +4,7 @@
  */
 package quiz_management_system;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import static quiz_management_system.FileHandler.readFileInObject;
 
@@ -15,26 +16,48 @@ public class Admin
 {
     public void createUser()
     {
-        StaticList userData = new StaticList();
-        userData = (StaticList) readFileInObject("student.txt");
+        ArrayList<User> userData = (ArrayList<User>) readFileInObject("student.txt");
         
         System.out.println("-----------Creating new user------------");
         Scanner sc = new Scanner(System.in);
-        String inUsername, inPassword;
+        String inUsername = new String(), inPassword;
         int aLevel;
-        System.out.println("Enter username:");
-        inUsername = sc.next();
-        //check if username already exists
+        
+        int status = 0;
+        while(status == 0)
+        {
+            System.out.println("Enter username:");
+            inUsername = sc.next();        
+            for(User i : userData)
+            {
+                if(inUsername.equals(""))
+                {
+                    System.out.println("You must enter a username.");
+                }
+                if(inUsername.equals(i.getUsername()))
+                {
+                    System.out.println("Username already exists.");
+                }
+            }
+        }
+        
         System.out.println("Enter password:");
         inPassword = sc.next();
         System.out.println("Set Access Level:");
         aLevel = sc.nextInt();
-        User newUser = new User(inUsername, inPassword, aLevel);
-        
-        //check if field is empty
-        
-        newUser.setUserID(userData.getMySize() + 1);
-        userData.append(newUser);
+         User newUser = null;
+        if(aLevel == 1)
+        {
+            newUser = new Student(inUsername, inPassword, aLevel);
+            newUser.setUserID(1*1000 + userData.size() + 1);
+        }
+        else if(aLevel == 2)
+        {
+            newUser = new Teacher(inUsername, inPassword, aLevel);
+            newUser.setUserID(2*1000 + userData.size() + 1);
+        }
+
+        userData.add(newUser);
     }
     public void removeUser()
     {

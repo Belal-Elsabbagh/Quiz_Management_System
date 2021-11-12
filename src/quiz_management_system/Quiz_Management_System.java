@@ -17,7 +17,14 @@ public class Quiz_Management_System
      */
     public static void main(String[] args) throws ClassNotFoundException
     {
-        testStructure();
+        ArrayList<User> userData = new ArrayList();
+        ArrayList<Quiz> quizData = new ArrayList();
+        //userData = (ArrayList <User>) readFileInObject("userData.dat");
+        //quizData = (ArrayList <Quiz>) readFileInObject("quizData.dat");
+        
+//        login(userData);
+        
+        testStructure(userData);
     }
     public static void testCreateQuiz()
     {
@@ -27,9 +34,8 @@ public class Quiz_Management_System
         q1.createQuiz(activeTeacher);
         System.out.println(q1.toString());
     }
-    public static void testStructure()
+    public static void testStructure(ArrayList<User> userData)
     {
-        ArrayList<User> userData = new ArrayList();
         User u1, u2, u3, u4;
         u1 = new User("Belal", "123");
         u2 = new User("Habiba", "456");
@@ -48,14 +54,12 @@ public class Quiz_Management_System
         u4.setUserID(userData.size() + 1);
         userData.add(u4);
         
-        writeObjectToFile(userData, "student.txt");
+        writeObjectToFile(userData, "userData.dat");
         
-        userData = new ArrayList();
-        userData = (ArrayList <User>) readFileInObject("student.txt");
         for(User i : userData)
             System.out.println(i.toString());
     }
-    public static void login()
+    public static void login(ArrayList<User> userData)
     {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
@@ -66,7 +70,7 @@ public class Quiz_Management_System
         inPassword = sc.next();
         User newUser = new User(inUsername, inPassword);
         int status = -1;
-        status = newUser.checkLogin();
+        status = newUser.checkLogin(userData);
         
         if(status == 0)
             System.out.println("User not found.");

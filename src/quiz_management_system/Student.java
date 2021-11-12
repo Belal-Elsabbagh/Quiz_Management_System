@@ -1,9 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package quiz_management_system;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Scanner;
 import quiz_management_system.Quiz.Question;
 
@@ -11,26 +7,45 @@ import quiz_management_system.Quiz.Question;
  *
  * @author belsa
  */
-public class Student implements Serializable
+public class Student extends User
 {
     //default serialVersion id
     private static final long serialVersionUID = 1L;
     
-    private int userID;
-    private String username;
-    private String password;
-    protected Attempt attempted; 
-            
+    private ArrayList<Attempt> attemptHistory; 
+
+    public Student(String username, String password, int accessLevel)
+    {
+        super(username, password, accessLevel);
+    }
+    
+    public void startAttempt(Quiz newQuiz)
+    {
+        Attempt newAttempt = new Attempt(newQuiz);
+        newAttempt.doAttempt();
+        attemptHistory.add(newAttempt);
+    }
+    
+    public void viewAttemptHistory()
+    {
+        for(Attempt i : attemptHistory)
+        {
+            double sum = 0;
+            for(Question j : i.getModel())
+            {
+                sum += j.getGrade();
+            }
+            System.out.println("Quiz: " + i.quiz.getQuizTitle());
+            System.out.println("Your result: " + i.result + "/" + sum);
+        }
+    }
+  
     class Attempt
     {
         private Quiz quiz;
-        private Question[] model; 
+        private Question[] model;
+        private int[] answerIndex;
         private double result;
-
-        public Attempt()
-        {
-            
-        }
         
         public Attempt(Quiz newQuiz)
         {
@@ -38,48 +53,37 @@ public class Student implements Serializable
             model = quiz.generateQuizModel();
             result = 0;
         }  
+
+        public Question[] getModel()
+        {
+            return model;
+        }
         
         public void doAttempt()
         {
             Scanner sc = new Scanner(System.in);
-            short answerIndex;
-        
+
             System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
         
             for(int i = 0; i < quiz.getnQuestions(); i++)
             {
                 model[i].displayQuestion();
-                answerIndex = sc.nextShort();
+                answerIndex[i] = sc.nextInt();
             
-                if(model[i].checkAnswer(answerIndex))
+                if(model[i].checkAnswer((short) answerIndex[i]))
                     result += model[i].getGrade();
             }
         }
-    }
-    public void startAttempt(Quiz newQuiz)
-    {
-        Attempt newAttempt = new Attempt(newQuiz);
-        newAttempt.doAttempt();
-    }
-
         
-
-
-    public String getUsername()
-    {
-        return username;
+        public void reviewAttempt()
+        {
+            for(int i = 0; i < quiz.getnQuestions(); i++)
+            {
+                model[i].displayQuestion();
+                System.out.println("Your Answer: " + answerIndex[i]);
+                if(model[i].checkAnswer((short) answerIndex[i]))
+                    System.out.println("Correct");
+            }   
+        }
     }
-    public void setUsername(String username)
-    {
-        this.username = username;
-    }
-    public String getPassword()
-    {
-        return password;
-    }
-    public void setPassword(String password)
-    {
-        this.password = password;
-    }
-
 }

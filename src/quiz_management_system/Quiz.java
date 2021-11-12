@@ -13,50 +13,44 @@ public class Quiz
     private String quizTitle;
     private Teacher creator;
     private int nAttempts, nQuestions;
-//    private Calendar openTime, duration; //still uncertain of the data type.
+    private Calendar openTime, duration; //still uncertain of the data type.
     private ArrayList<Question> questionBank;
-    private int qBankSize;
 
+    /************************************************** Setters & Getters *****/
     public String getQuizTitle()
     {
         return quizTitle;
     }
-
     public void setQuizTitle(String quizTitle)
     {
         this.quizTitle = quizTitle;
     }
-
     public int getnAttempts()
     {
         return nAttempts;
     }
-
     public void setnAttempts(int nAttempts)
     {
         this.nAttempts = nAttempts;
     }
-
     public int getnQuestions()
     {
         return nQuestions;
     }
-
     public void setnQuestions(int nQuestions)
     {
         this.nQuestions = nQuestions;
     }
-
     public Teacher getCreator()
     {
         return creator;
     }
-
     public void setCreator(Teacher creator)
     {
         this.creator = creator;
     }
-
+    /********************************************End of Setters & Getters *****/
+    
     public void displayQuizProperties()
     {
         System.out.println("-----------Displaying quiz properties------------");
@@ -64,13 +58,13 @@ public class Quiz
         System.out.println("Quiz Title: " + quizTitle);
         System.out.println("Number of questions: " + nQuestions);
         System.out.println("Number of attempts: " + nAttempts);
-        System.out.println("Size of question bank: " + qBankSize);
+        System.out.println("Size of question bank: " + questionBank.size());
     }
 
     @Override
     public String toString()
     {
-        return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nAttempts=" + nAttempts + ", nQuestions=" + nQuestions + ", qBankSize=" + qBankSize + '}';
+        return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nAttempts=" + nAttempts + ", nQuestions=" + nQuestions + ", questionBank.size()=" + questionBank.size() + '}';
     }
 
     public void createQuiz(Teacher author)
@@ -90,11 +84,11 @@ public class Quiz
             System.out.println("Enter number of attempts: ");
             nAttempts = sc.nextInt();
 
-            while (qBankSize < nQuestions)
+            while (questionBank.size() < nQuestions)
             {
                 System.out.println("Enter size of question bank: ");
-                qBankSize = sc.nextInt();
-                if (qBankSize < nQuestions)
+                questionBank = new ArrayList(sc.nextInt());
+                if (questionBank.size() < nQuestions)
                 {
                     System.out.println("Error: Number of question bank must be equal or more than number of questions");
                 } else
@@ -111,10 +105,10 @@ public class Quiz
 
         System.out.println("Quiz created sucessfully.");
     }
-
+    
     public void createQuestionBank()
     {
-        questionBank = new ArrayList(qBankSize);
+        questionBank = new ArrayList(questionBank.size());
 
         System.out.println("-----------Question Bank Creator-----------------");
         for (Question tempQ : questionBank)
@@ -146,7 +140,7 @@ public class Quiz
         private int questionID;
         private String prompt;
         private double grade;
-        protected Choice mcq;
+        private Choice mcq;
 
         public void createQuestion()
         {
@@ -201,7 +195,7 @@ public class Quiz
                 System.out.println((i + 1) + ". " + mcq.choices[i]);
             }
         }
-
+                
         public boolean checkAnswer(short inAnswer)
         {
             boolean result = false;
@@ -270,9 +264,6 @@ public class Quiz
                     if (answerKeyIndex > nChoices - 1)
                     {
                         System.out.println("Error: The number of choice doesn't exist");
-                    } else
-                    {
-                        continue;
                     }
                 }
             } catch (Exception e)
@@ -283,7 +274,7 @@ public class Quiz
             System.out.println("Choices added successfully.");
         }
 
-        public boolean checkAnswer(short inAnswer)
+        public boolean checkAnswer(int inAnswer)
         {
             boolean result = false;
             if (inAnswer == answerKeyIndex)

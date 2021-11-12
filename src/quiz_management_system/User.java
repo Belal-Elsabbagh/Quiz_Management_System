@@ -35,7 +35,6 @@ public class User implements Serializable
         this.password = password;
         this.accessLevel = -1;
     }
-    
 
     public User(String username, String password, int accessLevel)
     {
@@ -82,14 +81,9 @@ public class User implements Serializable
         return password;
     }
     
-    public int checkLogin()
+    public int checkLogin(ArrayList<User> userData)
     {
         int status = 0;
-        //load data into StaticList;
-        ArrayList<User> userData;
-        userData = new ArrayList();
-        userData = (ArrayList <User>) readFileInObject("student.txt");
-
         
         for(User i : userData)
         {
@@ -108,18 +102,5 @@ public class User implements Serializable
         //check if username exists, status = 1
         //check if corresponding password is equal to input, status = 2
         return status;
-    }
-    
-    public Student convert2Student()
-    {
-        Student s = new Student();
-        //load Student data;
-        return s;
-    }
-    public Teacher convert2Teacher()
-    {
-        Teacher t = new Teacher();
-        //load Teacher data;
-        return t;
     }
 }
