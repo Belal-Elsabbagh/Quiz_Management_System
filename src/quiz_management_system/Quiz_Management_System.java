@@ -1,8 +1,6 @@
 package quiz_management_system;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import static quiz_management_system.FileHandler.readFileInObject;
@@ -17,14 +15,15 @@ public class Quiz_Management_System
      */
     public static void main(String[] args) throws ClassNotFoundException
     {
-        ArrayList<User> userData = new ArrayList();
-        ArrayList<Quiz> quizData = new ArrayList();
-        //userData = (ArrayList <User>) readFileInObject("userData.dat");
-        //quizData = (ArrayList <Quiz>) readFileInObject("quizData.dat");
+        FileHandler data = new FileHandler();
+        data.userData = (ArrayList <User>) readFileInObject(data.user);
+        data.quizData = (ArrayList <Quiz>) readFileInObject(data.quiz);
         
-//        login(userData);
+        login(data);
+        //testStructure(userData);
         
-        testStructure(userData);
+        writeObjectToFile(data.userData, data.user);
+        writeObjectToFile(data.quizData, data.quiz);
     }
     public static void testCreateQuiz()
     {
@@ -53,13 +52,8 @@ public class Quiz_Management_System
         
         u4.setUserID(userData.size() + 1);
         userData.add(u4);
-        
-        writeObjectToFile(userData, "userData.dat");
-        
-        for(User i : userData)
-            System.out.println(i.toString());
     }
-    public static void login(ArrayList<User> userData)
+    public static User login(FileHandler data)
     {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
@@ -69,8 +63,10 @@ public class Quiz_Management_System
         System.out.println("Enter password:");
         inPassword = sc.next();
         User newUser = new User(inUsername, inPassword);
-        int status = -1;
-        status = newUser.checkLogin(userData);
+
+        int status = 0;
+        status = newUser.checkLogin(data.userData);
+
         
         if(status == 0)
             System.out.println("User not found.");
@@ -78,15 +74,18 @@ public class Quiz_Management_System
             System.out.println("Incorrect password.");
         else if(status == 2)
         {
-//            if(newUser.getAccessLevel() == 0)
-//            {
-//                Student activeStudent = newUser.convert2Student();
-//            }
-//            else if(newUser.getAccessLevel() == 1)
-//            {
-//                Teacher activeTeacher = newUser.convert2Teacher();
-//            }
+
+            if(newUser.getAccessLevel() == 0)
+            {
+                Student activeStudent = newUser.convert2Student();
+            }
+            else if(newUser.getAccessLevel() == 1)
+            {
+                Teacher activeTeacher = newUser.convert2Teacher();
+            }
+
             System.out.println("Login Successful");
         }
+        return newUser;
     }
 }

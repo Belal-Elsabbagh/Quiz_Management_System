@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package quiz_management_system;
 
 import java.util.ArrayList;
@@ -14,38 +10,35 @@ import static quiz_management_system.FileHandler.readFileInObject;
  */
 public class Admin
 {
-    public void createUser()
-    {
-        ArrayList<User> userData = (ArrayList<User>) readFileInObject("student.txt");
-        
+    public void createUser(ArrayList<User> userData)
+    {        
         System.out.println("-----------Creating new user------------");
         Scanner sc = new Scanner(System.in);
-        String inUsername = new String(), inPassword;
+        
+        String inUsername = new String(), inPassword = new String();
         int aLevel;
+        User newUser = null;
+
         
         int status = 0;
-        while(status == 0)
+        do
         {
             System.out.println("Enter username:");
-            inUsername = sc.next();        
-            for(User i : userData)
+            inUsername = sc.next();
+            newUser = new User(inUsername, inPassword);
+            status = newUser.checkLogin(userData);
+            if(status == 1)
             {
-                if(inUsername.equals(""))
-                {
-                    System.out.println("You must enter a username.");
-                }
-                if(inUsername.equals(i.getUsername()))
-                {
-                    System.out.println("Username already exists.");
-                }
+                System.err.println("Username already exists.");
+                continue;
             }
-        }
+            System.out.println("Enter password:");
+            inPassword = sc.next();
+        }while(status == 1);
         
-        System.out.println("Enter password:");
-        inPassword = sc.next();
-        System.out.println("Set Access Level:");
+
+        System.out.println("Set Access Level.\n 1 for student\n2 for teacher:");
         aLevel = sc.nextInt();
-         User newUser = null;
         if(aLevel == 1)
         {
             newUser = new Student(inUsername, inPassword, aLevel);

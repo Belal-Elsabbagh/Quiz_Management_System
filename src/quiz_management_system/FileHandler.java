@@ -1,10 +1,12 @@
 package quiz_management_system;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 /**
  *
@@ -12,7 +14,11 @@ import java.io.ObjectOutputStream;
  */
 public class FileHandler
 {
-    public static void writeObjectToFile(Object out, String filepath) 
+    public File user = new File("userData.dat"), quiz = new File("quizData.dat");
+    public ArrayList<User> userData = new ArrayList();
+    public ArrayList<Quiz> quizData = new ArrayList();
+    
+    public static void writeObjectToFile(Object out, File filepath) 
     {
         try 
         {
@@ -22,14 +28,13 @@ public class FileHandler
             objectOut.close();
             fileOut.close();
             System.out.println("The Object was succesfully written to a file");
- 
         } 
         catch (IOException ex) 
         {
             ex.printStackTrace();
         }
     }
-    public static Object readFileInObject(String filepath)
+    public static Object readFileInObject(File filepath)
     {
         try 
         {
@@ -42,7 +47,6 @@ public class FileHandler
             objectIn.close();
             fileIn.close();
             return obj;
- 
         } 
         catch (Exception ex) 
         {
