@@ -69,4 +69,17 @@ public class FileHandler
             return null;
         }
     }
+    
+    public Quiz searchQuizByID(int qID)
+    {
+        Quiz x = null;
+        for(Quiz i : quizData)
+        {
+            if(i.getQuizID() == qID)
+            {
+                x = i;
+            }
+        }
+        return x;
+    }
 }

@@ -14,11 +14,50 @@ public class Student extends User
     
     private ArrayList<Attempt> attemptHistory; 
 
-    public Student(String username, String password, int accessLevel)
+    public Student(String username, String password)
     {
-        super(username, password, accessLevel);
+        super(username, password);
     }
     
+    public void listStudentMenu(FileHandler data)
+    {
+        System.out.println("*****Logged in as " + username + "*****");
+        System.out.println("1. Attempt quiz.");
+        System.out.println("2. View attempt history.");
+        System.out.println("3. Review Attempt.");
+        Scanner sc = new Scanner(System.in);
+        short n;
+        n = sc.nextShort();
+        switch(n)
+        {
+            case 1: 
+            {
+                System.out.println("Enter Quiz ID: ");
+                Quiz newQuiz = data.searchQuizByID(sc.nextInt());
+                if(newQuiz == null)
+                    System.err.println("No Quiz Found.");
+                else
+                {
+                    startAttempt(newQuiz);
+                }
+            }
+            case 2:
+                viewAttemptHistory();
+            case 3:
+            {
+                System.out.println("Enter Quiz ID: ");
+                Quiz newQuiz = data.searchQuizByID(sc.nextInt());
+                if(newQuiz == null)
+                    System.err.println("No Quiz Found.");
+                else
+                {
+                    Attempt toReview = new Attempt (newQuiz);
+                    toReview.reviewAttempt();
+                }
+            }
+        }    
+
+    }
     public void startAttempt(Quiz newQuiz)
     {
         Attempt newAttempt = new Attempt(newQuiz);
@@ -28,7 +67,7 @@ public class Student extends User
     
     public void viewAttemptHistory()
     {
-        for(Attempt i : attemptHistory)
+        attemptHistory.forEach(i ->
         {
             double sum = 0;
             for(Question j : i.getModel())
@@ -37,7 +76,7 @@ public class Student extends User
             }
             System.out.println("Quiz: " + i.quiz.getQuizTitle());
             System.out.println("Your result: " + i.result + "/" + sum);
-        }
+        });
     }
   
     class Attempt
@@ -73,6 +112,7 @@ public class Student extends User
                 if(model[i].checkAnswer((short) answerIndex[i]))
                     result += model[i].getGrade();
             }
+            
         }
         
         public void reviewAttempt()

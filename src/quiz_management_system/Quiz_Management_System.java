@@ -2,6 +2,7 @@ package quiz_management_system;
 
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import static quiz_management_system.FileHandler.readFileInObject;
 import static quiz_management_system.FileHandler.writeObjectToFile;
@@ -16,41 +17,76 @@ public class Quiz_Management_System
     public static void main(String[] args) throws ClassNotFoundException
     {
         FileHandler data = new FileHandler();
-        
-        login(data);
-        //testStructure(userData);
-        
+        Scanner sc = new Scanner(System.in);
+        System.out.println("*****Quiz Management System*****");
+        System.out.println("Enter user:\n1. Student.\n2. Teacher.");
+        int type = sc.nextInt();
+        Student activeS;Teacher activeT;
+        if (type == 1)
+        {
+            activeS = studentLogin(data);
+            while(activeS != null)
+                activeS.listStudentMenu(data);
+        }
+        else if (type == 2)
+        {
+            activeT = teacherLogin(data);
+            while(activeT != null)
+                activeT.listTeacherMenu(data);
+        }
+//        testStudent(data);
+//        testTeacher(data);
+//        testCreateQuiz(data);
         data.save();
     }
-    public static void testCreateQuiz()
+    public static void testCreateQuiz(FileHandler data)
     {
         Quiz q1;
         q1 = new Quiz();
-        Teacher activeTeacher = new Teacher();
-        q1.createQuiz(activeTeacher);
-        System.out.println(q1.toString());
+        Teacher activeTeacher = new Teacher("Ali", "123");
+        activeTeacher.listTeacherMenu(data);
     }
-    public static void testStructure(ArrayList<User> userData)
+    public static void testStudent(FileHandler data)
     {
-        User u1, u2, u3, u4;
-        u1 = new User("Belal", "123");
-        u2 = new User("Habiba", "456");
-        u3 = new User("Mariam", "789");
-        u4 = new User("Lojain", "101112");
+        Student u1, u2, u3, u4;
+        u1 = new Student("Belal", "123");
+        u2 = new Student("Habiba", "456");
+        u3 = new Student("Mariam", "789");
+        u4 = new Student("Lojain", "101112");
         
-        u1.setUserID(userData.size() + 1);
-        userData.add(u1);
+        u1.setUserID(data.studentData.size() + 1);
+        data.studentData.add(u1);
         
-        u2.setUserID(userData.size() + 1);
-        userData.add(u2); 
+        u2.setUserID(data.studentData.size() + 1);
+        data.studentData.add(u2); 
         
-        u3.setUserID(userData.size() + 1);
-        userData.add(u3);
+        u3.setUserID(data.studentData.size() + 1);
+        data.studentData.add(u3);
         
-        u4.setUserID(userData.size() + 1);
-        userData.add(u4);
+        u4.setUserID(data.studentData.size() + 1);
+        data.studentData.add(u4);
     }
-    public static User login(FileHandler data)
+    public static void testTeacher(FileHandler data)
+    {
+        Teacher u1, u2, u3, u4;
+        u1 = new Teacher("Belal", "123");
+        u2 = new Teacher("Habiba", "456");
+        u3 = new Teacher("Mariam", "789");
+        u4 = new Teacher("Lojain", "101112");
+        
+        u1.setUserID(data.teacherData.size() + 1);
+        data.teacherData.add(u1);
+        
+        u2.setUserID(data.teacherData.size() + 1);
+        data.teacherData.add(u2); 
+        
+        u3.setUserID(data.teacherData.size() + 1);
+        data.teacherData.add(u3);
+        
+        u4.setUserID(data.teacherData.size() + 1);
+        data.teacherData.add(u4);
+    }
+    public static Student studentLogin(FileHandler data)
     {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
@@ -59,30 +95,62 @@ public class Quiz_Management_System
         inUsername = sc.next();
         System.out.println("Enter password:");
         inPassword = sc.next();
-        User newUser = new User(inUsername, inPassword);
 
-        int status = 0;
-        status = newUser.checkLogin(data.userData);
-
-        
-        if(status == 0)
-            System.out.println("User not found.");
-        else if(status == 1)
-            System.out.println("Incorrect password.");
-        else if(status == 2)
+        Student newStudent = null;
+        for (Iterator<Student> it = data.studentData.iterator(); it.hasNext();)
         {
-
-            if(newUser.getAccessLevel() == 1)
+            Student i = it.next();
+            if(inUsername.equals(i.getUsername()))
             {
-                Student activeStudent = newUser;
+                if(inPassword.equals(i.getPassword()))
+                {
+                    newStudent = i;
+                    System.out.println("Login Successful");
+                    break;
+                }
+                else
+                {
+                    System.err.println("Incorrect password.");
+                }
             }
-            else if(newUser.getAccessLevel() == 2)
+            else
             {
-                Teacher activeTeacher = newUser;
+                System.err.println("User not found.");
             }
-
-            System.out.println("Login Successful");
         }
-        return newUser;
+        return newStudent;
+    }
+    public static Teacher teacherLogin(FileHandler data)
+    {
+        Scanner sc = new Scanner(System.in);
+        String inUsername, inPassword;
+        
+        System.out.println("Enter username:");
+        inUsername = sc.next();
+        System.out.println("Enter password:");
+        inPassword = sc.next();
+
+        Teacher newTeacher = null;
+        for(Teacher i : data.teacherData)
+        {
+            if(inUsername.equals(i.getUsername()))
+            {
+                if(inPassword.equals(i.getPassword()))
+                {
+                    newTeacher = i;
+                    System.out.println("Login Successful");
+                    break;
+                }
+                else
+                {
+                    System.err.println("Incorrect password.");
+                }
+            }
+            else
+            {
+                System.err.println("User not found.");
+            }
+        }
+        return newTeacher;
     }
 }
