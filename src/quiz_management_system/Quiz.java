@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.Random;
 import java.util.Scanner;
 
-public class Quiz
+public class Quiz implements Serializable
 {
 
     private int quizID;
@@ -16,7 +16,16 @@ public class Quiz
     private Calendar openTime, duration; //still uncertain of the data type.
     private ArrayList<Question> questionBank;
 
+    public Quiz()
+    {
+        questionBank = new ArrayList();
+    }
     /************************************************** Setters & Getters *****/
+    public int getQuizID()
+    {
+        return quizID;
+    }
+
     public String getQuizTitle()
     {
         return quizTitle;
@@ -76,44 +85,33 @@ public class Quiz
         System.out.println("Enter quiz title: ");
         quizTitle = sc.nextLine();
 
-        try
-        {
             System.out.println("Enter number of questions: ");
             nQuestions = sc.nextInt();
 
             System.out.println("Enter number of attempts: ");
             nAttempts = sc.nextInt();
 
-            while (questionBank.size() < nQuestions)
-            {
-                System.out.println("Enter size of question bank: ");
-                questionBank = new ArrayList(sc.nextInt());
-                if (questionBank.size() < nQuestions)
-                {
-                    System.out.println("Error: Number of question bank must be equal or more than number of questions");
-                } else
-                {
-                    continue;
-                }
-            }
-        } catch (Exception e)
-        {
-            System.out.println("Error: Invailed input");
-            return;
-        }
+//                System.out.println("Enter size of question bank: ");
+//                questionBank = new ArrayList(sc.nextInt());
         createQuestionBank();
 
         System.out.println("Quiz created sucessfully.");
     }
     
-    public void createQuestionBank()
+    public void createQuestionBank() 
     {
-        questionBank = new ArrayList(questionBank.size());
+        questionBank = new ArrayList();
+        Scanner sc = new Scanner(System.in);
 
         System.out.println("-----------Question Bank Creator-----------------");
-        for (Question tempQ : questionBank)
+        int i = 1;
+        while(i != 0)
         {
+            Question tempQ = new Question();
             tempQ.createQuestion();
+            questionBank.add(tempQ);
+            System.out.println("stop?");
+            i = sc.nextInt();
         }
         System.out.println("Question Bank created successfully.");
     }
@@ -134,13 +132,18 @@ public class Quiz
         return newModel;
     }
 
-    public class Question
+    public class Question implements Serializable
     {
 
         private int questionID;
         private String prompt;
         private double grade;
         private Choice mcq;
+
+        public Question()
+        {
+            
+        }
 
         public void createQuestion()
         {
@@ -207,7 +210,7 @@ public class Quiz
         }
     }
 
-    private class Choice
+    private class Choice implements Serializable
     {
 
         private int nChoices;

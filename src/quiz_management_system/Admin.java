@@ -10,7 +10,7 @@ import static quiz_management_system.FileHandler.readFileInObject;
  */
 public class Admin
 {
-    public void createUser(ArrayList<User> userData)
+    public void createUser(FileHandler data)
     {        
         System.out.println("-----------Creating new user------------");
         Scanner sc = new Scanner(System.in);
@@ -26,8 +26,8 @@ public class Admin
             System.out.println("Enter username:");
             inUsername = sc.next();
             newUser = new User(inUsername, inPassword);
-            status = newUser.checkLogin(userData);
-            if(status == 1)
+            
+            if(data.studentData.contains(newUser) || data.teacherData.contains(newUser))
             {
                 System.err.println("Username already exists.");
                 continue;
@@ -41,16 +41,16 @@ public class Admin
         aLevel = sc.nextInt();
         if(aLevel == 1)
         {
-            newUser = new Student(inUsername, inPassword, aLevel);
-            newUser.setUserID(1*1000 + userData.size() + 1);
+            //newUser = new Student(inUsername, inPassword, aLevel);
+            newUser.setUserID(1*1000 + data.studentData.size() + 1);
+            data.studentData.add((Student)newUser);
         }
         else if(aLevel == 2)
         {
-            newUser = new Teacher(inUsername, inPassword, aLevel);
-            newUser.setUserID(2*1000 + userData.size() + 1);
+            //newUser = new Teacher(inUsername, inPassword, aLevel);
+            newUser.setUserID(2*1000 + data.teacherData.size() + 1);
+            data.teacherData.add((Teacher)newUser);
         }
-
-        userData.add(newUser);
     }
     public void removeUser()
     {
