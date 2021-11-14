@@ -16,14 +16,11 @@ public class Quiz_Management_System
     public static void main(String[] args) throws ClassNotFoundException
     {
         FileHandler data = new FileHandler();
-        data.userData = (ArrayList <User>) readFileInObject(data.user);
-        data.quizData = (ArrayList <Quiz>) readFileInObject(data.quiz);
         
         login(data);
         //testStructure(userData);
         
-        writeObjectToFile(data.userData, data.user);
-        writeObjectToFile(data.quizData, data.quiz);
+        data.save();
     }
     public static void testCreateQuiz()
     {
@@ -75,13 +72,13 @@ public class Quiz_Management_System
         else if(status == 2)
         {
 
-            if(newUser.getAccessLevel() == 0)
+            if(newUser.getAccessLevel() == 1)
             {
-                Student activeStudent = newUser.convert2Student();
+                Student activeStudent = newUser;
             }
-            else if(newUser.getAccessLevel() == 1)
+            else if(newUser.getAccessLevel() == 2)
             {
-                Teacher activeTeacher = newUser.convert2Teacher();
+                Teacher activeTeacher = newUser;
             }
 
             System.out.println("Login Successful");

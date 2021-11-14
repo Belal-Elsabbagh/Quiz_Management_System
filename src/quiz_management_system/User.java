@@ -103,4 +103,5 @@ public class User implements Serializable
         //check if corresponding password is equal to input, status = 2
         return status;
     }
+
 }
