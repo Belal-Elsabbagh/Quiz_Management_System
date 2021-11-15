@@ -44,7 +44,7 @@ public class Quiz_Management_System {
          */
     }
 
-    public static void testCreateQuiz(FileHandler data) {
+    public static void testCreateQuiz(FileHandler data) throws ParseException {
         Quiz q1;
         q1 = new Quiz();
         Teacher activeTeacher = new Teacher("Ali", "123");
