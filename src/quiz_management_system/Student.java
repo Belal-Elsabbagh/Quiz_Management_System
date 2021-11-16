@@ -1,4 +1,5 @@
 package quiz_management_system;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +19,11 @@ public class Student extends User
     public Student(String username, String password)
     {
         super(username, password);
+    }
+
+    public ArrayList<Attempt> getAttemptHistory()
+    {
+        return attemptHistory;
     }
     
     public int listStudentMenu(FileHandler data)
@@ -104,6 +110,16 @@ public class Student extends User
             model = quiz.generateQuizModel();
             result = 0;
         }  
+
+        public double getResult()
+        {
+            return result;
+        }
+
+        public Quiz getQuiz()
+        {
+            return quiz;
+        }
 
         public Question[] getModel()
         {

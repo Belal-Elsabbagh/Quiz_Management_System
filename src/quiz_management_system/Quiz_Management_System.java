@@ -2,16 +2,8 @@ package quiz_management_system;
 
 import java.text.ParseException;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
-import static quiz_management_system.FileHandler.readFileInObject;
-import static quiz_management_system.FileHandler.writeObjectToFile;
-
 
 public class Quiz_Management_System {
 
@@ -24,7 +16,7 @@ public class Quiz_Management_System {
        LocalTime date = LocalTime.now();
        System.out.println(date);
 
-        /*FileHandler data = new FileHandler();
+        FileHandler data = new FileHandler();
         Scanner sc = new Scanner(System.in);
         System.out.println("*****Quiz Management System*****");
         System.out.println("Enter user:\n1. Student.\n2. Teacher.");
@@ -54,7 +46,7 @@ public class Quiz_Management_System {
         testTeacher(data);
         testCreateQuiz(data);
         data.save();
-         */
+        
     }
 
     public static void testCreateQuiz(FileHandler data) throws ParseException {
