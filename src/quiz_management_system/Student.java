@@ -1,4 +1,5 @@
 package quiz_management_system;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -101,7 +102,8 @@ public class Student extends User
         
         public void timeattempt(){
             Quiz q = new Quiz();
-            if (new Date() == q.quizdate() ){
+             LocalTime time = LocalTime.now();
+            if (new Date() == q.quizdate() && time == q.openTime()){
             doAttempt();
         }
             else
@@ -111,7 +113,8 @@ public class Student extends User
         public void doAttempt()
         {
             Scanner sc = new Scanner(System.in);
-
+            Duration d = new Duration();
+            d.run();
             System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
             Quiz q = new Quiz();
             for(int i = 0; i < quiz.getnQuestions(); i++)

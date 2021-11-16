@@ -30,7 +30,7 @@ public class Duration extends TimerTask {
         //System.out.println(hr + ":" + min + ":" + sec);
         totalSec--;
         if (totalSec < 0){
-            
+        System.out.println("----------Time's up!!----------");
         System.exit(0);
     }
     }
