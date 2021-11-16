@@ -6,7 +6,8 @@ import java.util.Scanner;
 
 public class Teacher extends User
 {
-
+    private static final long serialVersionUID = 1L;
+    
     ArrayList<Quiz> createdQuizzes;
 
     Teacher()
@@ -33,6 +34,8 @@ public class Teacher extends User
         n = sc.nextShort();
         switch(n)
         {
+            case -1:
+                return 0;
             case 1: 
             {
                 listQuizzes();
@@ -45,7 +48,8 @@ public class Teacher extends User
             {
 
             }
-        }    
+        } 
+        return 1;
     }
 
     public void listQuizzes()
@@ -60,7 +64,7 @@ public class Teacher extends User
     {
         Quiz newQuiz = new Quiz();
         newQuiz.createQuiz(this);
-        
+        newQuiz.setQuizID(data.quizData.size()+1);
         data.quizData.add(newQuiz);
         createdQuizzes.add(newQuiz);
     }

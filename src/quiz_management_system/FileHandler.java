@@ -14,7 +14,9 @@ import java.util.ArrayList;
  */
 public class FileHandler
 {
-    public File student = new File("studentData.dat"), teacher = new File("teacherData.dat"), quiz = new File("quizData.dat");
+    public File student = new File("studentData.dat"),
+            teacher = new File("teacherData.dat"), 
+            quiz = new File("quizData.dat");
     public ArrayList<Student> studentData = new ArrayList();
     public ArrayList<Teacher> teacherData = new ArrayList();
     public ArrayList<Quiz> quizData = new ArrayList();

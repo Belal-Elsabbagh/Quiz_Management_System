@@ -12,11 +12,13 @@ import java.util.TimerTask;
 import static quiz_management_system.FileHandler.readFileInObject;
 import static quiz_management_system.FileHandler.writeObjectToFile;
 
+
 public class Quiz_Management_System {
 
     /**
      *
      * @param args
+     * @throws java.lang.ClassNotFoundException
      */
     public static void main(String[] args) throws ClassNotFoundException, ParseException {
        LocalTime date = LocalTime.now();
@@ -32,17 +34,25 @@ public class Quiz_Management_System {
         {
             activeS = studentLogin(data);
             while(activeS != null)
-                activeS.listStudentMenu(data);
+            {
+                if(activeS.listStudentMenu(data) == 0)
+                    break;
+            }
         }
         else if (type == 2)
         {
             activeT = teacherLogin(data);
             while(activeT != null)
-                activeT.listTeacherMenu(data);
+            {
+               if(activeT.listTeacherMenu(data) == 0)
+                   break;
+                       data.save();
+            }
+                
         }
-//        testStudent(data);
-//        testTeacher(data);
-//        testCreateQuiz(data);
+        testStudent(data);
+        testTeacher(data);
+        testCreateQuiz(data);
         data.save();
          */
     }
@@ -94,7 +104,8 @@ public class Quiz_Management_System {
         data.teacherData.add(u4);
     }
 
-    public static Student studentLogin(FileHandler data) {
+    public static Student studentLogin(FileHandler data)
+    {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
 
@@ -139,6 +150,7 @@ public class Quiz_Management_System {
                     break;
                 } else {
                     System.err.println("Incorrect password.");
+                    break;
                 }
             } else {
                 System.err.println("User not found.");

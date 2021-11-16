@@ -10,36 +10,45 @@ import quiz_management_system.Quiz.Question;
  * @author belsa
  */
 public class Student extends User
-{
-    //default serialVersion id
+{  
     private static final long serialVersionUID = 1L;
-    
-    private ArrayList<Attempt> attemptHistory; 
 
+    private ArrayList<Attempt> attemptHistory; 
+    
     public Student(String username, String password)
     {
         super(username, password);
     }
     
-    public void listStudentMenu(FileHandler data)
+    public int listStudentMenu(FileHandler data)
     {
         System.out.println("*****Logged in as " + username + "*****");
         System.out.println("1. Attempt quiz.");
         System.out.println("2. View attempt history.");
         System.out.println("3. Review Attempt.");
+        System.out.println("Enter -1 to quit");
         Scanner sc = new Scanner(System.in);
         short n;
         n = sc.nextShort();
         switch(n)
         {
+            case -1:
+                return 0;
             case 1: 
             {
                 System.out.println("Enter Quiz ID: ");
+                while(!sc.hasNextInt())
+                {
+                    System.err.println("INVALID INPUT.");
+                    sc.next();
+                }
                 Quiz newQuiz = data.searchQuizByID(sc.nextInt());
                 if(newQuiz == null)
                     System.err.println("No Quiz Found.");
                 else
                 {
+                    System.out.println("Starting Quiz: ");
+                    newQuiz.displayQuizProperties();
                     startAttempt(newQuiz);
                 }
             }
@@ -58,7 +67,7 @@ public class Student extends User
                 }
             }
         }    
-
+        return 1;
     }
     public void startAttempt(Quiz newQuiz)
     {
@@ -90,6 +99,7 @@ public class Student extends User
         
         public Attempt(Quiz newQuiz)
         {
+            quiz = newQuiz;
             model = new Question[quiz.getnQuestions()];
             model = quiz.generateQuizModel();
             result = 0;
@@ -116,7 +126,7 @@ public class Student extends User
             Duration d = new Duration();
             d.run();
             System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
-            Quiz q = new Quiz();
+            answerIndex = new int[quiz.getnQuestions()];
             for(int i = 0; i < quiz.getnQuestions(); i++)
             {
                 model[i].displayQuestion();
@@ -230,3 +240,4 @@ public class Student extends User
     }
 }
 }
+

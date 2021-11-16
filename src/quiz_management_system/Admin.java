@@ -52,11 +52,11 @@ public class Admin
             data.teacherData.add((Teacher)newUser);
         }
     }
-    public void removeUser()
+    public void removeUser(FileHandler data)
     {
         
     }
-    public void editUser()
+    public void editUser(FileHandler data)
     {
         
     }

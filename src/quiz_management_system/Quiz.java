@@ -13,7 +13,10 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-public class Quiz implements Serializable {
+public class Quiz implements Serializable
+{
+    private static final long serialVersionUID = 1L;
+
 
     private int quizID;
     private String quizTitle;
@@ -31,6 +34,7 @@ public class Quiz implements Serializable {
     /**
      * ************************************************ Setters & Getters ****
      */
+
     public LocalTime openTime() {
         return openTime;
     }
@@ -85,10 +89,13 @@ public class Quiz implements Serializable {
         this.totalSec = TotalSec;
     }
 
+
     /**
      * ******************************************End of Setters & Getters ****
      */
-    public void displayQuizProperties() {
+
+    public void displayQuizProperties()
+    {
         System.out.println("-----------Displaying quiz properties------------");
         System.out.println("Quiz ID: " + quizID);
         System.out.println("Quiz Title: " + quizTitle);
@@ -109,32 +116,49 @@ public class Quiz implements Serializable {
         System.out.println("-----------Creating a new quiz-------------------");
         System.out.println("Enter quiz title: ");
         quizTitle = sc.nextLine();
-
         System.out.println("Enter number of questions: ");
+        while (!sc.hasNextInt())
+        {
+            System.err.println("INVALID INPUT.");
+            sc.next();
+        }
         nQuestions = sc.nextInt();
-
         System.out.println("Enter number of attempts: ");
+        while (!sc.hasNextInt())
+        {
+            System.err.println("INVALID INPUT.");
+            sc.next();
+        }
         nAttempts = sc.nextInt();
+//       System.out.println("Enter size of question bank: ");
+//      questionBank = new ArrayList(sc.nextInt());
 
-//                System.out.println("Enter size of question bank: ");
-//                questionBank = new ArrayList(sc.nextInt());
         createQuestionBank();
         quiztime();
 
         System.out.println("Quiz created sucessfully.");
     }
 
-    public void createQuestionBank() {
+    public void createQuestionBank()
+    {
         questionBank = new ArrayList();
         Scanner sc = new Scanner(System.in);
 
         System.out.println("-----------Question Bank Creator-----------------");
         int i = 1;
-        while (i != 0) {
+
+        while (i != 0)
+        {
+
             Question tempQ = new Question();
             tempQ.createQuestion();
             questionBank.add(tempQ);
             System.out.println("stop?");
+            while (!sc.hasNextInt())
+            {
+                System.err.println("INVALID INPUT.");
+                sc.next();
+            }
             i = sc.nextInt();
         }
         System.out.println("Question Bank created successfully.");
@@ -154,14 +178,16 @@ public class Quiz implements Serializable {
         return newModel;
     }
 
-    public class Question implements Serializable {
+    public class Question implements Serializable 
+    {
 
         private int questionID;
         private String prompt;
         private double grade;
         private Choice mcq;
 
-        public Question() {
+        public Question()
+        {
 
         }
 
@@ -171,14 +197,14 @@ public class Quiz implements Serializable {
             System.out.println("Enter prompt: ");
             prompt = sc.next();
 
-            try {
-                sc = new Scanner(System.in);
-                System.out.println("Enter grade: ");
-                grade = sc.nextDouble();
-            } catch (Exception e) {
-                System.out.println("Error: Invailed input");
-                return;
+            sc = new Scanner(System.in);
+            System.out.println("Enter grade: ");
+            while (!sc.hasNextDouble())
+            {
+                System.err.println("INVALID INPUT.");
+                sc.next();
             }
+            grade = sc.nextDouble();
 
             mcq = new Choice();
             mcq.createMCQ();
@@ -210,7 +236,8 @@ public class Quiz implements Serializable {
             }
         }
 
-        public boolean checkAnswer(short inAnswer) {
+        public boolean checkAnswer(short inAnswer)
+        {
             boolean result = false;
             if (inAnswer == mcq.getAnswerKeyIndex()) {
                 result = true;
@@ -243,14 +270,15 @@ public class Quiz implements Serializable {
             Scanner sc = new Scanner(System.in);
 
             System.out.println("-----------Creating MCQ------------------");
-            try {
-                System.out.println("Enter number of choices: ");
-                nChoices = sc.nextShort();
 
-            } catch (Exception e) {
-                System.out.println("Error: Invailed input");
-                return;
+            System.out.println("Enter number of choices: ");
+            while (!sc.hasNextShort())
+            {
+                System.err.println("INVALID INPUT.");
+                sc.next();
             }
+            nChoices = sc.nextShort();
+
             choices = new String[nChoices];
 
             for (int i = 0; i < nChoices; i++) {
@@ -259,17 +287,19 @@ public class Quiz implements Serializable {
             }
 
             answerKeyIndex = nChoices;
-            try {
-                while (answerKeyIndex > nChoices - 1) {
-                    System.out.println("Enter the index of right answer (count starts at 0): ");
-                    answerKeyIndex = sc.nextShort();
-                    if (answerKeyIndex > nChoices - 1) {
-                        System.out.println("Error: The number of choice doesn't exist");
-                    }
+            while (answerKeyIndex > nChoices - 1)
+            {
+                System.out.println("Enter the index of right answer (count starts at 0): ");
+                while (!sc.hasNextShort())
+                {
+                    System.err.println("INVALID INPUT.");
+                    sc.next();
                 }
-            } catch (Exception e) {
-                System.out.println("Error: Invailed input");
-                return;
+                answerKeyIndex = sc.nextShort();
+                if (answerKeyIndex > nChoices - 1)
+                {
+                    System.out.println("Error: The number of choice doesn't exist");
+                }
             }
             System.out.println("Choices added successfully.");
         }
@@ -282,7 +312,7 @@ public class Quiz implements Serializable {
             return result;
         }
     }
-
+    
     public void quiztime() throws ParseException {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter Date (day-month-year):");

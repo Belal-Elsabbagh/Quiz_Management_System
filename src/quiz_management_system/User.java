@@ -12,6 +12,7 @@ public class User implements Serializable
     protected String username;
     private String password;
     private int accessLevel;
+    
     public User()
     {
         accessLevel = -1;
