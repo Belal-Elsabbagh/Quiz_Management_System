@@ -1,5 +1,6 @@
 package quiz_management_system;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 import quiz_management_system.Quiz.Question;
 
@@ -98,13 +99,21 @@ public class Student extends User
             return model;
         }
         
+        public void timeattempt(){
+            Quiz q = new Quiz();
+            if (new Date() == q.quizdate() ){
+            doAttempt();
+        }
+            else
+                System.out.println("----------------Quiz is not open yet----------------");
+        }
+        
         public void doAttempt()
         {
             Scanner sc = new Scanner(System.in);
 
             System.out.println("Starting Quiz...Enter answer index after the prompt appears.");
             Quiz q = new Quiz();
-        System.out.println("Quiz duration:"+ q.gettotalSec());
             for(int i = 0; i < quiz.getnQuestions(); i++)
             {
                 model[i].displayQuestion();

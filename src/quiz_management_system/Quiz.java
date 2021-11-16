@@ -19,7 +19,8 @@ public class Quiz implements Serializable {
     private String quizTitle;
     private Teacher creator;
     private int nAttempts, nQuestions;
-    private Calendar openTime, duration; //still uncertain of the data type.
+    public Date quizdate;
+    public LocalTime openTime;
     private ArrayList<Question> questionBank;
     private long totalSec;
 
@@ -30,6 +31,12 @@ public class Quiz implements Serializable {
     /**
      * ************************************************ Setters & Getters ****
      */
+    public LocalTime openTime() {
+        return openTime;
+    }
+    public Date quizdate() {
+        return quizdate;
+    }
     
     public int getQuizID() {
         return quizID;
@@ -286,6 +293,8 @@ public class Quiz implements Serializable {
         try {
             Date date = datein.parse(takeDate);
             System.out.println("The quiz will be on: " + new SimpleDateFormat("dd-MM-yyyy").format(date));
+            quizdate = datein.parse(takeDate);
+            
         } catch (ParseException e) {
             System.out.println("Invailed input");
         }
@@ -293,8 +302,9 @@ public class Quiz implements Serializable {
          System.out.println("as in the format 00:00:00");
         String time = sc.next();
          try {
-        LocalTime lt = LocalTime.parse(time);
-        System.out.println("The quiz time: "+lt);
+        LocalTime Time = LocalTime.parse(time);
+        System.out.println("The quiz time: "+ Time);
+        openTime = LocalTime.parse(time);
     
          } catch (Exception e) {
             System.out.println("Invailed input");

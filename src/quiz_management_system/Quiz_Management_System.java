@@ -1,7 +1,10 @@
 package quiz_management_system;
 
 import java.text.ParseException;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Timer;
@@ -16,8 +19,8 @@ public class Quiz_Management_System {
      * @param args
      */
     public static void main(String[] args) throws ClassNotFoundException, ParseException {
-        Quiz q = new Quiz();
-        q.quiztime();
+       LocalTime date = LocalTime.now();
+       System.out.println(date);
 
         /*FileHandler data = new FileHandler();
         Scanner sc = new Scanner(System.in);

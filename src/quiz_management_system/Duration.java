@@ -22,7 +22,7 @@ public class Duration extends TimerTask {
     public void convertTime() {
         Quiz q = new Quiz();
         totalSec =q.gettotalSec();
-        //System.out.println(new Date());
+        
         min = TimeUnit.SECONDS.toMinutes(totalSec);
         sec = totalSec - (min * 60);
         hr = TimeUnit.MINUTES.toHours(min);
@@ -30,6 +30,7 @@ public class Duration extends TimerTask {
         //System.out.println(hr + ":" + min + ":" + sec);
         totalSec--;
         if (totalSec < 0){
+            
         System.exit(0);
     }
     }
