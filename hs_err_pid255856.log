@@ -1,0 +1,48 @@
+#
+# There is insufficient memory for the Java Runtime Environment to continue.
+# Native memory allocation (malloc) failed to allocate 411480 bytes for AllocateHeap
+# Possible reasons:
+#   The system is out of physical RAM or swap space
+#   The process is running with CompressedOops enabled, and the Java Heap may be blocking the growth of the native heap
+# Possible solutions:
+#   Reduce memory load on the system
+#   Increase physical memory or swap space
+#   Check if swap backing store is full
+#   Decrease Java heap size (-Xmx/-Xms)
+#   Decrease number of Java threads
+#   Decrease Java thread stack sizes (-Xss)
+#   Set larger code cache with -XX:ReservedCodeCacheSize=
+#   JVM is running with Zero Based Compressed Oops mode in which the Java heap is
+#     placed in the first 32GB address space. The Java Heap base address is the
+#     maximum limit for the native heap growth. Please use -XX:HeapBaseMinAddress
+#     to set the Java Heap base and to place the Java Heap above 32GB virtual address.
+# This output file may be truncated or incomplete.
+#
+#  Out of Memory Error (./src/hotspot/share/memory/allocation.cpp:46), pid=255856, tid=311492
+#
+# JRE version: OpenJDK Runtime Environment (11.0.8) (build 11.0.8-internal+0-adhoc..jdk11u)
+# Java VM: OpenJDK 64-Bit Server VM (11.0.8-internal+0-adhoc..jdk11u, mixed mode, tiered, compressed oops, g1 gc, windows-amd64)
+# No core dump will be written. Minidumps are not enabled by default on client versions of Windows
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Dfile.encoding=UTF-8 --module-path=C:\Users\marma\OneDrive\Documents\GitHub\Quiz_Management_System\build\classes quiz_management_system.Quiz_Management_System
+
+Host: Intel(R) Core(TM) i7-10510U CPU @ 1.80GHz, 8 cores, 15G,  Windows 10 , 64 bit Build 19041 (10.0.19041.1202)
+Time: Mon Nov 15 17:54:09 2021 Egypt Standard Time elapsed time: 303 seconds (0d 0h 5m 3s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00000230da921000):  JavaThread "Timer-11514" [_thread_in_vm, id=311492, stack(0x00000043c4c00000,0x00000043c4d00000)]
+
+Stack: [0x00000043c4c00000,0x00000043c4d00000]
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [jvm.dll+0x5dfa5a]
+V  [jvm.dll+0x7175ce]
+V  [jvm.dll+0x718c9f]
+V  [jvm.dll+0x719363]
+V  [jvm.dll+0x240e48]
+V  [jvm.dll+0xb0c14]
+V  [jvm.dll+0x6e01f4]
+V  [jvm.dll+0x6da9cb]

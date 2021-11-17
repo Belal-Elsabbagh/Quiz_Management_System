@@ -1,24 +1,54 @@
 package quiz_management_system;
 
-import java.util.Calendar;
+import java.io.Serializable;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.time.LocalTime;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
-public class Quiz
+public class Quiz implements Serializable
 {
 
-    private static int count = 0;
+    private static final long serialVersionUID = 1L;
+
     private int quizID;
     private String quizTitle;
     private Teacher creator;
     private int nAttempts, nQuestions;
-//    private Calendar openTime, duration; //still uncertain of the data type.
-    private Question[] questionBank;
-    private int qBankSize;
+    public Date quizdate;
+    public LocalTime openTime;
+    private ArrayList<Question> questionBank;
+    private long totalSec;
 
     public Quiz()
     {
-        this.quizID = ++count;
+        questionBank = new ArrayList();
+    }
+
+    /**
+     * ************************************************ Setters & Getters ****
+     */
+    public LocalTime openTime()
+    {
+        return openTime;
+    }
+
+    public Date quizdate()
+    {
+        return quizdate;
+    }
+
+    public int getQuizID()
+    {
+        return quizID;
+    }
+
+    public void setQuizID(int quizID)
+    {
+        this.quizID = quizID;
     }
 
     public String getQuizTitle()
@@ -51,6 +81,34 @@ public class Quiz
         this.nQuestions = nQuestions;
     }
 
+    public Teacher getCreator()
+    {
+        return creator;
+    }
+
+    public void setCreator(Teacher creator)
+    {
+        this.creator = creator;
+    }
+
+    public long totalSec()
+    {
+        return quizID;
+    }
+
+    public long gettotalSec()
+    {
+        return totalSec;
+    }
+
+    public void settotalSec(long TotalSec)
+    {
+        this.totalSec = TotalSec;
+    }
+
+    /**
+     * ******************************************End of Setters & Getters ****
+     */
     public void displayQuizProperties()
     {
         System.out.println("-----------Displaying quiz properties------------");
@@ -58,43 +116,73 @@ public class Quiz
         System.out.println("Quiz Title: " + quizTitle);
         System.out.println("Number of questions: " + nQuestions);
         System.out.println("Number of attempts: " + nAttempts);
+        System.out.println("Size of question bank: " + questionBank.size());
     }
 
-    public void createQuiz(Teacher author)
+    @Override
+    public String toString()
+    {
+        return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nAttempts=" + nAttempts + ", nQuestions=" + nQuestions + ", questionBank.size()=" + questionBank.size() + '}';
+    }
+
+    public void createQuiz(Teacher author) throws ParseException
     {
         Scanner sc = new Scanner(System.in);
         creator = author;
-        
+
         System.out.println("-----------Creating a new quiz-------------------");
         System.out.println("Enter quiz title: ");
         quizTitle = sc.nextLine();
         System.out.println("Enter number of questions: ");
+        while (!sc.hasNextInt())
+        {
+            System.err.println("INVALID INPUT.");
+            sc.next();
+        }
         nQuestions = sc.nextInt();
         System.out.println("Enter number of attempts: ");
+        while (!sc.hasNextInt())
+        {
+            System.err.println("INVALID INPUT.");
+            sc.next();
+        }
         nAttempts = sc.nextInt();
-        System.out.println("Enter size of question bank: ");
-        qBankSize = sc.nextInt();
+
+        //quizTime();
+//       System.out.println("Enter size of question bank: ");
+//      questionBank = new ArrayList(sc.nextInt());
 
         createQuestionBank();
-        
+        quiztime();
+
         System.out.println("Quiz created sucessfully.");
     }
 
     public void createQuestionBank()
     {
-        questionBank = new Question[qBankSize];
-        Question tempQ = new Question();
-        
+        questionBank = new ArrayList();
+        Scanner sc = new Scanner(System.in);
+
         System.out.println("-----------Question Bank Creator-----------------");
-        for (int i = 0; i < qBankSize; i++)
+        int i = 1;
+
+        while (i != 0)
         {
+
+            Question tempQ = new Question();
             tempQ.createQuestion();
-            questionBank[i] = tempQ;
+            questionBank.add(tempQ);
+            System.out.println("stop?");
+            while (!sc.hasNextInt())
+            {
+                System.err.println("INVALID INPUT.");
+                sc.next();
+            }
+            i = sc.nextInt();
         }
-        
         System.out.println("Question Bank created successfully.");
     }
-    
+
     public Question[] generateQuizModel()
     {
         Question[] newModel;
@@ -104,18 +192,72 @@ public class Quiz
         int randIndex;
         for (int i = 0; i < nQuestions; i++)
         {
-            randIndex = generator.nextInt(questionBank.length);
-            newModel[i] = questionBank[randIndex];
+            randIndex = generator.nextInt(questionBank.size());
+
+            newModel[i] = questionBank.get(randIndex);
         }
         return newModel;
     }
-    
-    public class Question
+
+    public void quiztime() throws ParseException
     {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter Date (day-month-year):");
+        SimpleDateFormat datein = new SimpleDateFormat("dd-MM-yyyy");
+
+        String takeDate = sc.nextLine();
+
+        try
+        {
+            Date date = datein.parse(takeDate);
+            System.out.println("The quiz will be on: " + new SimpleDateFormat("dd-MM-yyyy").format(date));
+            quizdate = datein.parse(takeDate);
+
+        }
+        catch (ParseException e)
+        {
+            System.out.println("Invailed input");
+        }
+        System.out.println("Enter quiz time (hr:min:sec):");
+        System.out.println("as in the format 00:00:00");
+        String time = sc.next();
+        try
+        {
+            LocalTime Time = LocalTime.parse(time);
+            System.out.println("The quiz time: " + Time);
+            openTime = LocalTime.parse(time);
+
+        }
+        catch (Exception e)
+        {
+            System.out.println("Invailed input");
+        }
+        System.out.println("Enter quiz duration:");
+        System.out.println("Hour:");
+        int hour;
+        hour = sc.nextInt();
+        System.out.println("Min:");
+        int min;
+        min = sc.nextInt();
+        System.out.println("Sec:");
+        int sec;
+        sec = sc.nextInt();
+        System.out.println("The quiz duration will be:" + hour + ":" + min + ":" + sec);
+        totalSec = (hour * 60 * 60) + (min * 60) + sec;
+    }
+
+    public class Question implements Serializable
+    {
+
         private int questionID;
         private String prompt;
         private double grade;
         private Choice mcq;
+
+        public Question()
+        {
+
+        }
 
         public void createQuestion()
         {
@@ -123,59 +265,134 @@ public class Quiz
             System.out.println("-----------Creating a new question-----------");
             System.out.println("Enter prompt: ");
             prompt = sc.next();
-            
+
             sc = new Scanner(System.in);
             System.out.println("Enter grade: ");
+            while (!sc.hasNextDouble())
+            {
+                System.err.println("INVALID INPUT.");
+                sc.next();
+            }
             grade = sc.nextDouble();
-            
+
             mcq = new Choice();
             mcq.createMCQ();
-            
+
             System.out.println("Question added successfully.");
         }
-                
-        private class Choice
+
+        public int getQuestionID()
         {
-            private int nChoices;
-            private String[] choices;
-            private short answerKeyIndex;
+            return questionID;
+        }
 
-            private Choice()
+        public String getPrompt()
+        {
+            return prompt;
+        }
+
+        public double getGrade()
+        {
+            return grade;
+        }
+
+        public Choice getMcq()
+        {
+            return mcq;
+        }
+
+        public void displayQuestion()
+        {
+            System.out.println(prompt);
+            for (int i = 0; i < mcq.nChoices; i++)
             {
-                this.nChoices = 0;
-                choices = new String[2];
+                System.out.println((i + 1) + ". " + mcq.choices[i]);
+            }
+        }
+
+        public boolean checkAnswer(short inAnswer)
+        {
+            boolean result = false;
+            if (inAnswer == mcq.getAnswerKeyIndex())
+            {
+                result = true;
+            }
+            return result;
+        }
+    }
+
+    private class Choice implements Serializable
+    {
+
+        private int nChoices;
+        private String[] choices;
+        private int answerKeyIndex;
+
+        private Choice()
+        {
+            this.nChoices = 0;
+            choices = new String[2];
+        }
+
+        public int getnChoices()
+        {
+            return nChoices;
+        }
+
+        public int getAnswerKeyIndex()
+        {
+            return answerKeyIndex;
+        }
+
+        public void createMCQ()
+        {
+
+            Scanner sc = new Scanner(System.in);
+
+            System.out.println("-----------Creating MCQ------------------");
+
+            System.out.println("Enter number of choices: ");
+            while (!sc.hasNextShort())
+            {
+                System.err.println("INVALID INPUT.");
+                sc.next();
+            }
+            nChoices = sc.nextShort();
+
+            choices = new String[nChoices];
+
+            for (int i = 0; i < nChoices; i++)
+            {
+                System.out.println("Enter choice " + i + ": ");
+                choices[i] = sc.next();
             }
 
-            public void createMCQ()
+            answerKeyIndex = nChoices;
+            while (answerKeyIndex > nChoices - 1)
             {
-                Scanner sc = new Scanner(System.in);
-                
-                System.out.println("-----------Creating MCQ------------------");
-                System.out.println("Enter number of choices: ");
-                nChoices = sc.nextShort();
-                
-                choices = new String[nChoices];
-                
-                for (int i = 0; i < nChoices; i++)
-                {
-                    System.out.println("Enter choice " + i + ": ");
-                    choices[i] = sc.next();
-                }
                 System.out.println("Enter the index of right answer (count starts at 0): ");
-                answerKeyIndex = sc.nextShort();
-                
-                System.out.println("Choices added successfully.");
-            }
-
-            public boolean checkAnswer(short inAnswer)
-            {
-                boolean result = false;
-                if (inAnswer == answerKeyIndex)
+                while (!sc.hasNextShort())
                 {
-                    result = true;
+                    System.err.println("INVALID INPUT.");
+                    sc.next();
                 }
-                return result;
+                answerKeyIndex = sc.nextShort();
+                if (answerKeyIndex > nChoices - 1)
+                {
+                    System.out.println("Error: The number of choice doesn't exist");
+                }
             }
+            System.out.println("Choices added successfully.");
+        }
+
+        public boolean checkAnswer(int inAnswer)
+        {
+            boolean result = false;
+            if (inAnswer == answerKeyIndex)
+            {
+                result = true;
+            }
+            return result;
         }
     }
 }
