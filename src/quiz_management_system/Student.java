@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
 import quiz_management_system.Quiz.Question;
-
 /**
  *
  * @author belsa
@@ -26,7 +25,7 @@ public class Student extends User
         return attemptHistory;
     }
     
-    public int listStudentMenu(FileHandler data)
+    public int listStudentMenu(DataHandler data)
     {
         System.out.println("*****Logged in as " + username + "*****");
         System.out.println("1. Attempt quiz.");
@@ -48,7 +47,8 @@ public class Student extends User
                     System.err.println("INVALID INPUT.");
                     sc.next();
                 }
-                Quiz newQuiz = data.searchQuizByID(sc.nextInt());
+                Quiz newQuiz = null;
+                newQuiz = newQuiz.searchByID(sc.nextInt(), data);
                 if(newQuiz == null)
                     System.err.println("No Quiz Found.");
                 else
@@ -63,7 +63,13 @@ public class Student extends User
             case 3:
             {
                 System.out.println("Enter Quiz ID: ");
-                Quiz newQuiz = data.searchQuizByID(sc.nextInt());
+                while(!sc.hasNextInt())
+                {
+                    System.err.println("INVALID INPUT.");
+                    sc.next();
+                }
+                Quiz newQuiz = null;
+                newQuiz = newQuiz.searchByID(sc.nextInt(), data);
                 if(newQuiz == null)
                     System.err.println("No Quiz Found.");
                 else
@@ -75,6 +81,20 @@ public class Student extends User
         }    
         return 1;
     }
+    
+    public Student searchByID(int uID, DataHandler data)
+    {
+        Student x = null;
+        for(Student i : data.studentData)
+        {
+            if(i.getUserID() == uID)
+            {
+                x = i;
+            }
+        }
+        return x;
+    }
+    
     public void startAttempt(Quiz newQuiz)
     {
         Attempt newAttempt = new Attempt(newQuiz);
@@ -95,7 +115,35 @@ public class Student extends User
             System.out.println("Your result: " + i.result + "/" + sum);
         });
     }
-  
+    
+    public static Student studentLogin(DataHandler data)
+    {
+        Scanner sc = new Scanner(System.in);
+        String inUsername, inPassword;
+
+        System.out.println("Enter username:");
+        inUsername = sc.next();
+        System.out.println("Enter password:");
+        inPassword = sc.next();
+
+        Student newStudent = null;
+        for (Student i : data.studentData)
+        {
+            if (inUsername.equals(i.getUsername())) {
+                if (inPassword.equals(i.getPassword())) {
+                    newStudent = i;
+                    System.out.println("Login Successful");
+                    break;
+                } else {
+                    System.err.println("Incorrect password.");
+                }
+            } else {
+                System.err.println("User not found.");
+            }
+        }
+        return newStudent;
+    }
+      
     class Attempt
     {
         private Quiz quiz;
@@ -166,6 +214,7 @@ public class Student extends User
             }   
         }
     }
+    
     public class Menu {
     
     public boolean exit;

@@ -43,7 +43,7 @@ public class User implements Serializable
         this.password = og.password;
         this.accessLevel = og.accessLevel;
     }
-    
+        
     public void setUserID(int userID)
     {
         this.userID = userID;

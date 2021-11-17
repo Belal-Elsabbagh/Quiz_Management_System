@@ -1,16 +1,14 @@
 package quiz_management_system;
 
-import java.util.ArrayList;
 import java.util.Scanner;
-import static quiz_management_system.FileHandler.readFileInObject;
 
 /**
  *
  * @author belsa
  */
-public class Admin
+public class Admin extends User
 {
-    public void createUser(FileHandler data)
+    public void createUser(DataHandler data)
     {        
         System.out.println("-----------Creating new user------------");
         Scanner sc = new Scanner(System.in);
@@ -52,11 +50,11 @@ public class Admin
             data.teacherData.add((Teacher)newUser);
         }
     }
-    public void removeUser(FileHandler data)
+    public void removeUser(DataHandler data)
     {
         
     }
-    public void editUser(FileHandler data)
+    public void editUser(DataHandler data)
     {
         
     }

@@ -12,19 +12,22 @@ import java.util.ArrayList;
  *
  * @author belsa
  */
-public class FileHandler
+public class DataHandler
 {
     public File student = new File("studentData.dat"),
-            teacher = new File("teacherData.dat"), 
-            quiz = new File("quizData.dat");
+                teacher = new File("teacherData.dat"), 
+                quiz = new File("quizData.dat"),
+                admin = new File("adminData.dat");
     public ArrayList<Student> studentData = new ArrayList();
     public ArrayList<Teacher> teacherData = new ArrayList();
+    public ArrayList<Admin> adminData = new ArrayList();
     public ArrayList<Quiz> quizData = new ArrayList();
 
-    public FileHandler()
+    public DataHandler()
     {
         studentData = (ArrayList <Student>) readFileInObject(student);
         teacherData = (ArrayList <Teacher>) readFileInObject(teacher);
+        adminData = (ArrayList <Admin>) readFileInObject(admin);
         quizData = (ArrayList <Quiz>) readFileInObject(quiz);
     }
     
@@ -33,6 +36,7 @@ public class FileHandler
         writeObjectToFile(studentData, student);
         writeObjectToFile(teacherData, teacher);
         writeObjectToFile(quizData, quiz);
+        writeObjectToFile(adminData, admin);
     }
     
     public static void writeObjectToFile(Object out, File filepath) 
@@ -70,18 +74,5 @@ public class FileHandler
             ex.printStackTrace();
             return null;
         }
-    }
-    
-    public Quiz searchQuizByID(int qID)
-    {
-        Quiz x = null;
-        for(Quiz i : quizData)
-        {
-            if(i.getQuizID() == qID)
-            {
-                x = i;
-            }
-        }
-        return x;
     }
 }

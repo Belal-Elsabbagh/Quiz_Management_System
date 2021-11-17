@@ -28,9 +28,6 @@ public class Quiz implements Serializable
         questionBank = new ArrayList();
     }
 
-    /**
-     * ************************************************ Setters & Getters ****
-     */
     public LocalTime openTime()
     {
         return openTime;
@@ -106,9 +103,19 @@ public class Quiz implements Serializable
         this.totalSec = TotalSec;
     }
 
-    /**
-     * ******************************************End of Setters & Getters ****
-     */
+    public Quiz searchByID(int qID, DataHandler data)
+    {
+        Quiz x = null;
+        for(Quiz i : data.quizData)
+        {
+            if(i.getQuizID() == qID)
+            {
+                x = i;
+            }
+        }
+        return x;
+    }
+    
     public void displayQuizProperties()
     {
         System.out.println("-----------Displaying quiz properties------------");

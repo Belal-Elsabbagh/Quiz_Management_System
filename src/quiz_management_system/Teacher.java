@@ -7,6 +7,7 @@ import quiz_management_system.Student.Attempt;
 
 public class Teacher extends User
 {
+
     private static final long serialVersionUID = 1L;
 
     ArrayList<Quiz> createdQuizzes;
@@ -23,7 +24,7 @@ public class Teacher extends User
         createdQuizzes = new ArrayList();
     }
 
-    public int listTeacherMenu(FileHandler data) throws ParseException
+    public int listTeacherMenu(DataHandler data) throws ParseException
     {
         System.out.println("----------Teacher Operations Main Menu-----------");
         System.out.println("1. List my quizzes.");
@@ -32,10 +33,11 @@ public class Teacher extends User
         Scanner sc = new Scanner(System.in);
         short n;
         n = sc.nextShort();
-        switch(n)
+        switch (n)
         {
-            case -1: return 0;
-            case 1: 
+            case -1:
+                return 0;
+            case 1:
             {
                 listQuizzes();
                 break;
@@ -50,10 +52,23 @@ public class Teacher extends User
                 reviewGrades(data);
                 break;
             }
-        }    
+        }
         return 1;
     }
-
+    
+    public Teacher searchByID(int uID, DataHandler data)
+    {
+        Teacher x = null;
+        for(Teacher i : data.teacherData)
+        {
+            if(i.getUserID() == uID)
+            {
+                x = i;
+            }
+        }
+        return x;
+    }
+    
     public void listQuizzes()
     {
         for (Quiz i : createdQuizzes)
@@ -62,50 +77,74 @@ public class Teacher extends User
         }
     }
 
-    public void createNewQuiz(FileHandler data) throws ParseException
+    public void createNewQuiz(DataHandler data) throws ParseException
     {
         Quiz newQuiz = new Quiz();
         newQuiz.createQuiz(this);
-        
+
         data.quizData.add(newQuiz);
         createdQuizzes.add(newQuiz);
     }
-    
-        public void reviewGrades(FileHandler f)
+
+    public void reviewGrades(DataHandler data)
     {
         System.out.println("please enter quiz ID : ");
-        Scanner inputID = new Scanner(System.in);
-        int inID = inputID.nextInt();
+        Scanner sc = new Scanner(System.in);
+        int inID = sc.nextInt();
         System.out.println("Enter Quiz ID: ");
-        Quiz Q = f.searchQuizByID(inID);
-        if(Q == null)
+        Quiz newQuiz = null;
+        newQuiz = newQuiz.searchByID(sc.nextInt(), data);
+        if (newQuiz == null)
+        {
             System.err.println("No Quiz Found.");
+        }
         else
         {
-            for (Student i : f.studentData)
+            for (Student i : data.studentData)
             {
-                for(Attempt j :i.getAttemptHistory())
+                for (Attempt j : i.getAttemptHistory())
                 {
-                    if(j.getQuiz().equals(Q))
+                    if (j.getQuiz().equals(newQuiz))
+                    {
                         System.out.println(i.getUsername() + ": " + j.getResult());
-                        
+                    }
                 }
             }
-//            if ((Q.getQuizID())==inID)
-//            {
-//                System.out.println("Quiz: " + Q.getQuizTitle());
-//                for (int i = 0 ; i < a.attemptHistory.size() ; i++ )
-//                {
-//                   System.out.println("Student :" + a.attemptHistory.forEach(i -> 
-//                   {
-//                       System.out.println();
-//                   }) );
-//                 }  
-//            }
         }
-//        for(int i = 0; i < noOfStu ; i++){
-//            System.out.println("Student" + "Grade" + gradestu[i]);
-//        }
-        
+    }
+
+    public static Teacher teacherLogin(DataHandler data)
+    {
+        Scanner sc = new Scanner(System.in);
+        String inUsername, inPassword;
+
+        System.out.println("Enter username:");
+        inUsername = sc.next();
+        System.out.println("Enter password:");
+        inPassword = sc.next();
+
+        Teacher newTeacher = null;
+        for (Teacher i : data.teacherData)
+        {
+            if (inUsername.equals(i.getUsername()))
+            {
+                if (inPassword.equals(i.getPassword()))
+                {
+                    newTeacher = i;
+                    System.out.println("Login Successful");
+                    break;
+                }
+                else
+                {
+                    System.err.println("Incorrect password.");
+                    break;
+                }
+            }
+            else
+            {
+                System.err.println("User not found.");
+            }
+        }
+        return newTeacher;
     }
 }
