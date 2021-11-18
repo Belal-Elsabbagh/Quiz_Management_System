@@ -3,92 +3,54 @@ package quiz_management_system;
 import java.text.ParseException;
 import java.time.LocalTime;
 import java.util.Scanner;
+
 import static quiz_management_system.Student.studentLogin;
 import static quiz_management_system.Teacher.teacherLogin;
+import static quiz_management_system.Admin.adminLogin;
 
-public class Quiz_Management_System {
-
-    /**
-     *
-     * @param args
-     * @throws java.lang.ClassNotFoundException
-     * @throws java.text.ParseException
-     */
-    public static void main(String[] args) throws ClassNotFoundException, ParseException 
+public class Quiz_Management_System
+{
+    public static void main(String[] args) throws ParseException
     {
-       LocalTime date = LocalTime.now();
-       System.out.println(date);
-
         DataHandler data = new DataHandler();
-        Scanner sc = new Scanner(System.in);
+        
+        consoleLogin();
+
+        data.save();
+    }
+
+    public static void consoleLogin() throws ParseException
+    {
+        DataHandler data = new DataHandler();
+
+        LocalTime date = LocalTime.now();
+        System.out.println(date);
         System.out.println("*****Quiz Management System*****");
-        System.out.println("Enter user:\n1. Student.\n2. Teacher.");
+        System.out.println("Enter user:\n1. Student.\n2. Teacher.\n3. Admin.");
+        Scanner sc = new Scanner(System.in);
         int type = sc.nextInt();
-        Student activeS;Teacher activeT;
+
         if (type == 1)
         {
-            activeS = studentLogin(data);
-            while(activeS != null)
-                if(activeS.listStudentMenu(data) == 0)
-                    break;
+            Student activeS = studentLogin(data);
+            if (activeS == null)
+                System.err.println("Login unsuccessful.");
+            else
+                activeS.listStudentMenu(data);
         }
         else if (type == 2)
         {
-            activeT = teacherLogin(data);
-            while(activeT != null)
-               if(activeT.listTeacherMenu(data) == 0)
-                   break;
+            Teacher activeT = teacherLogin(data);
+            if (activeT == null)
+                System.err.println("Login unsuccessful.");
+            else
+                activeT.listTeacherMenu(data);
         }
-        data.save();  
-    }
-
-    /********Test Functions (EXPERIMENTAL********/
-    /**
-     * @param data)*
-     * @throws java.text.ParseException
-     *******/
-    public static void testCreateQuiz(DataHandler data) throws ParseException {
-        Quiz q1;
-        q1 = new Quiz();
-        Teacher activeTeacher = new Teacher("Ali", "123");
-        activeTeacher.listTeacherMenu(data);
-    }
-    public static void testStudent(DataHandler data) {
-        Student u1, u2, u3, u4;
-        u1 = new Student("Belal", "123");
-        u2 = new Student("Habiba", "456");
-        u3 = new Student("Mariam", "789");
-        u4 = new Student("Lojain", "101112");
-
-        u1.setUserID(data.studentData.size() + 1);
-        data.studentData.add(u1);
-
-        u2.setUserID(data.studentData.size() + 1);
-        data.studentData.add(u2);
-
-        u3.setUserID(data.studentData.size() + 1);
-        data.studentData.add(u3);
-
-        u4.setUserID(data.studentData.size() + 1);
-        data.studentData.add(u4);
-    }
-    public static void testTeacher(DataHandler data) {
-        Teacher u1, u2, u3, u4;
-        u1 = new Teacher("Belal", "123");
-        u2 = new Teacher("Habiba", "456");
-        u3 = new Teacher("Mariam", "789");
-        u4 = new Teacher("Lojain", "101112");
-
-        u1.setUserID(data.teacherData.size() + 1);
-        data.teacherData.add(u1);
-
-        u2.setUserID(data.teacherData.size() + 1);
-        data.teacherData.add(u2);
-
-        u3.setUserID(data.teacherData.size() + 1);
-        data.teacherData.add(u3);
-
-        u4.setUserID(data.teacherData.size() + 1);
-        data.teacherData.add(u4);
+        else if (type == 3)
+        {
+            Admin activeA = adminLogin(data);
+            if (activeA == null)
+                System.err.println("Login unsuccessful.");
+        }
     }
 }

@@ -7,7 +7,42 @@ import java.util.Scanner;
  * @author belsa
  */
 public class Admin extends User
-{
+{  
+    public static Admin adminLogin(DataHandler data)
+    {
+        Scanner sc = new Scanner(System.in);
+        String inUsername, inPassword;
+
+        System.out.println("Enter username:");
+        inUsername = sc.next();
+        System.out.println("Enter password:");
+        inPassword = sc.next();
+
+        Admin newAdmin = null;
+        for (Admin i : data.adminData)
+        {
+            if (inUsername.equals(i.getUsername()))
+            {
+                if (inPassword.equals(i.getPassword()))
+                {
+                    newAdmin = i;
+                    System.out.println("Login Successful");
+                    break;
+                }
+                else
+                {
+                    System.err.println("Incorrect password.");
+                    break;
+                }
+            }
+            else
+            {
+                System.err.println("User not found.");
+            }
+        }
+        return newAdmin;
+    }
+        
     public void createUser(DataHandler data)
     {        
         System.out.println("-----------Creating new user------------");
