@@ -39,7 +39,7 @@ public class DataHandler
         writeObjectToFile(adminData, admin);
     }
     
-    public static void writeObjectToFile(Object out, File filepath) 
+    public static void writeObjectToFile(Object out, File filepath)
     {
         try 
         {
