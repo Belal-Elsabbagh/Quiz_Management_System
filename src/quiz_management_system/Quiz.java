@@ -11,97 +11,52 @@ import java.text.SimpleDateFormat;
 
 public class Quiz implements Serializable
 {
-
     private static final long serialVersionUID = 1L;
 
     private int quizID;
     private String quizTitle;
     private Teacher creator;
     private int nAttempts, nQuestions;
-    public Date quizdate;
+    public Date quizDate;
     public LocalTime openTime;
     private ArrayList<Question> questionBank;
     private long totalSec;
 
     public Quiz()
     {
-        questionBank = new ArrayList();
+        questionBank = new ArrayList<>();
     }
 
     public LocalTime openTime()
     {
         return openTime;
     }
-
-    public Date quizdate()
+    public Date quizDate()
     {
-        return quizdate;
+        return quizDate;
     }
-
     public int getQuizID()
     {
         return quizID;
     }
-
-    public void setQuizID(int quizID)
-    {
-        this.quizID = quizID;
-    }
-
     public String getQuizTitle()
     {
         return quizTitle;
     }
-
-    public void setQuizTitle(String quizTitle)
-    {
-        this.quizTitle = quizTitle;
-    }
-
-    public int getnAttempts()
-    {
-        return nAttempts;
-    }
-
-    public void setnAttempts(int nAttempts)
-    {
-        this.nAttempts = nAttempts;
-    }
-
     public int getnQuestions()
     {
         return nQuestions;
     }
-
-    public void setnQuestions(int nQuestions)
-    {
-        this.nQuestions = nQuestions;
-    }
-
-    public Teacher getCreator()
-    {
-        return creator;
-    }
-
-    public void setCreator(Teacher creator)
-    {
-        this.creator = creator;
-    }
-
     public long totalSec()
     {
         return quizID;
     }
-
-    public long gettotalSec()
+    public long getTotalSec()
     {
         return totalSec;
     }
-
-    public void settotalSec(long TotalSec)
-    {
-        this.totalSec = TotalSec;
-    }
+    public void setTotalSec(long TotalSec) { this.totalSec = TotalSec; }
+    public void setQuizID(int quizID) { this.quizID = quizID; }
 
     public Quiz searchByID(int qID, DataHandler data)
     {
@@ -155,14 +110,10 @@ public class Quiz implements Serializable
         }
         nAttempts = sc.nextInt();
 
-        //quizTime();
-//       System.out.println("Enter size of question bank: ");
-//      questionBank = new ArrayList(sc.nextInt());
-
         createQuestionBank();
         quiztime();
 
-        System.out.println("Quiz created sucessfully.");
+        System.out.println("Quiz created successfully.");
     }
 
     public void createQuestionBank()
@@ -171,13 +122,13 @@ public class Quiz implements Serializable
         Scanner sc = new Scanner(System.in);
 
         System.out.println("-----------Question Bank Creator-----------------");
-        int i = 1;
+        int i = 0;
 
-        while (i != 0)
+        while (!sc.hasNextInt())
         {
-
             Question tempQ = new Question();
             tempQ.createQuestion();
+            tempQ.questionID = i + 1;
             questionBank.add(tempQ);
             System.out.println("stop?");
             while (!sc.hasNextInt())
@@ -206,7 +157,7 @@ public class Quiz implements Serializable
         return newModel;
     }
 
-    public void quiztime() throws ParseException
+    public void quiztime()
     {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter Date (day-month-year):");
@@ -218,12 +169,12 @@ public class Quiz implements Serializable
         {
             Date date = datein.parse(takeDate);
             System.out.println("The quiz will be on: " + new SimpleDateFormat("dd-MM-yyyy").format(date));
-            quizdate = datein.parse(takeDate);
+            quizDate = datein.parse(takeDate);
 
         }
         catch (ParseException e)
         {
-            System.out.println("Invailed input");
+            System.out.println("Invalid input");
         }
         System.out.println("Enter quiz time (hr:min:sec):");
         System.out.println("as in the format 00:00:00");
@@ -237,7 +188,7 @@ public class Quiz implements Serializable
         }
         catch (Exception e)
         {
-            System.out.println("Invailed input");
+            System.out.println("Invalid input");
         }
         System.out.println("Enter quiz duration:");
         System.out.println("Hour:");
@@ -250,12 +201,11 @@ public class Quiz implements Serializable
         int sec;
         sec = sc.nextInt();
         System.out.println("The quiz duration will be:" + hour + ":" + min + ":" + sec);
-        totalSec = (hour * 60 * 60) + (min * 60) + sec;
+        totalSec = ((long) hour * 60 * 60) + (min * 60) + sec;
     }
 
     public class Question implements Serializable
     {
-
         private int questionID;
         private String prompt;
         private double grade;
@@ -288,24 +238,9 @@ public class Quiz implements Serializable
             System.out.println("Question added successfully.");
         }
 
-        public int getQuestionID()
-        {
-            return questionID;
-        }
-
-        public String getPrompt()
-        {
-            return prompt;
-        }
-
         public double getGrade()
         {
             return grade;
-        }
-
-        public Choice getMcq()
-        {
-            return mcq;
         }
 
         public void displayQuestion()
@@ -319,16 +254,11 @@ public class Quiz implements Serializable
 
         public boolean checkAnswer(short inAnswer)
         {
-            boolean result = false;
-            if (inAnswer == mcq.getAnswerKeyIndex())
-            {
-                result = true;
-            }
-            return result;
+            return inAnswer == mcq.answerKeyIndex;
         }
     }
 
-    private class Choice implements Serializable
+    class Choice implements Serializable
     {
 
         private int nChoices;
@@ -339,16 +269,6 @@ public class Quiz implements Serializable
         {
             this.nChoices = 0;
             choices = new String[2];
-        }
-
-        public int getnChoices()
-        {
-            return nChoices;
-        }
-
-        public int getAnswerKeyIndex()
-        {
-            return answerKeyIndex;
         }
 
         public void createMCQ()
@@ -390,16 +310,6 @@ public class Quiz implements Serializable
                 }
             }
             System.out.println("Choices added successfully.");
-        }
-
-        public boolean checkAnswer(int inAnswer)
-        {
-            boolean result = false;
-            if (inAnswer == answerKeyIndex)
-            {
-                result = true;
-            }
-            return result;
         }
     }
 }
