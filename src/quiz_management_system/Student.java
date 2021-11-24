@@ -177,7 +177,7 @@ public class Student extends User
         public void timeattempt(){
             Quiz q = new Quiz();
              LocalTime time = LocalTime.now();
-            if (new Date() == q.quizdate() && time == q.openTime()){
+            if (new Date() == q.quizDate() && time == q.openTime()){
             doAttempt();
         }
             else
