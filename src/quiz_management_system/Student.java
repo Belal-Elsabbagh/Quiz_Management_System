@@ -3,6 +3,7 @@ package quiz_management_system;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Scanner;
 import quiz_management_system.Quiz.Question;
 /**
@@ -116,7 +117,7 @@ public class Student extends User
         });
     }
     
-    public static Student studentLogin(DataHandler data)
+    public static Student studentLogin()
     {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
@@ -127,7 +128,7 @@ public class Student extends User
         inPassword = sc.next();
 
         Student newStudent = null;
-        for (Student i : data.studentData)
+        for (Student i : DataHandler.studentData)
         {
             if (inUsername.equals(i.getUsername())) {
                 if (inPassword.equals(i.getPassword())) {

@@ -18,10 +18,10 @@ public class DataHandler
                 teacher = new File("teacherData.dat"), 
                 quiz = new File("quizData.dat"),
                 admin = new File("adminData.dat");
-    public ArrayList<Student> studentData = new ArrayList();
-    public ArrayList<Teacher> teacherData = new ArrayList();
-    public ArrayList<Admin> adminData = new ArrayList();
-    public ArrayList<Quiz> quizData = new ArrayList();
+    public static ArrayList<Student> studentData = new ArrayList();
+    public static ArrayList<Teacher> teacherData = new ArrayList();
+    public static ArrayList<Admin> adminData = new ArrayList();
+    public static ArrayList<Quiz> quizData = new ArrayList();
 
     public DataHandler()
     {

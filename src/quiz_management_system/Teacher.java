@@ -24,7 +24,7 @@ public class Teacher extends User
         createdQuizzes = new ArrayList();
     }
 
-    public int listTeacherMenu(DataHandler data) throws ParseException
+    public int listTeacherMenu() throws ParseException
     {
         System.out.println("----------Teacher Operations Main Menu-----------");
         System.out.println("1. List my quizzes.");
@@ -44,12 +44,12 @@ public class Teacher extends User
             }
             case 2:
             {
-                createNewQuiz(data);
+                createNewQuiz();
                 break;
             }
             case 3:
             {
-                reviewGrades(data);
+                reviewGrades();
                 break;
             }
         }
@@ -82,7 +82,7 @@ public class Teacher extends User
         Quiz newQuiz = new Quiz();
         newQuiz.createQuiz(this);
 
-        data.quizData.add(newQuiz);
+        DataHandler.quizData.add(newQuiz);
         createdQuizzes.add(newQuiz);
     }
 
@@ -100,7 +100,7 @@ public class Teacher extends User
         }
         else
         {
-            for (Student i : data.studentData)
+            for (Student i : DataHandler.studentData)
             {
                 for (Attempt j : i.getAttemptHistory())
                 {
@@ -113,7 +113,7 @@ public class Teacher extends User
         }
     }
 
-    public static Teacher teacherLogin(DataHandler data)
+    public static Teacher teacherLogin()
     {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword;
@@ -124,7 +124,7 @@ public class Teacher extends User
         inPassword = sc.next();
 
         Teacher newTeacher = null;
-        for (Teacher i : data.teacherData)
+        for (Teacher i : DataHandler.teacherData)
         {
             if (inUsername.equals(i.getUsername()))
             {

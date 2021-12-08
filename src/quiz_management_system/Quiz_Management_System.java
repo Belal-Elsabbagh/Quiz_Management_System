@@ -32,23 +32,23 @@ public class Quiz_Management_System
 
         if (type == 1)
         {
-            Student activeS = studentLogin(data);
+            Student activeS = studentLogin();
             if (activeS == null)
                 System.err.println("Login unsuccessful.");
             else
-                activeS.listStudentMenu(data);
+                activeS.listStudentMenu();
         }
         else if (type == 2)
         {
-            Teacher activeT = teacherLogin(data);
+            Teacher activeT = teacherLogin();
             if (activeT == null)
                 System.err.println("Login unsuccessful.");
             else
-                activeT.listTeacherMenu(data);
+                activeT.listTeacherMenu();
         }
         else if (type == 3)
         {
-            Admin activeA = adminLogin(data);
+            Admin activeA = adminLogin();
             if (activeA == null)
                 System.err.println("Login unsuccessful.");
         }
