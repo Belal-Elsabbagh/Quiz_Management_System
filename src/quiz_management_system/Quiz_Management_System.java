@@ -1,19 +1,21 @@
 package quiz_management_system;
 
 import java.text.ParseException;
-import java.time.LocalTime;
 import java.util.Scanner;
 
-import static quiz_management_system.Student.studentLogin;
-import static quiz_management_system.Teacher.teacherLogin;
-import static quiz_management_system.Admin.adminLogin;
+import static java.lang.System.*;
+import java.util.ArrayList;
 
 public class Quiz_Management_System
 {
+    private static User activeUser;
+
+    public static User getActiveUser() { return activeUser;  }
+
     public static void main(String[] args) throws ParseException
     {
         DataHandler data = new DataHandler();
-        
+        //buildUserData();
         consoleLogin();
 
         data.save();
@@ -21,36 +23,23 @@ public class Quiz_Management_System
 
     public static void consoleLogin() throws ParseException
     {
-        DataHandler data = new DataHandler();
-
-        LocalTime date = LocalTime.now();
-        System.out.println(date);
-        System.out.println("*****Quiz Management System*****");
-        System.out.println("Enter user:\n1. Student.\n2. Teacher.\n3. Admin.");
         Scanner sc = new Scanner(System.in);
-        int type = sc.nextInt();
-
-        if (type == 1)
-        {
-            Student activeS = studentLogin(data);
-            if (activeS == null)
-                System.err.println("Login unsuccessful.");
-            else
-                activeS.listStudentMenu(data);
-        }
-        else if (type == 2)
-        {
-            Teacher activeT = teacherLogin(data);
-            if (activeT == null)
-                System.err.println("Login unsuccessful.");
-            else
-                activeT.listTeacherMenu(data);
-        }
-        else if (type == 3)
-        {
-            Admin activeA = adminLogin(data);
-            if (activeA == null)
-                System.err.println("Login unsuccessful.");
-        }
+        String inUsername, inPassword;
+        out.println("*****Quiz Management System*****");
+        out.println("Enter username:"); inUsername = sc.next();
+        out.println("Enter password:"); inPassword = sc.next();
+        activeUser = User.login(inUsername, inPassword);
+        while (activeUser != null)
+            activeUser.listMenu();
+    }
+    
+    public static void buildUserData()
+    {
+        User u1 = new Student("Belal", "123");
+        DataHandler.userData.add(u1);
+        User u2 = new Teacher("Adel", "123");
+        DataHandler.userData.add(u2);    
+        User u3 = new Admin("Mohamed", "123");
+        DataHandler.userData.add(u3);    
     }
 }

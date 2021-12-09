@@ -2,72 +2,78 @@ package quiz_management_system;
 
 import java.util.Scanner;
 
+import static java.lang.System.in;
+import static java.lang.System.out;
+
 /**
- *
  * @author belsa
  */
 public class Admin extends User
-{  
-    public static Admin adminLogin(DataHandler data)
+{
+    public Admin(String username, String password)
     {
-        Scanner sc = new Scanner(System.in);
-        String inUsername, inPassword;
+        super(username, password, 3);
+    }
 
-        System.out.println("Enter username:");
-        inUsername = sc.next();
-        System.out.println("Enter password:");
-        inPassword = sc.next();
-
-        Admin newAdmin = null;
-        for (Admin i : data.adminData)
+    @Override
+    public int listMenu()
+    {
+        Scanner sc = new Scanner(in);
+        out.println("*****Logged in as " + Quiz_Management_System.getActiveUser().getUsername() + "*****");
+        out.println("1. View all users.\n2. Create new User.\n3. Edit user.\n4. Remove user.\nEnter -1 to quit\n");
+        short n;
+        n = sc.nextShort();
+        switch (n)
         {
-            if (inUsername.equals(i.getUsername()))
+            case -1:
+                return -1;
+            case 1:
             {
-                if (inPassword.equals(i.getPassword()))
-                {
-                    newAdmin = i;
-                    System.out.println("Login Successful");
-                    break;
-                }
-                else
-                {
-                    System.err.println("Incorrect password.");
-                    break;
-                }
+                listUsers();
             }
-            else
+            case 2:
             {
-                System.err.println("User not found.");
+                createUser();
+            }
+            case 3:
+            {
+
             }
         }
-        return newAdmin;
+        return 1;
     }
-        
-    public void createUser(DataHandler data)
-    {        
+
+    public void listUsers()
+    {
+        for (User i : DataHandler.userData)
+            out.println(i.toString());
+    }
+
+    public void createUser()
+    {
         System.out.println("-----------Creating new user------------");
         Scanner sc = new Scanner(System.in);
-        
-        String inUsername = new String(), inPassword = new String();
-        int aLevel;
-        User newUser = null;
 
-        
+        String inUsername, inPassword = null;
+        int aLevel;
+        User newUser;
+
+
         int status = 0;
         do
         {
             System.out.println("Enter username:");
             inUsername = sc.next();
-            newUser = new User(inUsername, inPassword);
-            
-            if(data.studentData.contains(newUser) || data.teacherData.contains(newUser))
+            newUser = new User(inUsername, null);
+
+            if (DataHandler.studentData.contains(newUser) || DataHandler.teacherData.contains(newUser))
             {
                 System.err.println("Username already exists.");
                 continue;
             }
             System.out.println("Enter password:");
             inPassword = sc.next();
-        }while(status == 1);
+        } while(status == 1);
         
 
         System.out.println("Set Access Level.\n 1 for student\n2 for teacher:");
@@ -75,22 +81,14 @@ public class Admin extends User
         if(aLevel == 1)
         {
             //newUser = new Student(inUsername, inPassword, aLevel);
-            newUser.setUserID(1*1000 + data.studentData.size() + 1);
-            data.studentData.add((Student)newUser);
+            newUser.setUserID(1000 + DataHandler.studentData.size() + 1);
+            DataHandler.studentData.add((Student) newUser);
         }
         else if(aLevel == 2)
         {
             //newUser = new Teacher(inUsername, inPassword, aLevel);
-            newUser.setUserID(2*1000 + data.teacherData.size() + 1);
-            data.teacherData.add((Teacher)newUser);
+            newUser.setUserID(2 * 1000 + DataHandler.teacherData.size() + 1);
+            DataHandler.teacherData.add((Teacher) newUser);
         }
-    }
-    public void removeUser(DataHandler data)
-    {
-        
-    }
-    public void editUser(DataHandler data)
-    {
-        
     }
 }

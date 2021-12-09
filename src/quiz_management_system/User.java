@@ -1,28 +1,16 @@
 package quiz_management_system;
 
 import java.io.Serializable;
+import java.text.ParseException;
 
-public class User implements Serializable
+public class User implements Serializable, Interactive
 {
-    //default serialVersion id
     private static final long serialVersionUID = 1L;
-    
 
     private int userID;
-    protected String username;
-    private String password;
-    private int accessLevel;
-    
-    public User()
-    {
-        accessLevel = -1;
-    }
-    
-    public User(int accessLevel)
-    {
-        this.accessLevel = accessLevel;
-    }
-    
+    private final int accessLevel;
+    private String username,password;
+
     public User(String username, String password)
     {
         this.username = username;
@@ -35,18 +23,25 @@ public class User implements Serializable
         this.username = username;
         this.password = password;
         this.accessLevel = accessLevel;
-    }    
-    public User(User og)
-    {
-        this.userID = og.userID;
-        this.username = og.username;
-        this.password = og.password;
-        this.accessLevel = og.accessLevel;
     }
-        
+
+    public int getUserID()
+    {
+        return userID;
+    }
+
     public void setUserID(int userID)
     {
         this.userID = userID;
+    }
+
+    public String getUsername()
+    {
+        return username;
+    }
+    public String getPassword()
+    {
+        return password;
     }
 
     @Override
@@ -54,24 +49,31 @@ public class User implements Serializable
     {
         return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", accessLevel=" + accessLevel + '}';
     }
-    
-    public int getUserID()
+
+    public static User login(String inUsername, String inPassword)
     {
-        return userID;
+        User newUser = new User(inUsername, inPassword);
+        User searchResult = DataHandler.hasUser(newUser);
+
+        if(searchResult == null)
+        {
+            System.err.println("No User Found.");
+            return null;
+        }
+
+        if (!newUser.password.equals(searchResult.password))
+        {
+            System.err.println("Incorrect password.");
+            return null;
+        }
+
+        System.out.println("Login Successful");
+        return searchResult;
     }
 
-    public int getAccessLevel()
+    @Override
+    public int listMenu() throws ParseException
     {
-        return accessLevel;
+        return 0;
     }
-
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public String getPassword()
-    {
-        return password;
-    }  
 }

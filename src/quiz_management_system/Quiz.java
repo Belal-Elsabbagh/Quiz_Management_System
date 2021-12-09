@@ -58,17 +58,16 @@ public class Quiz implements Serializable
     public void setTotalSec(long TotalSec) { this.totalSec = TotalSec; }
     public void setQuizID(int quizID) { this.quizID = quizID; }
 
-    public Quiz searchByID(int qID, DataHandler data)
+    public static Quiz searchByID(int qID)
     {
-        Quiz x = null;
-        for(Quiz i : data.quizData)
+        for(Quiz i : DataHandler.quizData)
         {
             if(i.getQuizID() == qID)
             {
-                x = i;
+                return i;
             }
         }
-        return x;
+        return null;
     }
     
     public void displayQuizProperties()
