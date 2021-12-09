@@ -1,14 +1,14 @@
 package quiz_management_system;
 
+import quiz_management_system.Student.Attempt;
+
 import java.io.Serial;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import quiz_management_system.Student.Attempt;
 
 public class Teacher extends User
 {
-
     @Serial
     private static final long serialVersionUID = 1L;
 
@@ -17,10 +17,11 @@ public class Teacher extends User
     public Teacher(String username, String password)
     {
         super(username, password);
-        createdQuizzes = new ArrayList();
+        createdQuizzes = new ArrayList<>();
     }
 
-    public int listTeacherMenu(DataHandler data) throws ParseException
+    @Override
+    public int listMenu() throws ParseException
     {
         System.out.println("----------Teacher Operations Main Menu-----------");
         System.out.println("1. List my quizzes.");
@@ -40,31 +41,18 @@ public class Teacher extends User
             }
             case 2:
             {
-                createNewQuiz(data);
+                createNewQuiz();
                 break;
             }
             case 3:
             {
-                reviewGrades(data);
+                reviewGrades();
                 break;
             }
         }
         return 1;
     }
-    
-    public Teacher searchByID(int uID, DataHandler data)
-    {
-        Teacher x = null;
-        for(Teacher i : data.teacherData)
-        {
-            if(i.getUserID() == uID)
-            {
-                x = i;
-            }
-        }
-        return x;
-    }
-    
+
     public void listQuizzes()
     {
         for (Quiz i : createdQuizzes)
@@ -73,73 +61,44 @@ public class Teacher extends User
         }
     }
 
-    public void createNewQuiz(DataHandler data) throws ParseException
+    public void createNewQuiz() throws ParseException
     {
         Quiz newQuiz = new Quiz();
         newQuiz.createQuiz(this);
 
-        data.quizData.add(newQuiz);
+        newQuiz.setQuizID(DataHandler.quizData.size());
+
+        DataHandler.quizData.add(newQuiz);
         createdQuizzes.add(newQuiz);
     }
 
-    public void reviewGrades(DataHandler data)
+    public void reviewGrades()
     {
-        System.out.println("please enter quiz ID : ");
         Scanner sc = new Scanner(System.in);
-        System.out.println("Enter Quiz ID: ");
-        Quiz newQuiz = null;
-        newQuiz = newQuiz.searchByID(sc.nextInt(), data);
+
+        System.out.println("please enter quiz ID : ");
+        while (!sc.hasNextInt())
+        {
+            System.err.println("INVALID INPUT.");
+            sc.next();
+        }
+        int inID = sc.nextInt();
+
+        Quiz newQuiz = Quiz.searchByID(inID);
         if (newQuiz == null)
         {
             System.err.println("No Quiz Found.");
+            return;
         }
-        else
+        for (Student i : DataHandler.studentData)
         {
-            for (Student i : data.studentData)
+            for (Attempt j : i.getAttemptHistory())
             {
-                for (Attempt j : i.getAttemptHistory())
+                if (j.getQuiz().equals(newQuiz))
                 {
-                    if (j.getQuiz().equals(newQuiz))
-                    {
-                        System.out.println(i.getUsername() + ": " + j.getResult());
-                    }
+                    System.out.println(i.getUsername() + ": " + j.getResult());
                 }
             }
         }
-    }
-
-    public static Teacher teacherLogin(DataHandler data)
-    {
-        Scanner sc = new Scanner(System.in);
-        String inUsername, inPassword;
-
-        System.out.println("Enter username:");
-        inUsername = sc.next();
-        System.out.println("Enter password:");
-        inPassword = sc.next();
-
-        Teacher newTeacher = null;
-        for (Teacher i : data.teacherData)
-        {
-            if (inUsername.equals(i.getUsername()))
-            {
-                if (inPassword.equals(i.getPassword()))
-                {
-                    newTeacher = i;
-                    System.out.println("Login Successful");
-                    break;
-                }
-                else
-                {
-                    System.err.println("Incorrect password.");
-                    break;
-                }
-            }
-            else
-            {
-                System.err.println("User not found.");
-            }
-        }
-        return newTeacher;
     }
 }

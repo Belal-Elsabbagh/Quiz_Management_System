@@ -1,68 +1,56 @@
 package quiz_management_system;
 
+import java.io.Serial;
 import java.io.Serializable;
+import java.text.ParseException;
 
-public class User implements Serializable
+public class User implements Serializable, Interactive
 {
-    //default serialVersion id
+    @Serial
     private static final long serialVersionUID = 1L;
-    
 
     private int userID;
-    protected String username;
-    private String password;
-    private int accessLevel;
-    
-    public User()
-    {
-        accessLevel = -1;
-    }
-    
-    public User(int accessLevel)
-    {
-        this.accessLevel = accessLevel;
-    }
-    
+    private Access accessLevel;
+    private String username, password;
+
     public User(String username, String password)
     {
         this.username = username;
         this.password = password;
-        this.accessLevel = -1;
+        this.accessLevel = Access.NONE;
     }
 
-    public User(String username, String password, int accessLevel)
+    public User(String username, String password, Access accessLevel)
     {
         this.username = username;
         this.password = password;
         this.accessLevel = accessLevel;
-    }    
-    public User(User og)
-    {
-        this.userID = og.userID;
-        this.username = og.username;
-        this.password = og.password;
-        this.accessLevel = og.accessLevel;
     }
-        
+
     public void setUserID(int userID)
     {
         this.userID = userID;
     }
 
-    @Override
-    public String toString()
+    public static User login(String inUsername, String inPassword)
     {
-        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", accessLevel=" + accessLevel + '}';
-    }
-    
-    public int getUserID()
-    {
-        return userID;
-    }
+        User newUser = new User(inUsername, inPassword);
+        User searchResult = DataHandler.hasUser(newUser);
 
-    public int getAccessLevel()
-    {
-        return accessLevel;
+        if (searchResult == null)
+        {
+            System.err.println("No User Found.");
+            return null;
+        }
+
+        if (!newUser.password.equals(searchResult.password))
+        {
+            System.err.println("Incorrect password.");
+            return null;
+        }
+
+        System.out.println("Login Successful");
+        return searchResult;
     }
 
     public String getUsername()
@@ -70,8 +58,30 @@ public class User implements Serializable
         return username;
     }
 
+    public int getUserID()
+    {
+        return userID;
+    }
+
     public String getPassword()
     {
         return password;
-    }  
+    }
+
+    @Override
+    public String toString()
+    {
+        return "User{" + "userID=" + userID + ", username=" + username + ", password=" + password + ", accessLevel=" + accessLevel + '}';
+    }
+
+    @Override
+    public int listMenu() throws ParseException
+    {
+        return 0;
+    }
+
+    enum Access
+    {
+        NONE, STUDENT, TEACHER, ADMIN;
+    }
 }

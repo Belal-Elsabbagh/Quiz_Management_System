@@ -1,14 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package quiz_management_system;
 
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.time.LocalTime;
-import java.util.Date;
 
 /**
  *
@@ -21,7 +15,7 @@ public class Duration extends TimerTask {
 
     public void convertTime() {
         Quiz q = new Quiz();
-        totalSec =q.gettotalSec();
+        totalSec = q.getTotalSec();
         
         min = TimeUnit.SECONDS.toMinutes(totalSec);
         sec = totalSec - (min * 60);
