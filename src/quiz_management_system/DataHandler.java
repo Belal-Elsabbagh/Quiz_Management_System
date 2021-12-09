@@ -22,19 +22,19 @@ public class DataHandler
 
     public DataHandler()
     {
-        studentData = (ArrayList <Student>) readFileInObject(student);
-        teacherData = (ArrayList <Teacher>) readFileInObject(teacher);
-        adminData   = (ArrayList <Admin>)   readFileInObject(admin);
-        quizData    = (ArrayList <Quiz>)    readFileInObject(quiz);
+        //studentData = (ArrayList <Student>) readFileInObject(student);
+        //teacherData = (ArrayList <Teacher>) readFileInObject(teacher);
+        //adminData   = (ArrayList <Admin>)   readFileInObject(admin);
+        //quizData    = (ArrayList <Quiz>)    readFileInObject(quiz);
         userData    = (ArrayList<User>)     readFileInObject(user);
     }
     
     public void save()
     {
-        writeObjectToFile(studentData, student);
-        writeObjectToFile(teacherData, teacher);
+        //writeObjectToFile(studentData, student);
+        //writeObjectToFile(teacherData, teacher);
+        //writeObjectToFile(adminData, admin);
         writeObjectToFile(quizData, quiz);
-        writeObjectToFile(adminData, admin);
         writeObjectToFile(userData, user);
     }
     
