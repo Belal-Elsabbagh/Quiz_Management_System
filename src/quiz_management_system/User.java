@@ -25,6 +25,11 @@ public class User implements Serializable, Interactive
         this.accessLevel = accessLevel;
     }
 
+    public int getUserID()
+    {
+        return userID;
+    }
+
     public void setUserID(int userID)
     {
         this.userID = userID;
