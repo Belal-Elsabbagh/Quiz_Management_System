@@ -1,6 +1,7 @@
-package quiz_management_system;
+package quiz_management_system.UserType;
 
-import quiz_management_system.Student.Attempt;
+import quiz_management_system.DataHandler;
+import quiz_management_system.Quiz;
 
 import java.io.Serial;
 import java.text.ParseException;
@@ -46,7 +47,7 @@ public class Teacher extends User
             }
             case 3:
             {
-                reviewGrades();
+                //reviewGrades();
                 break;
             }
         }
@@ -72,33 +73,33 @@ public class Teacher extends User
         createdQuizzes.add(newQuiz);
     }
 
-    public void reviewGrades()
-    {
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println("please enter quiz ID : ");
-        while (!sc.hasNextInt())
-        {
-            System.err.println("INVALID INPUT.");
-            sc.next();
-        }
-        int inID = sc.nextInt();
-
-        Quiz newQuiz = Quiz.searchByID(inID);
-        if (newQuiz == null)
-        {
-            System.err.println("No Quiz Found.");
-            return;
-        }
-        for (Student i : DataHandler.studentData)
-        {
-            for (Attempt j : i.getAttemptHistory())
-            {
-                if (j.getQuiz().equals(newQuiz))
-                {
-                    System.out.println(i.getUsername() + ": " + j.getResult());
-                }
-            }
-        }
-    }
+//    public void reviewGrades()
+//    {
+//        Scanner sc = new Scanner(System.in);
+//
+//        System.out.println("please enter quiz ID : ");
+//        while (!sc.hasNextInt())
+//        {
+//            System.err.println("INVALID INPUT.");
+//            sc.next();
+//        }
+//        int inID = sc.nextInt();
+//
+//        Quiz newQuiz = Quiz.searchByID(inID);
+//        if (newQuiz == null)
+//        {
+//            System.err.println("No Quiz Found.");
+//            return;
+//        }
+//        for (Student i : DataHandler.userData)
+//        {
+//            for (Attempt j : i.getAttemptHistory())
+//            {
+//                if (j.getQuiz().equals(newQuiz))
+//                {
+//                    System.out.println(i.getUsername() + ": " + j.getResult());
+//                }
+//            }
+//        }
+//    }
 }

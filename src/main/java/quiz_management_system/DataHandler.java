@@ -1,5 +1,7 @@
 package quiz_management_system;
 
+import quiz_management_system.UserType.User;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -8,24 +10,15 @@ import java.util.ArrayList;
  */
 public class DataHandler
 {
-    public static ArrayList<Student> studentData;
-    public static ArrayList<Teacher> teacherData;
-    public static ArrayList<Admin> adminData;
     public static ArrayList<Quiz> quizData;
     public static ArrayList<User> userData;
-    public File student = new File("studentData.dat"),
-            teacher = new File("teacherData.dat"),
-            quiz = new File("quizData.dat"),
-            admin = new File("adminData.dat"),
+    public File quiz = new File("quizData.dat"),
             user = new File("userData.dat");
 
     public DataHandler()
     {
-        studentData = (ArrayList<Student>) readFileInObject(student);
-        teacherData = (ArrayList<Teacher>) readFileInObject(teacher);
-        adminData = (ArrayList<Admin>) readFileInObject(admin);
-        quizData = (ArrayList<Quiz>) readFileInObject(quiz);
-        userData = (ArrayList<User>) readFileInObject(user);
+        //quizData = (ArrayList<Quiz>) readFileInObject(quiz);
+        //userData = (ArrayList<User>) readFileInObject(user);
     }
 
     public static Object readFileInObject(File filepath)
@@ -60,10 +53,7 @@ public class DataHandler
 
     public void save()
     {
-        writeObjectToFile(studentData, student);
-        writeObjectToFile(teacherData, teacher);
         writeObjectToFile(quizData, quiz);
-        writeObjectToFile(adminData, admin);
         writeObjectToFile(userData, user);
     }
 

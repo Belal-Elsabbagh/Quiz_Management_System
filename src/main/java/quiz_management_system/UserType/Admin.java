@@ -1,4 +1,7 @@
-package quiz_management_system;
+package quiz_management_system.UserType;
+
+import quiz_management_system.DataHandler;
+import quiz_management_system.Quiz_Management_System;
 
 import java.util.Scanner;
 
@@ -12,7 +15,7 @@ public class Admin extends User
 {
     public Admin(String username, String password)
     {
-        super(username, password, Access.ADMIN);
+        super(username, password, 3);
     }
 
     @Override
@@ -51,12 +54,11 @@ public class Admin extends User
 
     public void createUser()
     {
-        System.out.println("-----------Creating new user------------");
         Scanner sc = new Scanner(System.in);
-
         String inUsername, inPassword = null;
         int aLevel;
         User newUser;
+        System.out.println("-----------Creating new user------------");
 
 
         int status = 0;
@@ -66,7 +68,7 @@ public class Admin extends User
             inUsername = sc.next();
             newUser = new User(inUsername, null);
 
-            if (DataHandler.studentData.contains(newUser) || DataHandler.teacherData.contains(newUser))
+            if (DataHandler.userData.contains(newUser) || DataHandler.userData.contains(newUser))
             {
                 System.err.println("Username already exists.");
                 continue;
@@ -81,14 +83,14 @@ public class Admin extends User
         if(aLevel == 1)
         {
             //newUser = new Student(inUsername, inPassword, aLevel);
-            newUser.setUserID(1000 + DataHandler.studentData.size() + 1);
-            DataHandler.studentData.add((Student) newUser);
+            newUser.setUserID(1000 + DataHandler.userData.size() + 1);
+            DataHandler.userData.add((Student) newUser);
         }
         else if(aLevel == 2)
         {
             //newUser = new Teacher(inUsername, inPassword, aLevel);
-            newUser.setUserID(2 * 1000 + DataHandler.teacherData.size() + 1);
-            DataHandler.teacherData.add((Teacher) newUser);
+            newUser.setUserID(2 * 1000 + DataHandler.userData.size() + 1);
+            DataHandler.userData.add((Teacher) newUser);
         }
     }
 }
