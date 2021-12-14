@@ -1,6 +1,9 @@
-package quiz_management_system;
+package quiz_management_system.UserType;
 
+import quiz_management_system.Duration;
+import quiz_management_system.Quiz;
 import quiz_management_system.Quiz.Question;
+import quiz_management_system.Quiz_Management_System;
 
 import java.io.Serial;
 import java.util.ArrayList;

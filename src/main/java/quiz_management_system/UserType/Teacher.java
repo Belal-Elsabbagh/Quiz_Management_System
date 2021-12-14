@@ -1,4 +1,7 @@
-package quiz_management_system;
+package quiz_management_system.UserType;
+
+import quiz_management_system.DataHandler;
+import quiz_management_system.Quiz;
 
 import java.io.Serial;
 import java.text.ParseException;
