@@ -23,6 +23,7 @@ import java.awt.event.ActionListener;
 
 public class LoginWindow extends JFrame implements Windows
 {
+
     static JFrame window;
 
     static JLabel password_label, username_label;

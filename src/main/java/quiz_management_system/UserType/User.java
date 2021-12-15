@@ -35,8 +35,22 @@ public class User implements Serializable, Interactive
 
     public static User login(String inUsername, String inPassword)
     {
-        User newUser = new User(inUsername, inPassword);
-        return DataHandler.hasUser(newUser);
+        User newUser = searchByUsername(inUsername, Access.NONE);
+
+        if (newUser == null || !newUser.getPassword().equals(inPassword))
+            return null;
+
+        return newUser;
+    }
+
+    public static User searchByUsername(String inUsername, Access aLevel)
+    {
+        for (User i : DataHandler.userData)
+        {
+            if (i.getUsername().equals(inUsername))
+                return i;
+        }
+        return null;
     }
 
     public String getUsername()

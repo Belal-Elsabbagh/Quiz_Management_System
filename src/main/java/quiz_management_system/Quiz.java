@@ -36,6 +36,10 @@ public class Quiz implements Serializable
         return openTime;
     }
 
+    /**
+     * @param qID the required quizID to search
+     * @return the found quiz (null if not found)
+     */
     public static Quiz searchByID(int qID)
     {
         for (Quiz i : DataHandler.quizData)
@@ -104,7 +108,10 @@ public class Quiz implements Serializable
         return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nAttempts=" + nAttempts + ", nQuestions=" + nQuestions + ", questionBank.size()=" + questionBank.size() + '}';
     }
 
-    public void createQuiz(Teacher author) throws ParseException
+    /**
+     * @param author the creator of the quiz
+     */
+    public void createQuiz(Teacher author)
     {
         Scanner sc = new Scanner(System.in);
         creator = author;
@@ -158,6 +165,9 @@ public class Quiz implements Serializable
         System.out.println("Question Bank created successfully.");
     }
 
+    /**
+     * @return a shuffled set of questions in an array
+     */
     public Question[] generateQuizModel()
     {
         Question[] newModel;

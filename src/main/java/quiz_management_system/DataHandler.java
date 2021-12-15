@@ -17,8 +17,8 @@ public class DataHandler
 
     public DataHandler()
     {
-        //quizData = (ArrayList<Quiz>) readFileInObject(quiz);
-        //userData = (ArrayList<User>) readFileInObject(user);
+        quizData = (ArrayList<Quiz>) readFileInObject(quiz);
+        userData = (ArrayList<User>) readFileInObject(user);
     }
 
     public static Object readFileInObject(File filepath)
@@ -39,16 +39,6 @@ public class DataHandler
             ex.printStackTrace();
             return null;
         }
-    }
-
-    public static User hasUser(User inUser)
-    {
-        for (User i : userData)
-        {
-            if (i.getUsername().equals(inUser.getUsername()))
-                return i;
-        }
-        return null;
     }
 
     public void save()
