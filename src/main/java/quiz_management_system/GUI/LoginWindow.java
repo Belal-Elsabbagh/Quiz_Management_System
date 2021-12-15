@@ -7,22 +7,45 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * GUI Class Description
+ * <p>
+ * The main class has static default GUI elements, extends JFrame and implements the Windows Interface
+ * which has a function for calling the window when needed.
+ * <p>
+ * The static block initializes the elements with the properties that we need and loads them into the system.
+ * <p>
+ * When the class constructor is called, the JFrame constructor is called then the elements are loaded in the window
+ * and the action listeners are paired with the objects.
+ * <p>
+ * Event handling is done by nested class(es).
+ */
+
 public class LoginWindow extends JFrame implements Windows
 {
-    static JLabel password = new JLabel("Password"), username = new JLabel("Username");
-    static JTextField username_text = new JTextField(21);
-    static JButton actionLogin = new JButton("Log in");
-    static JPasswordField password_text = new JPasswordField(30);
-
     static JFrame window;
+
+    static JLabel password_label, username_label;
+    static JTextField username_text;
+    static JButton actionLogin;
+    static JPasswordField password_text;
+
+    static
+    {
+        password_label = new JLabel("Password");
+        username_label = new JLabel("Username");
+        username_text = new JTextField(21);
+        password_text = new JPasswordField(30);
+        actionLogin = new JButton("Log in");
+    }
 
     public LoginWindow()
     {
         setLayout(new GridLayout(2, 2, 10, 10));
 
-        add(username);
+        add(username_label);
         add(username_text);
-        add(password);
+        add(password_label);
         add(password_text);
         add(actionLogin);
 
