@@ -36,7 +36,7 @@ public class Admin extends User
             }
             case 2:
             {
-                createUser();
+                createUserConsole();
             }
             case 3:
             {
@@ -52,7 +52,11 @@ public class Admin extends User
             out.println(i.toString());
     }
 
-    public void createUser()
+
+    /**
+     * @deprecated not used with GUI
+     */
+    public void createUserConsole()
     {
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword = null;
@@ -61,36 +65,42 @@ public class Admin extends User
         System.out.println("-----------Creating new user------------");
 
 
-        int status = 0;
+        boolean status = false;
         do
         {
             System.out.println("Enter username:");
             inUsername = sc.next();
-            newUser = new User(inUsername, null);
 
-            if (DataHandler.userData.contains(newUser) || DataHandler.userData.contains(newUser))
+            if (User.searchByUsername(inUsername, Access.NONE) != null)
             {
                 System.err.println("Username already exists.");
                 continue;
             }
             System.out.println("Enter password:");
             inPassword = sc.next();
-        } while(status == 1);
-        
+            status = true;
+        } while (!status);
 
-        System.out.println("Set Access Level.\n 1 for student\n2 for teacher:");
+
+        System.out.println("Set Access Level.\n 1 for student\n2 for teacher\n3 for Admin:");
         aLevel = sc.nextInt();
+        // TODO Set an ID for the user
         if(aLevel == 1)
         {
-            //newUser = new Student(inUsername, inPassword, aLevel);
-            newUser.setUserID(1000 + DataHandler.userData.size() + 1);
-            DataHandler.userData.add((Student) newUser);
+            newUser = new Student(inUsername, inPassword, Access.STUDENT);
+            DataHandler.userData.add(newUser);
         }
-        else if(aLevel == 2)
+        else if (aLevel == 2)
         {
-            //newUser = new Teacher(inUsername, inPassword, aLevel);
+            newUser = new Teacher(inUsername, inPassword, Access.TEACHER);
             newUser.setUserID(2 * 1000 + DataHandler.userData.size() + 1);
-            DataHandler.userData.add((Teacher) newUser);
+            DataHandler.userData.add(newUser);
+        }
+        else if (aLevel == 3)
+        {
+            newUser = new Teacher(inUsername, inPassword, Access.ADMIN);
+            newUser.setUserID(2 * 1000 + DataHandler.userData.size() + 1);
+            DataHandler.userData.add(newUser);
         }
     }
 }

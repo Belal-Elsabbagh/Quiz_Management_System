@@ -4,7 +4,6 @@ import quiz_management_system.DataHandler;
 import quiz_management_system.Quiz;
 
 import java.io.Serial;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,14 +14,14 @@ public class Teacher extends User
 
     ArrayList<Quiz> createdQuizzes;
 
-    public Teacher(String username, String password)
+    public Teacher(String username, String password, Access teacher)
     {
         super(username, password);
         createdQuizzes = new ArrayList<>();
     }
 
     @Override
-    public int listMenu() throws ParseException
+    public int listMenu()
     {
         System.out.println("----------Teacher Operations Main Menu-----------");
         System.out.println("1. List my quizzes.");
@@ -47,7 +46,7 @@ public class Teacher extends User
             }
             case 3:
             {
-                //reviewGrades();
+                reviewStudentGradesConsole();
                 break;
             }
         }
@@ -62,7 +61,7 @@ public class Teacher extends User
         }
     }
 
-    public void createNewQuiz() throws ParseException
+    public void createNewQuiz()
     {
         Quiz newQuiz = new Quiz();
         newQuiz.createQuiz(this);
@@ -73,33 +72,43 @@ public class Teacher extends User
         createdQuizzes.add(newQuiz);
     }
 
-//    public void reviewGrades()
-//    {
-//        Scanner sc = new Scanner(System.in);
-//
-//        System.out.println("please enter quiz ID : ");
-//        while (!sc.hasNextInt())
-//        {
-//            System.err.println("INVALID INPUT.");
-//            sc.next();
-//        }
-//        int inID = sc.nextInt();
-//
-//        Quiz newQuiz = Quiz.searchByID(inID);
-//        if (newQuiz == null)
-//        {
-//            System.err.println("No Quiz Found.");
-//            return;
-//        }
-//        for (Student i : DataHandler.userData)
-//        {
-//            for (Attempt j : i.getAttemptHistory())
-//            {
-//                if (j.getQuiz().equals(newQuiz))
-//                {
-//                    System.out.println(i.getUsername() + ": " + j.getResult());
-//                }
-//            }
-//        }
-//    }
+    /**
+     * @deprecated not used with GUI
+     */
+    public void reviewStudentGradesConsole()
+    {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("please enter quiz ID : ");
+        while (!sc.hasNextInt())
+        {
+            System.err.println("INVALID INPUT.");
+            sc.next();
+        }
+        int inID = sc.nextInt();
+
+        Quiz newQuiz = Quiz.searchByID(inID);
+        if (newQuiz == null)
+        {
+            System.err.println("No Quiz Found.");
+            return;
+        }
+    }
+
+    public void reviewStudentGrades(Quiz newQuiz)
+    {
+        for (User i : DataHandler.userData)
+        {
+            if (i instanceof Student)
+            {
+                for (Student.Attempt j : ((Student) i).getAttemptHistory())
+                {
+                    if (j.getQuiz().equals(newQuiz))
+                    {
+                        // TODO properly display the students with their respective grades of the quiz.
+                    }
+                }
+            }
+        }
+    }
 }

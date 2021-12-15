@@ -6,7 +6,6 @@ import quiz_management_system.Interactive;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,13 +73,13 @@ public class User implements Serializable, Interactive
     }
 
     @Override
-    public int listMenu() throws ParseException
+    public int listMenu()
     {
         new LoginWindow().constructWindow();
         return 0;
     }
 
-    enum Access
+    public enum Access
     {
         NONE(0), STUDENT(1), TEACHER(2), ADMIN(3);
 

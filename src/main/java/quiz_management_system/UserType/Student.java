@@ -21,7 +21,7 @@ public class Student extends User
 
     private ArrayList<Attempt> attemptHistory;
 
-    public Student(String username, String password)
+    public Student(String username, String password, Access student)
     {
         super(username, password);
     }

@@ -12,16 +12,30 @@ public class DataHandler
 {
     public static ArrayList<Quiz> quizData;
     public static ArrayList<User> userData;
-    public File quiz = new File("quizData.dat"),
-            user = new File("userData.dat");
+    public static File quiz, user;
 
+    static
+    {
+        quiz = new File("quizData.dat");
+        user = new File("userData.dat");
+    }
+
+    /**
+     * initializes the ArrayList objects with the data in the files
+     */
     public DataHandler()
     {
         quizData = (ArrayList<Quiz>) readFileInObject(quiz);
         userData = (ArrayList<User>) readFileInObject(user);
     }
 
-    public static Object readFileInObject(File filepath)
+    /**
+     * reads a serializable object from a given file.
+     *
+     * @param filepath the file that we want to return the object from.
+     * @return the object that was saved in the file (or null if an exception was thrown).
+     */
+    private static Object readFileInObject(File filepath)
     {
         try
         {
@@ -41,13 +55,22 @@ public class DataHandler
         }
     }
 
-    public void save()
+    /**
+     * writes current data to the files for saving.
+     */
+    static void save()
     {
         writeObjectToFile(quizData, quiz);
         writeObjectToFile(userData, user);
     }
 
-    public static void writeObjectToFile(Object out, File filepath)
+    /**
+     * a function that writes a serializable object to a file.
+     *
+     * @param out      the object to be written to the file
+     * @param filepath the file to which the object will be written
+     */
+    private static void writeObjectToFile(Object out, File filepath)
     {
         try
         {
