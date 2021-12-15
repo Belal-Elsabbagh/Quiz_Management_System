@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginWindow
+public class LoginWindow extends JFrame implements Windows
 {
     static JLabel password = new JLabel("Password"), username = new JLabel("Username");
     static JTextField username_text = new JTextField(21);
@@ -18,46 +18,45 @@ public class LoginWindow
 
     public LoginWindow()
     {
-        window = new LoginMenuConstructor();
+        setLayout(new GridLayout(2, 2, 10, 10));
+
+        add(username);
+        add(username_text);
+        add(password);
+        add(password_text);
+        add(actionLogin);
+
+        ActionLogin actionlogin = new ActionLogin();
+        actionLogin.addActionListener(actionlogin);
+    }
+
+
+    @Override
+    public void constructWindow()
+    {
+        window = new LoginWindow();
         window.setTitle("Quiz Management System Login");
         window.setSize(640, 480);
         window.setLocationRelativeTo(null); // to not have it open at the corner
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setVisible(true);
     }
-}
 
-class LoginMenuConstructor extends JFrame
-{
-    public LoginMenuConstructor()
+    static class ActionLogin implements ActionListener
     {
-        setLayout(new GridLayout(2, 2, 10, 10));
-
-        add(LoginWindow.username);
-        add(LoginWindow.username_text);
-        add(LoginWindow.password);
-        add(LoginWindow.password_text);
-        add(LoginWindow.actionLogin);
-
-        ActionLogin actionLogin = new ActionLogin();
-        LoginWindow.actionLogin.addActionListener(actionLogin);
-    }
-}
-
-class ActionLogin implements ActionListener
-{
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        String Username = LoginWindow.username_text.getText();
-        String Password1 = String.valueOf(LoginWindow.password_text.getPassword());
-
-        User newUser = User.login(Username, Password1);
-        if (newUser == null)
+        @Override
+        public void actionPerformed(ActionEvent e)
         {
-            JOptionPane.showMessageDialog(null, "Username or Password mismatch");
-            return;
+            String Username = username_text.getText();
+            String Password1 = String.valueOf(password_text.getPassword());
+
+            User newUser = User.login(Username, Password1);
+            if (newUser == null)
+            {
+                JOptionPane.showMessageDialog(null, "Username or Password mismatch");
+                return;
+            }
+            JOptionPane.showMessageDialog(null, "Login Successful");
         }
-        JOptionPane.showMessageDialog(null, "Login Successful");
     }
 }

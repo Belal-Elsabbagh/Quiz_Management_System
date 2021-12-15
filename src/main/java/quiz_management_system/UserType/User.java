@@ -62,7 +62,7 @@ public class User implements Serializable, Interactive
     @Override
     public int listMenu() throws ParseException
     {
-        new LoginWindow();
+        new LoginWindow().constructWindow();
         return 0;
     }
 
