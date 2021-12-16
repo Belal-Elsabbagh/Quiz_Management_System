@@ -31,7 +31,11 @@ public class Student extends User
         return attemptHistory;
     }
 
-    public int listMenu()
+
+    /**
+     * @deprecated
+     */
+    public int listMenuConsole()
     {
         out.println("*****Logged in as " + Quiz_Management_System.getActiveUser().getUsername() + "*****");
         out.println("1. Attempt quiz.");

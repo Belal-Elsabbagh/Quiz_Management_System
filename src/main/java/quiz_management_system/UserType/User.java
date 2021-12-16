@@ -73,10 +73,9 @@ public class User implements Serializable, Interactive
     }
 
     @Override
-    public int listMenu()
+    public void listMenu()
     {
-        new LoginWindow().constructWindow();
-        return 0;
+        LoginWindow.constructWindow();
     }
 
     public enum Access

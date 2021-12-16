@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 
 /**
  * GUI Class Description
@@ -21,11 +23,11 @@ import java.awt.event.ActionListener;
  * Event handling is done by nested class(es).
  */
 
-public class LoginWindow extends JFrame implements Windows
+public class LoginWindow extends JFrame
 {
-
     static JFrame window;
 
+    static JPanel content, user, pass;
     static JLabel password_label, username_label;
     static JTextField username_text;
     static JButton actionLogin;
@@ -33,34 +35,39 @@ public class LoginWindow extends JFrame implements Windows
 
     static
     {
-        password_label = new JLabel("Password");
         username_label = new JLabel("Username");
-        username_text = new JTextField(21);
-        password_text = new JPasswordField(30);
+        password_label = new JLabel("Password");
+        username_text = new JTextField(20);
+        password_text = new JPasswordField(20);
         actionLogin = new JButton("Log in");
+        user = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pass = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        content = new JPanel(new GridLayout(2,1));
     }
 
     public LoginWindow()
     {
-        setLayout(new GridLayout(2, 2, 10, 10));
+        user.add(username_label);
+        user.add(username_text);
+        pass.add(password_label);
+        pass.add(password_text);
 
-        add(username_label);
-        add(username_text);
-        add(password_label);
-        add(password_text);
-        add(actionLogin);
+        content.add(user);
+        content.add(pass);
+
+        add(content, BorderLayout.CENTER);
+        add(actionLogin, BorderLayout.SOUTH);
+
 
         ActionLogin actionlogin = new ActionLogin();
         actionLogin.addActionListener(actionlogin);
     }
 
-
-    @Override
-    public void constructWindow()
+    public static void constructWindow()
     {
         window = new LoginWindow();
         window.setTitle("Quiz Management System Login");
-        window.setSize(640, 480);
+        window.setSize(400, 200);
         window.setLocationRelativeTo(null); // to not have it open at the corner
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setVisible(true);
@@ -81,6 +88,7 @@ public class LoginWindow extends JFrame implements Windows
                 return;
             }
             JOptionPane.showMessageDialog(null, "Login Successful");
+
         }
     }
 }

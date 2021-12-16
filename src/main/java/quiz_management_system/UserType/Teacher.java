@@ -21,7 +21,15 @@ public class Teacher extends User
     }
 
     @Override
-    public int listMenu()
+    public void listMenu()
+    {
+        super.listMenu();
+    }
+
+    /**
+     * @deprecated
+     */
+    public int listMenuConsole()
     {
         System.out.println("----------Teacher Operations Main Menu-----------");
         System.out.println("1. List my quizzes.");

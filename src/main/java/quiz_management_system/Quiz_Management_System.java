@@ -21,12 +21,8 @@ public class Quiz_Management_System
     {
         new DataHandler();
         activeUser = new User("", "");
-
-        buildUserData();
-        activeUser.listMenu();
-//        consoleLogin();
-
-        DataHandler.save();
+        while(activeUser != null)
+            activeUser.listMenu();
     }
 
     public static void buildUserData()

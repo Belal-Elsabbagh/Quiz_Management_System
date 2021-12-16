@@ -4,5 +4,5 @@ import java.text.ParseException;
 
 public interface Interactive
 {
-    int listMenu() throws ParseException;
+    void listMenu() throws ParseException;
 }

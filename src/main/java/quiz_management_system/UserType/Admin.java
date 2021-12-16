@@ -3,6 +3,8 @@ package quiz_management_system.UserType;
 import quiz_management_system.DataHandler;
 import quiz_management_system.Quiz_Management_System;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Scanner;
 
 import static java.lang.System.in;
@@ -11,15 +13,23 @@ import static java.lang.System.out;
 /**
  * @author belsa
  */
-public class Admin extends User
+public class Admin extends User implements Serializable
 {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     public Admin(String username, String password)
     {
         super(username, password, 3);
     }
 
     @Override
-    public int listMenu()
+    public void listMenu()
+    {
+        super.listMenu();
+    }
+
+    public int listMenuConsole()
     {
         Scanner sc = new Scanner(in);
         out.println("*****Logged in as " + Quiz_Management_System.getActiveUser().getUsername() + "*****");
