@@ -1,6 +1,8 @@
 package quiz_management_system.UserType;
 
 import quiz_management_system.Duration;
+import quiz_management_system.GUI.StudentGUI.StudentWindow;
+import quiz_management_system.Interactive;
 import quiz_management_system.Quiz;
 import quiz_management_system.Quiz.Question;
 import quiz_management_system.Quiz_Management_System;
@@ -14,7 +16,7 @@ import static java.lang.System.*;
 /**
  * @author belsa
  */
-public class Student extends User
+public class Student extends User implements Interactive
 {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -31,6 +33,11 @@ public class Student extends User
         return attemptHistory;
     }
 
+    @Override
+    public void listMenu()
+    {
+        StudentWindow.constructWindow();
+    }
 
     /**
      * @deprecated

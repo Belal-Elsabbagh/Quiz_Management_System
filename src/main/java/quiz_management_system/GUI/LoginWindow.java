@@ -1,13 +1,12 @@
 package quiz_management_system.GUI;
 
+import quiz_management_system.Quiz_Management_System;
 import quiz_management_system.UserType.User;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 
 /**
  * GUI Class Description
@@ -87,8 +86,12 @@ public class LoginWindow extends JFrame
                 JOptionPane.showMessageDialog(null, "Username or Password mismatch");
                 return;
             }
+
             JOptionPane.showMessageDialog(null, "Login Successful");
 
+            Quiz_Management_System.setActiveUser(newUser);
+            window.setVisible(false);
+            Quiz_Management_System.getActiveUser().listMenu();
         }
     }
 }

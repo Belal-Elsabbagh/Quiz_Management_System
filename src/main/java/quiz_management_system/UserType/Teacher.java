@@ -1,6 +1,7 @@
 package quiz_management_system.UserType;
 
 import quiz_management_system.DataHandler;
+import quiz_management_system.GUI.TeacherGUI.TeacherWindow;
 import quiz_management_system.Quiz;
 
 import java.io.Serial;
@@ -23,7 +24,7 @@ public class Teacher extends User
     @Override
     public void listMenu()
     {
-        super.listMenu();
+        TeacherWindow.constructWindow();
     }
 
     /**
@@ -99,7 +100,6 @@ public class Teacher extends User
         if (newQuiz == null)
         {
             System.err.println("No Quiz Found.");
-            return;
         }
     }
 
