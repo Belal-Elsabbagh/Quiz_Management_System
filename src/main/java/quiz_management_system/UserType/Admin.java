@@ -1,6 +1,7 @@
 package quiz_management_system.UserType;
 
 import quiz_management_system.DataHandler;
+import quiz_management_system.GUI.AdminGUI.AdminWindow;
 import quiz_management_system.Quiz_Management_System;
 
 import java.io.Serial;
@@ -26,9 +27,12 @@ public class Admin extends User implements Serializable
     @Override
     public void listMenu()
     {
-        super.listMenu();
+        AdminWindow.constructWindow();
     }
 
+    /**
+     * @deprecated
+     */
     public int listMenuConsole()
     {
         Scanner sc = new Scanner(in);

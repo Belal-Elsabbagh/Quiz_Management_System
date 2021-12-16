@@ -12,17 +12,14 @@ public class Quiz_Management_System
 {
     private static User activeUser;
 
-    public static User getActiveUser()
-    {
-        return activeUser;
-    }
+    public static User getActiveUser() { return activeUser; }
+    public static void setActiveUser(User activeUser) { Quiz_Management_System.activeUser = activeUser; }
 
     public static void main(String[] args)
     {
         new DataHandler();
         activeUser = new User("", "");
-        while(activeUser != null)
-            activeUser.listMenu();
+        activeUser.listMenu();
     }
 
     public static void buildUserData()
@@ -36,6 +33,9 @@ public class Quiz_Management_System
         DataHandler.userData.add(u3);
     }
 
+    /**
+     * @deprecated
+     */
     public static void consoleLogin()
     {
         Scanner sc = new Scanner(System.in);
