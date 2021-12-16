@@ -3,6 +3,7 @@ package quiz_management_system.GUI.TeacherGUI;
 import quiz_management_system.Quiz_Management_System;
 
 import javax.swing.*;
+import java.awt.*;
 
 /**
  * GUI Class Description
@@ -22,8 +23,13 @@ public class CreateQuizWindow extends JFrame
 {
     static JFrame window;
 
+    static JPanel p1, p2, p3 , p4;
     static
     {
+        p1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        p4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
     }
 
