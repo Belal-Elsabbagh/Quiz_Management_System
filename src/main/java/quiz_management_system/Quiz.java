@@ -2,6 +2,9 @@ package quiz_management_system;
 
 import quiz_management_system.UserType.Teacher;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -337,6 +340,86 @@ public class Quiz implements Serializable
                 }
             }
             System.out.println("Choices added successfully.");
+        }
+    }
+
+    static class CreateQuizWindow extends JFrame
+    {
+        static JFrame window;
+
+        static JPanel title_panel, background;
+        static Font myFont;
+        static JLabel Title, label1, label2, label3, label4;
+        static JButton button;
+        static JTextField textField1, textField2, textField3, textField4;
+        static Border brdr;
+
+        static
+        {
+            title_panel = new JPanel();
+            brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+            background = new JPanel();
+            myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+            Title = new JLabel("Create Quiz ");
+            button = new JButton("Create Questions");
+            textField1 = new JTextField();
+            textField2 = new JTextField();
+            textField3 = new JTextField();
+            textField4 = new JTextField();
+
+        }
+
+        public CreateQuizWindow()
+        {
+            Title.setFont(myFont);
+            title_panel.add(Title);
+            add(title_panel, BorderLayout.PAGE_START);
+            Title.setForeground(Color.BLACK);
+            title_panel.setBackground(Color.white);
+            title_panel.setBorder(brdr);
+            //submit button
+            button.setFont(new Font("Sans Serif", Font.PLAIN, 25));
+            button.setFocusable(false);
+            button.setBounds(280, 450, 240, 40);
+            button.addActionListener(e -> System.out.println("Saved"));
+            button.setBorder(BorderFactory.createEtchedBorder());
+            button.setBackground(new Color(222, 184, 150));
+            add(button);
+            //labels
+            label1 = new JLabel("Title: ");
+            label1.setBounds(10, 100, 60, 30);
+            label2 = new JLabel("Quiz Code: ");
+            label2.setBounds(10, 140, 1000, 30);
+            label3 = new JLabel("Duration: ");
+            label3.setBounds(10, 180, 60, 30);
+            label4 = new JLabel("Number of Questions: ");
+            label4.setBounds(10, 220, 140, 30);
+            add(label1);
+            add(label2);
+            add(label3);
+            add(label4);
+            //text fields
+            textField1.setBounds(200, 100, 200, 30);
+            textField2.setBounds(200, 140, 200, 30);
+            textField3.setBounds(200, 180, 200, 30);
+            textField4.setBounds(200, 220, 200, 30);
+            add(textField1);
+            add(textField2);
+            add(textField3);
+            add(textField4);
+            //Backgroung
+            background.setBackground(Color.WHITE);
+            add(background, BorderLayout.CENTER);
+        }
+
+        public static void constructWindow()
+        {
+            window = new CreateQuizWindow();
+            //window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
+            window.setSize(550, 550);
+            window.setLocationRelativeTo(null); // to not have it open at the corner
+            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            window.setVisible(true);
         }
     }
 }

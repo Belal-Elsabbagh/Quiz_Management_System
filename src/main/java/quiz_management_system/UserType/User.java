@@ -1,7 +1,7 @@
 package quiz_management_system.UserType;
 
 import quiz_management_system.DataHandler;
-import quiz_management_system.GUI.LoginWindow;
+import quiz_management_system.LoginWindow;
 import quiz_management_system.Interactive;
 
 import java.io.Serial;
