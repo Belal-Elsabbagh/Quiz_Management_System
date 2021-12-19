@@ -7,6 +7,7 @@ import quiz_management_system.Quiz.Question;
 import quiz_management_system.Quiz_Management_System;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -117,6 +118,53 @@ public class Student extends User implements Interactive
         });
     }
 
+    static class StudentWindow extends JFrame
+    {
+        static JFrame window;
+
+        private static String[] THeader;
+        private static Object[][] data;
+        static JTable AttemptHistoryTable;
+        static JLabel enterQuizID_label;
+        static JTextField enterQuizID_text;
+        static JButton actionAttempt;
+        static JPanel doNewQuiz;
+
+        static
+        {
+            doNewQuiz = new JPanel(new GridLayout(3, 1));
+            data = new Object[2][10];
+            enterQuizID_label = new JLabel("Enter Quiz ID");
+            enterQuizID_text = new JTextField(10);
+            actionAttempt = new JButton("Attempt Quiz");
+            THeader = new String[]{"Quiz", "Grade"};
+        }
+
+        public StudentWindow()
+        {
+            AttemptHistoryTable = new JTable(data, THeader);
+
+            setLayout(new FlowLayout(FlowLayout.LEFT));
+
+            doNewQuiz.add(enterQuizID_label);
+            doNewQuiz.add(enterQuizID_text);
+            doNewQuiz.add(actionAttempt);
+
+            add(AttemptHistoryTable);
+            add(doNewQuiz);
+        }
+
+        public static void constructWindow()
+        {
+            window = new StudentWindow();
+            window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
+            window.setSize(640, 480);
+            window.setLocationRelativeTo(null); // to not have it open at the corner
+            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            window.setVisible(true);
+        }
+    }
+
     protected class Attempt
     {
         private final Quiz quiz;
@@ -225,32 +273,6 @@ public class Student extends User implements Interactive
                 window.setVisible(true);
             }
         }
-    }
-
-    static class StudentWindow extends JFrame
-    {
-        static JFrame window;
-
-        static
-        {
-
-        }
-
-        public StudentWindow()
-        {
-
-        }
-
-        public static void constructWindow()
-        {
-            window = new StudentWindow();
-            window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-            window.setSize(400, 200);
-            window.setLocationRelativeTo(null); // to not have it open at the corner
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.setVisible(true);
-        }
-
     }
 }
 
