@@ -20,8 +20,6 @@ public class Quiz_Management_System
         new DataHandler();
         activeUser = new User("", "");
         activeUser.listMenu();
-
-        //CreateQuestionBank.constructWindow();
     }
 
     public static void buildUserData()

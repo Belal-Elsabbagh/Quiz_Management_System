@@ -1,9 +1,9 @@
 package quiz_management_system.UserType;
 
 import quiz_management_system.DataHandler;
+import quiz_management_system.GUI.AdminGUI.AdminWindow;
 import quiz_management_system.Quiz_Management_System;
 
-import javax.swing.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Scanner;
@@ -115,31 +115,6 @@ public class Admin extends User implements Serializable
             newUser = new Teacher(inUsername, inPassword, Access.ADMIN);
             newUser.setUserID(2 * 1000 + DataHandler.userData.size() + 1);
             DataHandler.userData.add(newUser);
-        }
-    }
-
-    static class AdminWindow extends JFrame
-    {
-        static JFrame window;
-
-        static
-        {
-
-        }
-
-        public AdminWindow()
-        {
-
-        }
-
-        public static void constructWindow()
-        {
-            window = new AdminWindow();
-            window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-            window.setSize(400, 200);
-            window.setLocationRelativeTo(null); // to not have it open at the corner
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.setVisible(true);
         }
     }
 }
