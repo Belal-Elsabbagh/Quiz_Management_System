@@ -128,7 +128,6 @@ public class Student extends User implements Interactive
     {
         private String[] THeader = new String[]{"Quiz", "Grade"};
         private Object[][] data = new Object[2][10];
-        ;
         JTable AttemptHistoryTable;
         JLabel enterQuizID_label = new JLabel("Enter Quiz ID");
         JTextField enterQuizID_text = new JTextField(10);

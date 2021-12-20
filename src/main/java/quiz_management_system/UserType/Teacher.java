@@ -27,7 +27,14 @@ public class Teacher extends User
     @Override
     public void listMenu()
     {
-        TeacherWindow.constructWindow();
+        JFrame window;
+
+        window = new TeacherWindow();
+        window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
+        window.setSize(640, 480);
+        window.setLocationRelativeTo(null); // to not have it open at the corner
+        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        window.setVisible(true);
     }
 
     /**
@@ -123,30 +130,56 @@ public class Teacher extends User
         }
     }
 
-    static class TeacherWindow extends JFrame
+
+    /**
+     * @author marma
+     */
+    class TeacherWindow extends JFrame
     {
-        static JFrame window;
-
-        static
-        {
-
-        }
-
         public TeacherWindow()
         {
+            //Title
+            JPanel Title = new JPanel();
+            Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+            Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+            JLabel Title_label = new JLabel("Welcome " + Quiz_Management_System.getActiveUser().getUsername()); // + username
+            Title.add(Title_label);
+            add(Title, BorderLayout.PAGE_START);
+            Title_label.setFont(myFont);
+            Title_label.setForeground(Color.BLACK);
+            Title.setBackground(Color.WHITE);
+            Title.setBorder(brdr);
+            //List
+            JPanel l = new JPanel();
+            JLabel lb = new JLabel("Created Quizes: ");
+            lb.setBounds(5, 70, 100, 30);
+            String[] data = {"1", "2"};
+            JList list = new JList(data);
+            list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+            l.add(list);
+            list.setPreferredSize(new Dimension(250, 400));
+            l.setBackground(new Color(239, 222, 205));
+            l.setBounds(5, 100, 280, 420);
+            add(l);
+            add(lb);
+            JScrollPane lscroll = new JScrollPane();
+            lscroll.setPreferredSize(new Dimension(250, 80));
 
+            //buttons
+            JButton b1 = new JButton("Create quiz");
+            b1.setBounds(300, 100, 200, 30);
+            b1.setBackground(new Color(222, 184, 150));
+            add(b1);
+            JButton b2 = new JButton("Review quiz grades");
+            b2.setBounds(300, 150, 200, 30);
+            b2.setBackground(new Color(222, 184, 150));
+            add(b2);
+            //background
+            JPanel Back = new JPanel();
+            Back.setBackground(Color.WHITE);
+            add(Back, BorderLayout.CENTER);
         }
-
-        public static void constructWindow()
-        {
-            window = new TeacherWindow();
-            window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-            window.setSize(400, 200);
-            window.setLocationRelativeTo(null); // to not have it open at the corner
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.setVisible(true);
-        }
-
     }
 
     /**
