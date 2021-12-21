@@ -2,6 +2,9 @@ package quiz_management_system;
 
 import quiz_management_system.UserType.Teacher;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.text.ParseException;
