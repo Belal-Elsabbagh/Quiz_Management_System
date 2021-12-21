@@ -130,7 +130,6 @@ public class Teacher extends User
         }
     }
 
-
     /**
      * @author marma
      */
@@ -151,7 +150,7 @@ public class Teacher extends User
             Title.setBorder(brdr);
             //List
             JPanel l = new JPanel();
-            JLabel lb = new JLabel("Created Quizes: ");
+            JLabel lb = new JLabel("Created Quizzes: ");
             lb.setBounds(5, 70, 100, 30);
             String[] data = {"1", "2"};
             JList list = new JList(data);
@@ -163,8 +162,8 @@ public class Teacher extends User
             l.setBounds(5, 100, 280, 420);
             add(l);
             add(lb);
-            JScrollPane lscroll = new JScrollPane();
-            lscroll.setPreferredSize(new Dimension(250, 80));
+            JScrollPane lScroll = new JScrollPane();
+            lScroll.setPreferredSize(new Dimension(250, 80));
 
             //buttons
             JButton b1 = new JButton("Create quiz");
