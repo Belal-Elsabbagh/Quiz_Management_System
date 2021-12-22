@@ -189,7 +189,7 @@ public class Admin extends User implements Serializable
             JTable table = new JTable(data, columnNames);
             table.setBounds(0, 50, 350, 100);
             table.setBackground(new Color(239, 222, 205));
-            add(table);
+            add(scrollpane);
 
 //        JScrollPane scrollPane = new JScrollPane(table);
 //        table.setFillsViewportHeight(true);

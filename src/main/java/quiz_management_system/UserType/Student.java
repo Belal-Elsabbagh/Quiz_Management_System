@@ -9,6 +9,8 @@ import quiz_management_system.Quiz_Management_System;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -43,6 +45,7 @@ public class Student extends User implements Interactive
         window = new StudentWindow();
         window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
         window.setSize(640, 480);
+        window.setResizable(false);
         window.setLocationRelativeTo(null); // to not have it open at the corner
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         window.setVisible(true);
@@ -124,33 +127,97 @@ public class Student extends User implements Interactive
         });
     }
 
-    class StudentWindow extends JFrame
+    class StudentWindow extends JFrame implements ActionListener
     {
-        private String[] THeader = new String[]{"Quiz", "Grade"};
-        private Object[][] data = new Object[2][10];
-        JTable AttemptHistoryTable;
-        JLabel enterQuizID_label = new JLabel("Enter Quiz ID");
-        JTextField enterQuizID_text = new JTextField(10);
-        JButton actionAttempt = new JButton("Attempt Quiz");
-        JPanel doNewQuiz = new JPanel(new GridLayout(3, 1));
+        // Title
+        JPanel Title = new JPanel();
+        Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+        Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+        JLabel Title_label = new JLabel("Welcome " + Quiz_Management_System.getActiveUser().getUsername()); // + username
+        // Table
+        JTable attemptTable;
+        JPanel l = new JPanel();
+        JLabel lb = new JLabel("Attempt History");
+        // Buttons
+        JButton actionAttempt = new JButton("Attempt Now");
+        JButton actionReview = new JButton("Review quiz grades");
+        //background
+        JPanel Back = new JPanel();
+
+        JTextField qID = new JTextField(20);
 
         public StudentWindow()
         {
-            AttemptHistoryTable = new JTable(data, THeader);
+            Title.add(Title_label);
+            add(Title, BorderLayout.PAGE_START);
+            Title_label.setFont(myFont);
+            Title_label.setForeground(Color.BLACK);
+            Title.setBackground(Color.WHITE);
+            Title.setBorder(brdr);
 
-            setLayout(new FlowLayout(FlowLayout.LEFT));
+            lb.setBounds(5, 70, 100, 30);
 
-            doNewQuiz.add(enterQuizID_label);
-            doNewQuiz.add(enterQuizID_text);
-            doNewQuiz.add(actionAttempt);
+            String[] headers = {"Quiz", "Result"};
+            attemptTable = new JTable(loadData(), headers);
+            attemptTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            //attemptTable.setPreferredSize(new Dimension(250, 400));
+            JScrollPane lScroll = new JScrollPane(attemptTable);
+            lScroll.setPreferredSize(new Dimension(250, 80));
+            l.add(lScroll);
+            l.setBackground(new Color(239, 222, 205));
+            l.setBounds(5, 100, 280, 420);
+            add(l);
+            add(lb);
 
-            add(AttemptHistoryTable);
-            add(doNewQuiz);
+            qID.setBounds(300, 100, 200, 30);
+            qID.setBackground(new Color(222, 184, 150));
+            add(qID);
+
+            //buttons
+            actionAttempt.setBounds(300, 150, 200, 30);
+            actionAttempt.setBackground(new Color(222, 184, 150));
+            actionAttempt.addActionListener(this);
+            add(actionAttempt);
+
+            Back.setBackground(Color.WHITE);
+            add(Back, BorderLayout.CENTER);
         }
 
-        public void closeWindow()
+        private Object[][] loadData()
         {
-            setVisible(false);
+            int n = 0;
+            Object[][] data;
+            if (attemptHistory != null)
+            {
+                data = new String[2][attemptHistory.size()];
+                int j = 0;
+                for (Attempt i : attemptHistory)
+                {
+                    data[0][j] = i.getQuiz().getQuizTitle();
+                    j++;
+                }
+                return data;
+            }
+            data = new Object[2][1];
+            return data;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            if (e.getSource() == actionReview)
+            {
+                setVisible(false);
+
+                JFrame window;
+                window = new Teacher.ReviewQuizGrades();
+                window.setTitle("Review Quiz Grades");
+                window.setSize(400, 500);
+                window.setResizable(false);
+                window.setLocationRelativeTo(null); // to not have it open at the corner
+                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                window.setVisible(true);
+            }
         }
     }
 
@@ -262,7 +329,7 @@ public class Student extends User implements Interactive
                 Title_label.setForeground(Color.BLACK);
                 Title.setBackground(Color.WHITE);
                 Title.setBorder(brdr);
-                // rigth/left buttons
+                // right/left buttons
                 right_b.setIcon(icon_r);
                 left_b.setIcon(icon_l);
                 right_b.setBackground(Color.WHITE);
@@ -376,7 +443,7 @@ public class Student extends User implements Interactive
                 Title_label.setForeground(Color.BLACK);
                 Title.setBackground(Color.WHITE);
                 Title.setBorder(brdr);
-                // rigth/left buttons
+                // right/left buttons
                 right_b.setIcon(icon_r);
                 left_b.setIcon(icon_l);
                 right_b.setBackground(Color.WHITE);

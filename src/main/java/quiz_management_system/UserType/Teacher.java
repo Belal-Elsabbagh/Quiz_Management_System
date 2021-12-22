@@ -7,6 +7,8 @@ import quiz_management_system.Quiz_Management_System;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -133,24 +135,31 @@ public class Teacher extends User
     /**
      * @author marma
      */
-    class TeacherWindow extends JFrame
+    class TeacherWindow extends JFrame implements ActionListener
     {
+        // Title
+        JPanel Title = new JPanel();
+        Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+        Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+        JLabel Title_label = new JLabel("Welcome " + Quiz_Management_System.getActiveUser().getUsername()); // + username
+        // List
+        JPanel l = new JPanel();
+        JLabel lb = new JLabel("Created Quizzes: ");
+        // Buttons
+        JButton actionCreate = new JButton("Create quiz");
+        JButton actionReview = new JButton("Review quiz grades");
+        //background
+        JPanel Back = new JPanel();
+
         public TeacherWindow()
         {
-            //Title
-            JPanel Title = new JPanel();
-            Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
-            Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-            JLabel Title_label = new JLabel("Welcome " + Quiz_Management_System.getActiveUser().getUsername()); // + username
             Title.add(Title_label);
             add(Title, BorderLayout.PAGE_START);
             Title_label.setFont(myFont);
             Title_label.setForeground(Color.BLACK);
             Title.setBackground(Color.WHITE);
             Title.setBorder(brdr);
-            //List
-            JPanel l = new JPanel();
-            JLabel lb = new JLabel("Created Quizzes: ");
+
             lb.setBounds(5, 70, 100, 30);
             String[] data = {"1", "2"};
             JList list = new JList(data);
@@ -166,18 +175,34 @@ public class Teacher extends User
             lScroll.setPreferredSize(new Dimension(250, 80));
 
             //buttons
-            JButton b1 = new JButton("Create quiz");
-            b1.setBounds(300, 100, 200, 30);
-            b1.setBackground(new Color(222, 184, 150));
-            add(b1);
-            JButton b2 = new JButton("Review quiz grades");
-            b2.setBounds(300, 150, 200, 30);
-            b2.setBackground(new Color(222, 184, 150));
-            add(b2);
-            //background
-            JPanel Back = new JPanel();
+            actionCreate.setBounds(300, 100, 200, 30);
+            actionCreate.setBackground(new Color(222, 184, 150));
+            actionCreate.addActionListener(this);
+            add(actionCreate);
+            actionReview.setBounds(300, 150, 200, 30);
+            actionReview.setBackground(new Color(222, 184, 150));
+            actionReview.addActionListener(this);
+            add(actionReview);
+
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            if (e.getSource() == actionReview)
+            {
+                setVisible(false);
+
+                JFrame window;
+                window = new ReviewQuizGrades();
+                window.setTitle("Review Quiz Grades");
+                window.setSize(400, 500);
+                window.setLocationRelativeTo(null); // to not have it open at the corner
+                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                window.setVisible(true);
+            }
         }
     }
 
@@ -193,9 +218,8 @@ public class Teacher extends User
         static Border brdr;
         static JTable table;
         static String[] columnNames = {"Student", "Grade"};
-        static Object[][] data = {
-                {"Kathy", 5}, {"John", 4}};
-        static JScrollPane scrollpane;
+        static Object[][] data = {{"Kathy", 5}, {"John", 4}};
+        static JScrollPane scrollPane;
 
         static
         {
@@ -211,7 +235,7 @@ public class Teacher extends User
             label5 = new JLabel(" ");
             label6 = new JLabel(" ");
             table = new JTable(data, columnNames);
-            scrollpane = new JScrollPane(table);
+            scrollPane = new JScrollPane(table);
             table.setFillsViewportHeight(true);
         }
 
@@ -251,18 +275,8 @@ public class Teacher extends User
             //Table
             table.setBounds(100, 300, 300, 500);
             table.setBackground(new Color(222, 184, 150));
-            add(table);
+            add(scrollPane);
 
-        }
-
-        public static void constructWindow()
-        {
-            window = new ReviewQuizGrades();
-            //  window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-            window.setSize(400, 200);
-            window.setLocationRelativeTo(null); // to not have it open at the corner
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.setVisible(true);
         }
     }
 }
