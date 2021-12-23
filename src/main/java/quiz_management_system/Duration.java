@@ -5,18 +5,19 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
  * @author marma
  */
-public class Duration extends TimerTask {
+public class Duration extends TimerTask
+{
 
     static long hr, min, sec, totalSec;
 
 
-    public void convertTime() {
+    public void convertTime()
+    {
         Quiz q = new Quiz();
         totalSec = q.getTotalSec();
-        
+
         min = TimeUnit.SECONDS.toMinutes(totalSec);
         sec = totalSec - (min * 60);
         hr = TimeUnit.MINUTES.toHours(min);

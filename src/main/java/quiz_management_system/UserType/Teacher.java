@@ -87,7 +87,7 @@ public class Teacher extends User
         Quiz newQuiz = new Quiz();
         newQuiz.createQuiz(this);
 
-        newQuiz.setQuizID(DataHandler.quizData.size());
+        //TODO set String quizID to add to the quizzes
 
         DataHandler.quizData.add(newQuiz);
         createdQuizzes.add(newQuiz);
@@ -106,7 +106,7 @@ public class Teacher extends User
             System.err.println("INVALID INPUT.");
             sc.next();
         }
-        int inID = sc.nextInt();
+        String inID = sc.next();
 
         Quiz newQuiz = Quiz.searchByID(inID);
         if (newQuiz == null)
@@ -162,7 +162,7 @@ public class Teacher extends User
 
             lb.setBounds(5, 70, 100, 30);
             String[] data = {"1", "2"};
-            JList list = new JList(data);
+            JList<String> list = new JList<>(data);
             list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
             list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
             l.add(list);
@@ -209,35 +209,24 @@ public class Teacher extends User
     /**
      * @author Habiba1234567
      */
-    static class ReviewQuizGrades extends JFrame
+    class ReviewQuizGrades extends JFrame
     {
-        static JFrame window;
-        static JPanel title_panel, background;
-        static Font myFont;
-        static JLabel Title, label1, label2, label3, label4, label5, label6;
-        static Border brdr;
-        static JTable table;
-        static String[] columnNames = {"Student", "Grade"};
-        static Object[][] data = {{"Kathy", 5}, {"John", 4}};
-        static JScrollPane scrollPane;
-
-        static
-        {
-            title_panel = new JPanel();
-            brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
-            background = new JPanel();
-            myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-            Title = new JLabel("Review Quiz Grades ");
-            label1 = new JLabel("Best Grade : ");
-            label2 = new JLabel("Worst Grade : ");
-            label3 = new JLabel("Average Grade : ");
-            label4 = new JLabel(" ");
-            label5 = new JLabel(" ");
-            label6 = new JLabel(" ");
-            table = new JTable(data, columnNames);
-            scrollPane = new JScrollPane(table);
-            table.setFillsViewportHeight(true);
-        }
+        JPanel title_panel = new JPanel(),
+                background = new JPanel();
+        Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+        JLabel Title = new JLabel("Review Quiz Grades "),
+                BestGrade_label = new JLabel("Best Grade : "),
+                WorstGrade_label = new JLabel("Worst Grade : "),
+                AverageGrade_label = new JLabel("Average Grade : "),
+                label4 = new JLabel(" "),
+                label5 = new JLabel(" "),
+                label6 = new JLabel(" ");
+        Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+        String[] columnNames = {"Student", "Grade"};
+        Object[][] data = {{"Kathy", 5}, {"John", 4}};
+        JTable table = new JTable(data, columnNames);
+        ;
+        JScrollPane scrollPane = new JScrollPane(table);
 
         public ReviewQuizGrades()
         {
@@ -249,21 +238,17 @@ public class Teacher extends User
             title_panel.setBorder(brdr);
 
             //labels
-            label1 = new JLabel("Title: ");
-            label1.setBounds(10, 100, 60, 30);
-            label2 = new JLabel("Best Grade : ");
-            label2.setBounds(10, 140, 100, 30);
-            label3 = new JLabel("Worst Grade : ");
-            label3.setBounds(10, 180, 200, 30);
-            label4 = new JLabel("Average Grade : ");
-            label4.setBounds(10, 220, 200, 30);
+            Title.setBounds(10, 100, 60, 30);
+            BestGrade_label.setBounds(10, 140, 100, 30);
+            WorstGrade_label.setBounds(10, 180, 200, 30);
+            AverageGrade_label.setBounds(10, 220, 200, 30);
             label5 = new JLabel(" ");
             label5.setBounds(10, 260, 60, 30);
             label6 = new JLabel(" ");
             label6.setBounds(10, 300, 60, 30);
-            add(label1);
-            add(label2);
-            add(label3);
+            add(BestGrade_label);
+            add(WorstGrade_label);
+            add(AverageGrade_label);
             add(label4);
             add(label5);
             add(label6);
@@ -273,10 +258,10 @@ public class Teacher extends User
             add(background, BorderLayout.CENTER);
 
             //Table
+            table.setFillsViewportHeight(true);
             table.setBounds(100, 300, 300, 500);
             table.setBackground(new Color(222, 184, 150));
             add(scrollPane);
-
         }
     }
 }

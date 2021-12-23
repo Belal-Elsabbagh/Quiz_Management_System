@@ -22,6 +22,7 @@ public class Quiz_Management_System
         activeUser.listMenu();
     }
 
+
     public static void buildUserData()
     {
         DataHandler.userData = new ArrayList<>();

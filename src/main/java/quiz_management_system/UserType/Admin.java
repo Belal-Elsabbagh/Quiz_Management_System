@@ -5,6 +5,8 @@ import quiz_management_system.Quiz_Management_System;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -122,9 +124,12 @@ public class Admin extends User implements Serializable
         }
     }
 
+    /**
+     * @author Lojain45Mostafa
+     */
     static class AdminWindow extends JFrame implements ActionListener
     {
-        String[] columnNames = {"First Name",
+        String[] headers = {"First Name",
                 "Last Name",
                 "ID",
                 "Type"};
@@ -138,20 +143,18 @@ public class Admin extends User implements Serializable
         static JFrame window;
         static JPanel Background_panel = new JPanel();
         static JPanel Title_panel = new JPanel();
-        static JPanel Table_panel = new JPanel();
         static JButton update_button = new JButton();
         static JButton Save_button = new JButton();
         static JButton Delete_button = new JButton();
         static JLabel Title = new JLabel("Admin");
         static Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
         static Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-        static JScrollPane scrollpane;
+        static JScrollPane scrollPane;
 
-        JTable table = new JTable(data, columnNames);
+        JTable table = new JTable(data, headers);
 
         public AdminWindow()
         {
-
             Title.setFont(myFont);
             Title_panel.add(Title);
             add(Title_panel, BorderLayout.PAGE_START);
@@ -184,16 +187,14 @@ public class Admin extends User implements Serializable
             Delete_button.setBackground(new Color(222, 184, 150));
             add(Delete_button);
 
-            scrollpane = new JScrollPane(table);
             table.setFillsViewportHeight(true);
-            JTable table = new JTable(data, columnNames);
+            table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
             table.setBounds(0, 50, 350, 100);
-            table.setBackground(new Color(239, 222, 205));
-            add(scrollpane);
 
-//        JScrollPane scrollPane = new JScrollPane(table);
-//        table.setFillsViewportHeight(true);
-//        add(scrollPane);
+            table.setBackground(new Color(239, 222, 205));
+            scrollPane = new JScrollPane(table);
+            scrollPane.setBounds(0, 50, 350, 100);
+            add(scrollPane);
 
             Background_panel.setBackground(Color.WHITE);
             Background_panel.setBounds(0, 0, 550, 550);

@@ -76,10 +76,11 @@ public class Student extends User implements Interactive
                     err.println("INVALID INPUT.");
                     sc.next();
                 }
-                Quiz newQuiz = Quiz.searchByID(sc.nextInt());
+                Quiz newQuiz = Quiz.searchByID(sc.next());
                 if (newQuiz == null)
                 {
                     err.println("No Quiz Found.");
+                    return 0;
                 }
                 out.println("Starting Quiz: ");
                 newQuiz.displayQuizProperties();
@@ -95,7 +96,7 @@ public class Student extends User implements Interactive
                     err.println("INVALID INPUT.");
                     sc.next();
                 }
-                Quiz newQuiz = Quiz.searchByID(sc.nextInt());
+                Quiz newQuiz = Quiz.searchByID(sc.next());
                 if (newQuiz == null)
                 {
                     err.println("No Quiz Found.");
@@ -157,7 +158,7 @@ public class Student extends User implements Interactive
 
             lb.setBounds(5, 70, 100, 30);
 
-            String[] headers = {"Quiz", "Result"};
+            String[] headers = {"ID", "Quiz", "Result"};
             attemptTable = new JTable(loadData(), headers);
             attemptTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
             //attemptTable.setPreferredSize(new Dimension(250, 400));
@@ -189,16 +190,18 @@ public class Student extends User implements Interactive
             Object[][] data;
             if (attemptHistory != null)
             {
-                data = new String[2][attemptHistory.size()];
+                data = new String[3][attemptHistory.size()];
                 int j = 0;
                 for (Attempt i : attemptHistory)
                 {
-                    data[0][j] = i.getQuiz().getQuizTitle();
+                    data[0][j] = i.getQuiz().getQuizID();
+                    data[1][j] = i.getQuiz().getQuizTitle();
+                    data[2][3] = i.getResult();
                     j++;
                 }
                 return data;
             }
-            data = new Object[2][1];
+            data = new Object[3][1];
             return data;
         }
 
@@ -207,21 +210,29 @@ public class Student extends User implements Interactive
         {
             if (e.getSource() == actionReview)
             {
-                setVisible(false);
+                if (Quiz.searchByID(qID.getText()) == null)
+                {
+                    JOptionPane.showMessageDialog(null, "Quiz not found.");
+                    return;
+                }
 
+                //TODO Load attempt object from table and create the window from it
+                setVisible(false);
+/* FIXME
                 JFrame window;
-                window = new Teacher.ReviewQuizGrades();
+                window = new Attempt.ReviewAttemptWindow();
                 window.setTitle("Review Quiz Grades");
                 window.setSize(400, 500);
                 window.setResizable(false);
                 window.setLocationRelativeTo(null); // to not have it open at the corner
                 window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 window.setVisible(true);
+                */
             }
         }
     }
 
-    protected class Attempt
+    public class Attempt
     {
         private final Quiz quiz;
         private Question[] model;
@@ -231,18 +242,9 @@ public class Student extends User implements Interactive
         public Attempt(Quiz newQuiz)
         {
             quiz = newQuiz;
-            model = new Question[quiz.getnQuestions()];
+            model = new Question[quiz.getNQuestions()];
             model = quiz.generateQuizModel();
             result = 0;
-
-            JFrame window;
-            window = new DoAttemptWindow();
-            window.setTitle(newQuiz.getQuizTitle());
-            window.setSize(550, 550);
-            window.setResizable(false);
-            window.setLocationRelativeTo(null); // to not have it open at the corner
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.setVisible(true);
         }
 
         public double getResult()
@@ -266,8 +268,8 @@ public class Student extends User implements Interactive
             Duration d = new Duration();
             d.run();
             out.println("Starting Quiz...Enter answer index after the prompt appears.");
-            answerIndex = new int[quiz.getnQuestions()];
-            for(int i = 0; i < quiz.getnQuestions(); i++)
+            answerIndex = new int[quiz.getNQuestions()];
+            for (int i = 0; i < quiz.getNQuestions(); i++)
             {
                 model[i].displayQuestion();
                 answerIndex[i] = sc.nextInt();
@@ -283,7 +285,7 @@ public class Student extends User implements Interactive
          */
         public void reviewAttemptConsole()
         {
-            for (int i = 0; i < quiz.getnQuestions(); i++)
+            for (int i = 0; i < quiz.getNQuestions(); i++)
             {
                 model[i].displayQuestion();
                 out.println("Your Answer: " + answerIndex[i]);
@@ -297,6 +299,7 @@ public class Student extends User implements Interactive
          */
         class DoAttemptWindow extends JFrame
         {
+            JFrame window;
             JPanel Back = new JPanel(),
                     Title = new JPanel(),
                     down = new JPanel();
@@ -311,7 +314,6 @@ public class Student extends User implements Interactive
                     Q = new JLabel("Question number: " + 1),
                     timer = new JLabel(" Timer");
             JButton right_b = new JButton(), left_b = new JButton(), submit = new JButton("Submit");
-            ;
             Icon icon_r = new ImageIcon("UR.PNG"),
                     icon_l = new ImageIcon("UL.PNG");
             Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
@@ -388,51 +390,42 @@ public class Student extends User implements Interactive
 
             public void constructWindow()
             {
-
+                window = new DoAttemptWindow();
+                window.setTitle(quiz.getQuizTitle());
+                window.setSize(550, 550);
+                window.setResizable(false);
+                window.setLocationRelativeTo(null); // to not have it open at the corner
+                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                window.setVisible(true);
             }
         }
 
         /**
          * @author marma
          */
-        static class ReviewAttemptWindow extends JFrame
+        class ReviewAttemptWindow extends JFrame
         {
-            static JFrame window;
-            static JPanel Back, Title, down;
-            static Font myFont;
-            static JLabel Title_label, prompt_label, choice_label, c1, c2, c3, c4, Q, grade, answer;
-            static JButton right_b, left_b, submit;
-            static Icon icon_r, icon_l;
-            static Border brdr;
-            static JRadioButton c1_r, c2_r, c3_r, c4_r, I_r;
-
-            static
-            {
-                myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-                Title_label = new JLabel("Quiz Title");
-                Back = new JPanel();
-                Title = new JPanel();
-                brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
-                down = new JPanel();
-                Q = new JLabel("Question number: " + 1);
-                prompt_label = new JLabel("((((Question here))))");  // getQuizTitle function
-                choice_label = new JLabel("choices: ");
-                c1 = new JLabel("choice 1");     //get the text written in choice 1
-                c2 = new JLabel("choice 2");     //get the text written in choice 2
-                c3 = new JLabel("choice 3");     //get the text written in choice 3
-                c4 = new JLabel("choice 4");     //get the text written in choice 4
-                grade = new JLabel(" Grade: " + 100);
-                submit = new JButton("Close");
-                answer = new JLabel(" The right answer is " + 1);   //index of right answer
-                right_b = new JButton();
-                left_b = new JButton();
-                icon_r = new ImageIcon("D:\\UR.PNG");
-                icon_l = new ImageIcon("D:\\UL.PNG");
-                c1_r = new JRadioButton();
-                c2_r = new JRadioButton();
-                c3_r = new JRadioButton();
-                c4_r = new JRadioButton();
-            }
+            JPanel Back = new JPanel(),
+                    Title = new JPanel(),
+                    down = new JPanel();
+            Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+            JLabel Title_label = new JLabel("Quiz Title"),
+                    prompt_label = new JLabel("((((Question here))))"),
+                    choice_label = new JLabel("Choices: "),
+                    choice1 = new JLabel("choice 1"),
+                    choice2 = new JLabel("choice 2"), choice3 = new JLabel("choice 3"),
+                    choice4 = new JLabel("choice 4"),
+                    Q = new JLabel("Question number: " + 1),
+                    grade = new JLabel(" Grade: " + 1.5),
+                    answer = new JLabel(" The right answer is " + 1);
+            JButton right_b = new JButton(new ImageIcon("UR.PNG")),
+                    left_b = new JButton(new ImageIcon("UL.PNG")),
+                    submit = new JButton("Close");
+            Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+            JRadioButton c1_r = new JRadioButton("Choice 1."),
+                    c2_r = new JRadioButton("Choice 1."),
+                    c3_r = new JRadioButton("Choice 1."),
+                    c4_r = new JRadioButton("Choice 1.");
 
             public ReviewAttemptWindow()
             {
@@ -444,8 +437,6 @@ public class Student extends User implements Interactive
                 Title.setBackground(Color.WHITE);
                 Title.setBorder(brdr);
                 // right/left buttons
-                right_b.setIcon(icon_r);
-                left_b.setIcon(icon_l);
                 right_b.setBackground(Color.WHITE);
                 left_b.setBackground(Color.WHITE);
                 down.add(left_b, BorderLayout.EAST);
@@ -456,10 +447,10 @@ public class Student extends User implements Interactive
                 Q.setBounds(5, 60, 200, 30);
                 prompt_label.setBounds(5, 100, 500, 30);
                 choice_label.setBounds(5, 140, 100, 30);
-                c1.setBounds(40, 180, 100, 30);
-                c2.setBounds(40, 220, 100, 30);
-                c3.setBounds(40, 260, 100, 30);
-                c4.setBounds(40, 300, 100, 30);
+                choice1.setBounds(40, 180, 100, 30);
+                choice2.setBounds(40, 220, 100, 30);
+                choice3.setBounds(40, 260, 100, 30);
+                choice4.setBounds(40, 300, 100, 30);
                 grade.setBorder(brdr);
                 grade.setBounds(400, 60, 100, 30);
                 answer.setBorder(brdr);
@@ -467,10 +458,10 @@ public class Student extends User implements Interactive
                 add(Q);
                 add(prompt_label);
                 add(choice_label);
-                add(c1);
-                add(c2);
-                add(c3);
-                add(c4);
+                add(choice1);
+                add(choice2);
+                add(choice3);
+                add(choice4);
                 add(grade);
                 add(answer);
                 //radio buttons
@@ -501,17 +492,6 @@ public class Student extends User implements Interactive
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
-            }
-
-            public static void constructWindow()
-            {
-                window = new ReviewAttemptWindow();
-                //window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-                window.setSize(550, 550);
-                window.setResizable(false);
-                window.setLocationRelativeTo(null); // to not have it open at the corner
-                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                window.setVisible(true);
             }
         }
     }

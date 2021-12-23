@@ -20,7 +20,7 @@ public class Quiz implements Serializable
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private int quizID;
+    private String quizID;
     private String quizTitle;
     private Teacher creator;
     private int nAttempts, nQuestions;
@@ -43,11 +43,11 @@ public class Quiz implements Serializable
      * @param qID the required quizID to search
      * @return the found quiz (null if not found)
      */
-    public static Quiz searchByID(int qID)
+    public static Quiz searchByID(String qID)
     {
         for (Quiz i : DataHandler.quizData)
         {
-            if (i.getQuizID() == qID)
+            if (i.getQuizID().equals(qID))
             {
                 return i;
             }
@@ -55,7 +55,7 @@ public class Quiz implements Serializable
         return null;
     }
 
-    public int getQuizID()
+    public String getQuizID()
     {
         return quizID;
     }
@@ -65,14 +65,9 @@ public class Quiz implements Serializable
         return quizTitle;
     }
 
-    public int getnQuestions()
+    public int getNQuestions()
     {
         return nQuestions;
-    }
-
-    public long totalSec()
-    {
-        return quizID;
     }
 
     public Date quizDate()
@@ -90,7 +85,7 @@ public class Quiz implements Serializable
         this.totalSec = TotalSec;
     }
 
-    public void setQuizID(int quizID)
+    public void setQuizID(String quizID)
     {
         this.quizID = quizID;
     }
@@ -138,14 +133,14 @@ public class Quiz implements Serializable
         nAttempts = sc.nextInt();
 
         createQuestionBank();
-        quiztime();
+        quizTime();
 
         System.out.println("Quiz created successfully.");
     }
 
     public void createQuestionBank()
     {
-        questionBank = new ArrayList();
+        questionBank = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
 
         System.out.println("-----------Question Bank Creator-----------------");
@@ -187,19 +182,19 @@ public class Quiz implements Serializable
         return newModel;
     }
 
-    public void quiztime()
+    public void quizTime()
     {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter Date (day-month-year):");
-        SimpleDateFormat datein = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat dateIn = new SimpleDateFormat("dd-MM-yyyy");
 
         String takeDate = sc.nextLine();
 
         try
         {
-            Date date = datein.parse(takeDate);
+            Date date = dateIn.parse(takeDate);
             System.out.println("The quiz will be on: " + new SimpleDateFormat("dd-MM-yyyy").format(date));
-            quizDate = datein.parse(takeDate);
+            quizDate = dateIn.parse(takeDate);
 
         }
         catch (ParseException e)

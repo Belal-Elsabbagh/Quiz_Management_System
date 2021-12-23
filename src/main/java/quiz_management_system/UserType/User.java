@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Map;
 
 public class User implements Serializable, Interactive
 {
@@ -88,7 +87,7 @@ public class User implements Serializable, Interactive
     {
         NONE(0), STUDENT(1), TEACHER(2), ADMIN(3);
 
-        private static Map map = new HashMap<>();
+        private static HashMap map = new HashMap<>();
 
         static
         {
@@ -98,9 +97,9 @@ public class User implements Serializable, Interactive
             }
         }
 
-        private int value;
+        private final int value;
 
-        private Access(int value)
+        Access(int value)
         {
             this.value = value;
         }
@@ -214,17 +213,14 @@ public class User implements Serializable, Interactive
                 {
                     changed();
                 }
-
                 public void removeUpdate(DocumentEvent e)
                 {
                     changed();
                 }
-
                 public void insertUpdate(DocumentEvent e)
                 {
                     changed();
                 }
-
                 public void changed()
                 {
                     actionLogin.setEnabled(!x.getText().equals(""));
