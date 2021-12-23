@@ -6,7 +6,6 @@ import quiz_management_system.Quiz_Management_System;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -129,11 +128,10 @@ public class Admin extends User implements Serializable
      */
     static class AdminWindow extends JFrame implements ActionListener
     {
-        String[] headers = {"First Name",
-                "Last Name",
-                "ID",
-                "Type"};
-        Object[][] data = {
+        static String[] headers = {"User ID",
+                "Username",
+                "Position"};
+        static Object[][] data = {
                 {"Kathy", "Smith", "2100", "Teacher"},
                 {"John", "Doe", "2500", "Teacher"},
                 {"Sue", "Black", "1003", "Student"},
@@ -151,7 +149,7 @@ public class Admin extends User implements Serializable
         static Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
         static JScrollPane scrollPane;
 
-        JTable table = new JTable(data, headers);
+        static JTable table = new JTable(data, headers);
 
         public AdminWindow()
         {
@@ -161,7 +159,6 @@ public class Admin extends User implements Serializable
             Title.setForeground(Color.BLACK);
             Title_panel.setBackground(Color.white);
             Title_panel.setBorder(brdr);
-
 
             update_button.setBounds(400, 100, 100, 50);
             update_button.addActionListener(this);
@@ -187,6 +184,7 @@ public class Admin extends User implements Serializable
             Delete_button.setBackground(new Color(222, 184, 150));
             add(Delete_button);
 
+            constructData();
             table.setFillsViewportHeight(true);
             table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
             table.setBounds(0, 50, 350, 100);
@@ -211,20 +209,35 @@ public class Admin extends User implements Serializable
             window.setVisible(true);
         }
 
+        private static void constructData()
+        {
+            DefaultTableModel data = new DefaultTableModel();
+            data.setColumnIdentifiers(headers);
+            for (User i : DataHandler.userData)
+            {
+                Object[] row = new Object[]{i.getUserID(), i.getUsername(), i.getAccessLevel()};
+                data.addRow(row);
+            }
+            table = new JTable(data);
+        }
+
         @Override
         public void actionPerformed(ActionEvent e)
         {
             if (e.getSource() == update_button)
             {
                 System.out.println("Data is updated");
+                return;
             }
             if (e.getSource() == Save_button)
             {
                 System.out.println("Data is saved");
+                return;
             }
             if (e.getSource() == Delete_button)
             {
                 System.out.println("Data is deleted");
+                return;
             }
         }
     }

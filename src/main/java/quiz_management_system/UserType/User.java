@@ -57,6 +57,11 @@ public class User implements Serializable, Interactive
         return null;
     }
 
+    public Access getAccessLevel()
+    {
+        return accessLevel;
+    }
+
     public String getUsername()
     {
         return username;
