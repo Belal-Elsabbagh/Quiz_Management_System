@@ -6,6 +6,7 @@ import quiz_management_system.Quiz_Management_System;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,7 +25,7 @@ public class Admin extends User implements Serializable
     @Serial
     private static final long serialVersionUID = 1L;
 
-    public Admin(String username, String password)
+    public Admin(String username, String password, Access admin)
     {
         super(username, password, 3);
     }
@@ -82,7 +83,6 @@ public class Admin extends User implements Serializable
         int aLevel;
         User newUser;
         System.out.println("-----------Creating new user------------");
-
 
         boolean status = false;
         do

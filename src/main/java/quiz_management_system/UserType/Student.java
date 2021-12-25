@@ -1,13 +1,11 @@
 package quiz_management_system.UserType;
 
-import quiz_management_system.Duration;
-import quiz_management_system.Interactive;
-import quiz_management_system.Quiz;
+import quiz_management_system.*;
 import quiz_management_system.Quiz.Question;
-import quiz_management_system.Quiz_Management_System;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -158,8 +156,7 @@ public class Student extends User implements Interactive
 
             lb.setBounds(5, 70, 100, 30);
 
-            String[] headers = {"ID", "Quiz", "Result"};
-            attemptTable = new JTable(loadData(), headers);
+            constructData();
             attemptTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
             //attemptTable.setPreferredSize(new Dimension(250, 400));
             JScrollPane lScroll = new JScrollPane(attemptTable);
@@ -184,25 +181,17 @@ public class Student extends User implements Interactive
             add(Back, BorderLayout.CENTER);
         }
 
-        private Object[][] loadData()
+        private void constructData()
         {
-            int n = 0;
-            Object[][] data;
-            if (attemptHistory != null)
+            DefaultTableModel data = new DefaultTableModel();
+            String[] headers = {"ID", "Quiz", "Result"};
+            data.setColumnIdentifiers(headers);
+            for (Attempt i : attemptHistory)
             {
-                data = new String[3][attemptHistory.size()];
-                int j = 0;
-                for (Attempt i : attemptHistory)
-                {
-                    data[0][j] = i.getQuiz().getQuizID();
-                    data[1][j] = i.getQuiz().getQuizTitle();
-                    data[2][3] = i.getResult();
-                    j++;
-                }
-                return data;
+                Object[] row = new Object[]{i.getQuiz().getQuizTitle(), i.getResult()};
+                data.addRow(row);
             }
-            data = new Object[3][1];
-            return data;
+            attemptTable = new JTable(data);
         }
 
         @Override
@@ -245,6 +234,26 @@ public class Student extends User implements Interactive
             model = new Question[quiz.getNQuestions()];
             model = quiz.generateQuizModel();
             result = 0;
+        }
+
+        public void setModel(Question[] model)
+        {
+            this.model = model;
+        }
+
+        public int[] getAnswerIndex()
+        {
+            return answerIndex;
+        }
+
+        public void setAnswerIndex(int[] answerIndex)
+        {
+            this.answerIndex = answerIndex;
+        }
+
+        public void setResult(double result)
+        {
+            this.result = result;
         }
 
         public double getResult()

@@ -20,18 +20,28 @@ public class Quiz_Management_System
         new DataHandler();
         activeUser = new User("", "");
         activeUser.listMenu();
+        //buildData();
     }
 
 
-    public static void buildUserData()
+    public static void buildData()
     {
         DataHandler.userData = new ArrayList<>();
+        DataHandler.quizData = new ArrayList<>();
+
         User u1 = new Student("Belal", "123", User.Access.STUDENT);
+        u1.setUserID(u1.hashCode());
         DataHandler.userData.add(u1);
         User u2 = new Teacher("Adel", "123", User.Access.TEACHER);
+        u2.setUserID(u2.getUserID());
         DataHandler.userData.add(u2);
-        User u3 = new Admin("Mohamed", "123");
+        User u3 = new Admin("Mohamed", "123", User.Access.ADMIN);
+        u2.setUserID(u3.hashCode());
         DataHandler.userData.add(u3);
+
+        ((Teacher) u2).createNewQuiz();
+
+        DataHandler.save();
     }
 
     /**

@@ -10,10 +10,7 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 public class Quiz implements Serializable
 {
@@ -33,6 +30,7 @@ public class Quiz implements Serializable
     {
         questionBank = new ArrayList<>();
     }
+
 
     public LocalTime openTime()
     {
@@ -171,13 +169,12 @@ public class Quiz implements Serializable
         Question[] newModel;
         newModel = new Question[nQuestions];
 
-        Random generator = new Random();
-        int randIndex;
+        ArrayList<Question> shuffled = new ArrayList<>(questionBank);
+        Collections.shuffle(shuffled);
+
         for (int i = 0; i < nQuestions; i++)
         {
-            randIndex = generator.nextInt(questionBank.size());
-
-            newModel[i] = questionBank.get(randIndex);
+            newModel[i] = shuffled.get(i);
         }
         return newModel;
     }
