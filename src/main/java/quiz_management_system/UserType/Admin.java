@@ -6,7 +6,6 @@ import quiz_management_system.Quiz_Management_System;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,7 +26,7 @@ public class Admin extends User implements Serializable
 
     public Admin(String username, String password, Access admin)
     {
-        super(username, password, 3);
+        super(username, password, admin);
     }
 
     @Override
@@ -81,7 +80,7 @@ public class Admin extends User implements Serializable
         Scanner sc = new Scanner(System.in);
         String inUsername, inPassword = null;
         int aLevel;
-        User newUser;
+        User newUser = null;
         System.out.println("-----------Creating new user------------");
 
         boolean status = false;
@@ -90,7 +89,7 @@ public class Admin extends User implements Serializable
             System.out.println("Enter username:");
             inUsername = sc.next();
 
-            if (User.searchByUsername(inUsername, Access.NONE) != null)
+            if (User.searchByUsername(inUsername) != null)
             {
                 System.err.println("Username already exists.");
                 continue;
@@ -104,21 +103,16 @@ public class Admin extends User implements Serializable
         System.out.println("Set Access Level.\n 1 for student\n2 for teacher\n3 for Admin:");
         aLevel = sc.nextInt();
         // TODO Set an ID for the user
-        if(aLevel == 1)
-        {
+        if (aLevel == 1)
             newUser = new Student(inUsername, inPassword, Access.STUDENT);
-            DataHandler.userData.add(newUser);
-        }
         else if (aLevel == 2)
-        {
             newUser = new Teacher(inUsername, inPassword, Access.TEACHER);
-            newUser.setUserID(2 * 1000 + DataHandler.userData.size() + 1);
-            DataHandler.userData.add(newUser);
-        }
         else if (aLevel == 3)
+            newUser = new Admin(inUsername, inPassword, Access.ADMIN);
+
+        if (newUser != null)
         {
-            newUser = new Teacher(inUsername, inPassword, Access.ADMIN);
-            newUser.setUserID(2 * 1000 + DataHandler.userData.size() + 1);
+            newUser.setUserID(newUser.hashCode());
             DataHandler.userData.add(newUser);
         }
     }
@@ -128,57 +122,43 @@ public class Admin extends User implements Serializable
      */
     static class AdminWindow extends JFrame implements ActionListener
     {
-        static String[] headers = {"User ID",
-                "Username",
-                "Position"};
-        static Object[][] data = {
-                {"Kathy", "Smith", "2100", "Teacher"},
-                {"John", "Doe", "2500", "Teacher"},
-                {"Sue", "Black", "1003", "Student"},
-                {"Jane", "White", "1220", "Student"},
-                {"Joe", "Brown", "2004", "Teacher"}
-        };
         static JFrame window;
-        static JPanel Background_panel = new JPanel();
-        static JPanel Title_panel = new JPanel();
-        static JButton update_button = new JButton();
-        static JButton Save_button = new JButton();
-        static JButton Delete_button = new JButton();
+        static JPanel Background_panel = new JPanel(),
+                Title_panel = new JPanel();
+        static JButton update_button = new JButton("Update"),
+                Add_button = new JButton("Add"),
+                Delete_button = new JButton("Delete");
         static JLabel Title = new JLabel("Admin");
         static Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
         static Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
         static JScrollPane scrollPane;
-
-        static JTable table = new JTable(data, headers);
+        static JTable table;
 
         public AdminWindow()
         {
             Title.setFont(myFont);
             Title_panel.add(Title);
-            add(Title_panel, BorderLayout.PAGE_START);
             Title.setForeground(Color.BLACK);
             Title_panel.setBackground(Color.white);
             Title_panel.setBorder(brdr);
+            add(Title_panel, BorderLayout.PAGE_START);
 
             update_button.setBounds(400, 100, 100, 50);
             update_button.addActionListener(this);
-            update_button.setText("Update");
             update_button.setFocusable(false);
             update_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
             update_button.setBackground(new Color(222, 184, 150));
             add(update_button);
 
-            Save_button.setBounds(400, 200, 100, 50);
-            Save_button.addActionListener(this);
-            Save_button.setText("Add");
-            Save_button.setFocusable(false);
-            Save_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
-            Save_button.setBackground(new Color(222, 184, 150));
-            add(Save_button);
+            Add_button.setBounds(400, 200, 100, 50);
+            Add_button.addActionListener(this);
+            Add_button.setFocusable(false);
+            Add_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
+            Add_button.setBackground(new Color(222, 184, 150));
+            add(Add_button);
 
             Delete_button.setBounds(400, 300, 100, 50);
             Delete_button.addActionListener(this);
-            Delete_button.setText("Delete");
             Delete_button.setFocusable(false);
             Delete_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
             Delete_button.setBackground(new Color(222, 184, 150));
@@ -212,6 +192,7 @@ public class Admin extends User implements Serializable
         private static void constructData()
         {
             DefaultTableModel data = new DefaultTableModel();
+            String[] headers = {"User ID", "Username", "Position"};
             data.setColumnIdentifiers(headers);
             for (User i : DataHandler.userData)
             {
@@ -229,7 +210,7 @@ public class Admin extends User implements Serializable
                 System.out.println("Data is updated");
                 return;
             }
-            if (e.getSource() == Save_button)
+            if (e.getSource() == Add_button)
             {
                 System.out.println("Data is saved");
                 return;
@@ -237,7 +218,6 @@ public class Admin extends User implements Serializable
             if (e.getSource() == Delete_button)
             {
                 System.out.println("Data is deleted");
-                return;
             }
         }
     }

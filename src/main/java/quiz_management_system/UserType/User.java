@@ -1,7 +1,6 @@
 package quiz_management_system.UserType;
 
 import quiz_management_system.DataHandler;
-import quiz_management_system.Interactive;
 import quiz_management_system.Quiz_Management_System;
 
 import javax.swing.*;
@@ -12,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashMap;
 
 public class User implements Serializable, Interactive
 {
@@ -27,19 +25,19 @@ public class User implements Serializable, Interactive
     {
         this.username = username;
         this.password = password;
-        this.accessLevel = Access.valueOf(0);
+        this.accessLevel = Access.NONE;
     }
 
-    public User(String username, String password, int accessLevel)
+    public User(String username, String password, Access accessLevel)
     {
         this.username = username;
         this.password = password;
-        this.accessLevel = Access.valueOf(accessLevel);
+        this.accessLevel = accessLevel;
     }
 
     public static User login(String inUsername, String inPassword)
     {
-        User newUser = searchByUsername(inUsername, Access.NONE);
+        User newUser = searchByUsername(inUsername);
 
         if (newUser == null || !newUser.getPassword().equals(inPassword))
             return null;
@@ -47,7 +45,7 @@ public class User implements Serializable, Interactive
         return newUser;
     }
 
-    public static User searchByUsername(String inUsername, Access aLevel)
+    public static User searchByUsername(String inUsername)
     {
         for (User i : DataHandler.userData)
         {
@@ -90,34 +88,7 @@ public class User implements Serializable, Interactive
 
     public enum Access
     {
-        NONE(0), STUDENT(1), TEACHER(2), ADMIN(3);
-
-        private static HashMap map = new HashMap<>();
-
-        static
-        {
-            for (Access aLevel : Access.values())
-            {
-                map.put(aLevel.value, aLevel);
-            }
-        }
-
-        private final int value;
-
-        Access(int value)
-        {
-            this.value = value;
-        }
-
-        public static Access valueOf(int pageType)
-        {
-            return (Access) map.get(pageType);
-        }
-
-        public int getValue()
-        {
-            return value;
-        }
+        NONE, STUDENT, TEACHER, ADMIN
     }
 
     static class LoginWindow extends JFrame

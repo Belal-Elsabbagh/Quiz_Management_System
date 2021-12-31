@@ -27,7 +27,8 @@ public class Student extends User implements Interactive
 
     public Student(String username, String password, Access student)
     {
-        super(username, password);
+        super(username, password, student);
+        attemptHistory = new ArrayList<>();
     }
 
     public ArrayList<Attempt> getAttemptHistory()
@@ -85,7 +86,7 @@ public class Student extends User implements Interactive
                 startAttempt(newQuiz);
             }
             case 2:
-                viewAttemptHistory();
+                viewAttemptHistoryConsole();
             case 3:
             {
                 out.println("Enter Quiz ID: ");
@@ -112,7 +113,11 @@ public class Student extends User implements Interactive
         Attempt newAttempt = new Attempt(newQuiz);
     }
 
-    public void viewAttemptHistory()
+
+    /**
+     * @deprecated not used with GUI.
+     */
+    public void viewAttemptHistoryConsole()
     {
         attemptHistory.forEach(i ->
         {

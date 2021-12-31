@@ -1,9 +1,6 @@
 package quiz_management_system;
 
-import quiz_management_system.UserType.Admin;
-import quiz_management_system.UserType.Student;
-import quiz_management_system.UserType.Teacher;
-import quiz_management_system.UserType.User;
+import quiz_management_system.UserType.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -36,11 +33,11 @@ public class Quiz_Management_System
         u2.setUserID(u2.getUserID());
         DataHandler.userData.add(u2);
         User u3 = new Admin("Mohamed", "123", User.Access.ADMIN);
-        u2.setUserID(u3.hashCode());
+        u3.setUserID(u3.hashCode());
         DataHandler.userData.add(u3);
 
-        ((Teacher) u2).createNewQuiz();
-
+        //((Teacher) u2).createNewQuiz();
+        //((Student)u1).startAttempt(Quiz.searchByID("1"));
         DataHandler.save();
     }
 

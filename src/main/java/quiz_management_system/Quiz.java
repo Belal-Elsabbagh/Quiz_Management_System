@@ -233,11 +233,6 @@ public class Quiz implements Serializable
         private double grade;
         private Choice mcq;
 
-        public Question()
-        {
-
-        }
-
         public void createQuestion()
         {
             Scanner sc = new Scanner(System.in);
@@ -281,7 +276,6 @@ public class Quiz implements Serializable
 
         static class CreateQuestionBank extends JFrame
         {
-
             static JFrame window;
             static JPanel Back, Title, down;
             static Font myFont;
@@ -389,60 +383,60 @@ public class Quiz implements Serializable
                 window.setVisible(true);
             }
         }
-    }
 
-    class Choice implements Serializable
-    {
-
-        private int nChoices;
-        private String[] choices;
-        private int answerKeyIndex;
-
-        private Choice()
-        {
-            this.nChoices = 0;
-            choices = new String[2];
-        }
-
-        public void createMCQ()
+        class Choice implements Serializable
         {
 
-            Scanner sc = new Scanner(System.in);
+            private int nChoices;
+            private String[] choices;
+            private int answerKeyIndex;
 
-            System.out.println("-----------Creating MCQ------------------");
-
-            System.out.println("Enter number of choices: ");
-            while (!sc.hasNextShort())
+            private Choice()
             {
-                System.err.println("INVALID INPUT.");
-                sc.next();
-            }
-            nChoices = sc.nextShort();
-
-            choices = new String[nChoices];
-
-            for (int i = 0; i < nChoices; i++)
-            {
-                System.out.println("Enter choice " + i + ": ");
-                choices[i] = sc.next();
+                this.nChoices = 0;
+                choices = new String[2];
             }
 
-            answerKeyIndex = nChoices;
-            while (answerKeyIndex > nChoices - 1)
+            public void createMCQ()
             {
-                System.out.println("Enter the index of right answer (count starts at 0): ");
+
+                Scanner sc = new Scanner(System.in);
+
+                System.out.println("-----------Creating MCQ------------------");
+
+                System.out.println("Enter number of choices: ");
                 while (!sc.hasNextShort())
                 {
                     System.err.println("INVALID INPUT.");
                     sc.next();
                 }
-                answerKeyIndex = sc.nextShort();
-                if (answerKeyIndex > nChoices - 1)
+                nChoices = sc.nextShort();
+
+                choices = new String[nChoices];
+
+                for (int i = 0; i < nChoices; i++)
                 {
-                    System.out.println("Error: The number of choice doesn't exist");
+                    System.out.println("Enter choice " + i + ": ");
+                    choices[i] = sc.next();
                 }
+
+                answerKeyIndex = nChoices;
+                while (answerKeyIndex > nChoices - 1)
+                {
+                    System.out.println("Enter the index of right answer (count starts at 0): ");
+                    while (!sc.hasNextShort())
+                    {
+                        System.err.println("INVALID INPUT.");
+                        sc.next();
+                    }
+                    answerKeyIndex = sc.nextShort();
+                    if (answerKeyIndex > nChoices - 1)
+                    {
+                        System.out.println("Error: The number of choice doesn't exist");
+                    }
+                }
+                System.out.println("Choices added successfully.");
             }
-            System.out.println("Choices added successfully.");
         }
     }
 }

@@ -6,6 +6,7 @@ import quiz_management_system.Quiz_Management_System;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,7 +23,7 @@ public class Teacher extends User
 
     public Teacher(String username, String password, Access teacher)
     {
-        super(username, password);
+        super(username, password, teacher);
         createdQuizzes = new ArrayList<>();
     }
 
@@ -115,23 +116,6 @@ public class Teacher extends User
         }
     }
 
-    public void reviewStudentGrades(Quiz newQuiz)
-    {
-        for (User i : DataHandler.userData)
-        {
-            if (i instanceof Student)
-            {
-                for (Student.Attempt j : ((Student) i).getAttemptHistory())
-                {
-                    if (j.getQuiz().equals(newQuiz))
-                    {
-                        // TODO properly display the students with their respective grades of the quiz.
-                    }
-                }
-            }
-        }
-    }
-
     /**
      * @author marma
      */
@@ -143,13 +127,17 @@ public class Teacher extends User
         Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
         JLabel Title_label = new JLabel("Welcome " + Quiz_Management_System.getActiveUser().getUsername()); // + username
         // List
-        JPanel l = new JPanel();
+        JPanel listArea = new JPanel();
         JLabel lb = new JLabel("Created Quizzes: ");
         // Buttons
         JButton actionCreate = new JButton("Create quiz");
         JButton actionReview = new JButton("Review quiz grades");
         //background
         JPanel Back = new JPanel();
+
+        JList<String> quizList;
+        JScrollPane scrollPane;
+        JTextField qID_review = new JTextField(15);
 
         public TeacherWindow()
         {
@@ -161,25 +149,29 @@ public class Teacher extends User
             Title.setBorder(brdr);
 
             lb.setBounds(5, 70, 100, 30);
-            String[] data = {"1", "2"};
-            JList<String> list = new JList<>(data);
-            list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-            list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-            l.add(list);
-            list.setPreferredSize(new Dimension(250, 400));
-            l.setBackground(new Color(239, 222, 205));
-            l.setBounds(5, 100, 280, 420);
-            add(l);
+
+            constructData();
+            quizList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            quizList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+            listArea.add(quizList);
+            quizList.setPreferredSize(new Dimension(250, 400));
+
+            quizList.setBackground(new Color(239, 222, 205));
+            scrollPane = new JScrollPane(quizList);
+            scrollPane.setBounds(0, 50, 250, 400);
+            add(scrollPane);
+            listArea.setBackground(new Color(239, 222, 205));
+            add(listArea);
             add(lb);
-            JScrollPane lScroll = new JScrollPane();
-            lScroll.setPreferredSize(new Dimension(250, 80));
 
             //buttons
             actionCreate.setBounds(300, 100, 200, 30);
             actionCreate.setBackground(new Color(222, 184, 150));
             actionCreate.addActionListener(this);
             add(actionCreate);
-            actionReview.setBounds(300, 150, 200, 30);
+            qID_review.setBounds(300, 150, 200, 30);
+            add(qID_review);
+            actionReview.setBounds(300, 200, 200, 30);
             actionReview.setBackground(new Color(222, 184, 150));
             actionReview.addActionListener(this);
             add(actionReview);
@@ -193,10 +185,17 @@ public class Teacher extends User
         {
             if (e.getSource() == actionReview)
             {
-                setVisible(false);
 
                 JFrame window;
-                window = new ReviewQuizGrades();
+                try
+                {
+                    window = new ReviewQuizGrades(Quiz.searchByID(qID_review.getText()));
+                } catch (NullPointerException nullPointerException)
+                {
+                    JOptionPane.showMessageDialog(null, "No Quiz Found!", "Warning", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+                setVisible(false);
                 window.setTitle("Review Quiz Grades");
                 window.setSize(400, 500);
                 window.setLocationRelativeTo(null); // to not have it open at the corner
@@ -204,12 +203,19 @@ public class Teacher extends User
                 window.setVisible(true);
             }
         }
+
+        private void constructData()
+        {
+            DefaultListModel<String> data = new DefaultListModel<>();
+            createdQuizzes.forEach((i) -> data.addElement(i.getQuizTitle()));
+            quizList = new JList<>(data);
+        }
     }
 
     /**
      * @author Habiba1234567
      */
-    class ReviewQuizGrades extends JFrame
+    static class ReviewQuizGrades extends JFrame
     {
         JPanel title_panel = new JPanel(),
                 background = new JPanel();
@@ -225,10 +231,9 @@ public class Teacher extends User
         String[] columnNames = {"Student", "Grade"};
         Object[][] data = {{"Kathy", 5}, {"John", 4}};
         JTable table = new JTable(data, columnNames);
-        ;
         JScrollPane scrollPane = new JScrollPane(table);
 
-        public ReviewQuizGrades()
+        public ReviewQuizGrades(Quiz newQuiz)
         {
             Title.setFont(myFont);
             title_panel.add(Title);
@@ -242,9 +247,7 @@ public class Teacher extends User
             BestGrade_label.setBounds(10, 140, 100, 30);
             WorstGrade_label.setBounds(10, 180, 200, 30);
             AverageGrade_label.setBounds(10, 220, 200, 30);
-            label5 = new JLabel(" ");
             label5.setBounds(10, 260, 60, 30);
-            label6 = new JLabel(" ");
             label6.setBounds(10, 300, 60, 30);
             add(BestGrade_label);
             add(WorstGrade_label);
@@ -258,10 +261,30 @@ public class Teacher extends User
             add(background, BorderLayout.CENTER);
 
             //Table
+            constructData(newQuiz);
             table.setFillsViewportHeight(true);
             table.setBounds(100, 300, 300, 500);
             table.setBackground(new Color(222, 184, 150));
             add(scrollPane);
+        }
+
+        public void constructData(Quiz newQuiz)
+        {
+            DefaultTableModel data = new DefaultTableModel(0, 3);
+            data.setColumnIdentifiers(new String[]{"Student ID", "Student Name", "Grade"});
+            for (User i : DataHandler.userData)
+            {
+                if (!(i instanceof Student))
+                    continue;
+                for (Student.Attempt j : ((Student) i).getAttemptHistory())
+                {
+                    if (j.getQuiz().equals(newQuiz))
+                    {
+                        Object[] row = new Object[]{i.getUserID(), i.getUsername(), j.getResult()};
+                        data.addRow(row);
+                    }
+                }
+            }
         }
     }
 }
