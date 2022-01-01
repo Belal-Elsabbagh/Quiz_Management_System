@@ -1,8 +1,4 @@
-package quiz_management_system.UserType;
-
-import quiz_management_system.DataHandler;
-import quiz_management_system.Quiz;
-import quiz_management_system.Quiz_Management_System;
+package quiz_management_system;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -276,6 +272,7 @@ public class Teacher extends User
             {
                 if (!(i instanceof Student))
                     continue;
+
                 for (Student.Attempt j : ((Student) i).getAttemptHistory())
                 {
                     if (j.getQuiz().equals(newQuiz))

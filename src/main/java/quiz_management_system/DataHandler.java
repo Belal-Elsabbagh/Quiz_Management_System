@@ -1,7 +1,5 @@
 package quiz_management_system;
 
-import quiz_management_system.UserType.User;
-
 import java.io.*;
 import java.util.ArrayList;
 

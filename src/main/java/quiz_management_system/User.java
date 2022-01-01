@@ -1,7 +1,4 @@
-package quiz_management_system.UserType;
-
-import quiz_management_system.DataHandler;
-import quiz_management_system.Quiz_Management_System;
+package quiz_management_system;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;

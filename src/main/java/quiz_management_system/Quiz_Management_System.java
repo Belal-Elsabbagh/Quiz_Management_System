@@ -1,7 +1,5 @@
 package quiz_management_system;
 
-import quiz_management_system.UserType.*;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 

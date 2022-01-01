@@ -1,7 +1,5 @@
 package quiz_management_system;
 
-import quiz_management_system.UserType.Teacher;
-
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -147,7 +145,7 @@ public class Quiz implements Serializable
         while (!sc.hasNextInt())
         {
             Question tempQ = new Question();
-            tempQ.createQuestion();
+            tempQ.createQuestionConsole();
             tempQ.questionID = i + 1;
             questionBank.add(tempQ);
             System.out.println("stop?");
@@ -233,7 +231,10 @@ public class Quiz implements Serializable
         private double grade;
         private Choice mcq;
 
-        public void createQuestion()
+        /**
+         * @deprecated not used with GUI
+         */
+        public void createQuestionConsole()
         {
             Scanner sc = new Scanner(System.in);
             System.out.println("-----------Creating a new question-----------");
@@ -250,9 +251,19 @@ public class Quiz implements Serializable
             grade = sc.nextDouble();
 
             mcq = new Choice();
-            mcq.createMCQ();
+            mcq.createMCQConsole();
 
             System.out.println("Question added successfully.");
+        }
+
+        public String getPrompt()
+        {
+            return prompt;
+        }
+
+        public Choice getMCQ()
+        {
+            return mcq;
         }
 
         public double getGrade()
@@ -260,7 +271,10 @@ public class Quiz implements Serializable
             return grade;
         }
 
-        public void displayQuestion()
+        /**
+         * @deprecated not used with GUI
+         */
+        public void displayQuestionConsole()
         {
             System.out.println(prompt);
             for (int i = 0; i < mcq.nChoices; i++)
@@ -386,18 +400,30 @@ public class Quiz implements Serializable
 
         class Choice implements Serializable
         {
-
             private int nChoices;
             private String[] choices;
             private int answerKeyIndex;
 
             private Choice()
             {
-                this.nChoices = 0;
-                choices = new String[2];
+                this.nChoices = 4;
+                choices = new String[4];
             }
 
-            public void createMCQ()
+            public String[] getChoices()
+            {
+                return choices;
+            }
+
+            public String getChoiceAt(int index)
+            {
+                return choices[index];
+            }
+
+            /**
+             * @deprecated not used with GUI
+             */
+            public void createMCQConsole()
             {
 
                 Scanner sc = new Scanner(System.in);

@@ -1,4 +1,4 @@
-package quiz_management_system.UserType;
+package quiz_management_system;
 
 import java.text.ParseException;
 
