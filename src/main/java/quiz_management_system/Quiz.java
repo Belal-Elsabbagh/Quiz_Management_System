@@ -18,7 +18,7 @@ public class Quiz implements Serializable
     private String quizID;
     private String quizTitle;
     private Teacher creator;
-    private int nAttempts, nQuestions;
+    private int nQuestions;
     public Date quizDate;
     public LocalTime openTime;
     private ArrayList<Question> questionBank;
@@ -29,6 +29,15 @@ public class Quiz implements Serializable
         questionBank = new ArrayList<>();
     }
 
+    public Quiz(String quizID, String quizTitle, Teacher creator, int nQuestions)
+    {
+        this.quizID = quizID;
+        this.quizTitle = quizTitle;
+        this.creator = creator;
+        this.nQuestions = nQuestions;
+
+        this.questionBank = new ArrayList<>();
+    }
 
     public LocalTime openTime()
     {
@@ -86,20 +95,24 @@ public class Quiz implements Serializable
         this.quizID = quizID;
     }
 
+    public ArrayList<Question> getQuestionBank()
+    {
+        return questionBank;
+    }
+
     public void displayQuizProperties()
     {
         System.out.println("-----------Displaying quiz properties------------");
         System.out.println("Quiz ID: " + quizID);
         System.out.println("Quiz Title: " + quizTitle);
         System.out.println("Number of questions: " + nQuestions);
-        System.out.println("Number of attempts: " + nAttempts);
         System.out.println("Size of question bank: " + questionBank.size());
     }
 
     @Override
     public String toString()
     {
-        return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nAttempts=" + nAttempts + ", nQuestions=" + nQuestions + ", questionBank.size()=" + questionBank.size() + '}';
+        return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nQuestions=" + nQuestions + ", questionBank.size()=" + questionBank.size() + '}';
     }
 
     /**
@@ -120,13 +133,6 @@ public class Quiz implements Serializable
             sc.next();
         }
         nQuestions = sc.nextInt();
-        System.out.println("Enter number of attempts: ");
-        while (!sc.hasNextInt())
-        {
-            System.err.println("INVALID INPUT.");
-            sc.next();
-        }
-        nAttempts = sc.nextInt();
 
         createQuestionBank();
         quizTime();
@@ -230,6 +236,18 @@ public class Quiz implements Serializable
         private String prompt;
         private double grade;
         private Choice mcq;
+
+        public Question(int questionID, String prompt, double grade)
+        {
+            this.questionID = questionID;
+            this.prompt = prompt;
+            this.grade = grade;
+        }
+
+        public Question()
+        {
+            
+        }
 
         /**
          * @deprecated not used with GUI
@@ -398,7 +416,7 @@ public class Quiz implements Serializable
             }
         }
 
-        class Choice implements Serializable
+        public class Choice implements Serializable
         {
             private int nChoices;
             private String[] choices;
@@ -408,6 +426,12 @@ public class Quiz implements Serializable
             {
                 this.nChoices = 4;
                 choices = new String[4];
+            }
+
+            public Choice(String[] choices, int answerKeyIndex)
+            {
+                this.choices = choices;
+                this.answerKeyIndex = answerKeyIndex;
             }
 
             public String[] getChoices()

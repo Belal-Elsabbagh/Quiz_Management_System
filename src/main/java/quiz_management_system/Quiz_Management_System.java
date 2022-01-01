@@ -34,6 +34,9 @@ public class Quiz_Management_System
         u3.setUserID(u3.hashCode());
         DataHandler.userData.add(u3);
 
+        Quiz newQuiz = new Quiz("2020-MID", "Planets of the Solar System", (Teacher) u2, 3);
+
+
         //((Teacher) u2).createNewQuiz();
         //((Student)u1).startAttempt(Quiz.searchByID("1"));
         DataHandler.save();
