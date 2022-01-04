@@ -38,15 +38,7 @@ public class Student extends User implements Interactive
     @Override
     public void listMenu()
     {
-        JFrame window;
-
-        window = new StudentWindow();
-        window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-        window.setSize(640, 480);
-        window.setResizable(false);
-        window.setLocationRelativeTo(null); // to not have it open at the corner
-        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.setVisible(true);
+        JFrame window = new StudentWindow();
     }
 
     /**
@@ -155,13 +147,6 @@ public class Student extends User implements Interactive
 
         public StudentWindow()
         {
-            Title.add(Title_label);
-            add(Title, BorderLayout.PAGE_START);
-            Title_label.setFont(myFont);
-            Title_label.setForeground(Color.BLACK);
-            Title.setBackground(Color.WHITE);
-            Title.setBorder(brdr);
-
             JButton b = new JButton("send");
             b.setBounds(153, 480, 80, 30);
             b.setBackground(new Color(222, 184, 150));
@@ -186,6 +171,13 @@ public class Student extends User implements Interactive
             actionOpenChat.setBounds(3, 1, 53, 53);
             actionOpenChat.addActionListener(this);
             add(actionOpenChat);
+
+            Title.add(Title_label);
+            add(Title, BorderLayout.PAGE_START);
+            Title_label.setFont(myFont);
+            Title_label.setForeground(Color.BLACK);
+            Title.setBackground(Color.WHITE);
+            Title.setBorder(brdr);
 
             lb.setBounds(5, 70, 100, 30);
 
@@ -212,6 +204,13 @@ public class Student extends User implements Interactive
 
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
+
+            setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
+            setSize(550, 550);
+            setResizable(false);
+            setLocationRelativeTo(null); // to not have it open at the corner
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            setVisible(true);
         }
 
         private void constructData()
@@ -254,6 +253,10 @@ public class Student extends User implements Interactive
             else if (e.getSource() == actionOpenChat)
             {
                 chat_panel.setVisible(true);
+            }
+            else if (e.getSource() == actionCloseChat)
+            {
+                chat_panel.setVisible(false);
             }
         }
     }
