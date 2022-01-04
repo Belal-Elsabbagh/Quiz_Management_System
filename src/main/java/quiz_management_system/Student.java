@@ -147,6 +147,10 @@ public class Student extends User implements Interactive
         //background
         JPanel Back = new JPanel();
 
+        JPanel chat_panel = new JPanel();
+        JButton actionCloseChat = new JButton("x");
+        JButton actionOpenChat = new JButton(new ImageIcon("t1.jpeg"));
+
         JTextField qID = new JTextField(20);
 
         public StudentWindow()
@@ -181,6 +185,31 @@ public class Student extends User implements Interactive
             actionAttempt.addActionListener(this);
             add(actionAttempt);
 
+            JButton b = new JButton("send");
+            b.setBounds(153, 480, 80, 30);
+            b.setBackground(new Color(222, 184, 150));
+            chat_panel.setBackground(new Color(239, 222, 205));
+            JTextField t1 = new JTextField();
+            chat_panel.setLayout(null);
+            t1.setBounds(1, 480, 150, 30);
+            chat_panel.setBounds(300, 1, 250, 550);
+            JTextArea l1 = new JTextArea(100, 50);
+            l1.setLineWrap(true);
+            l1.setEditable(false);
+            l1.setBounds(5, 35, 220, 440);
+            actionCloseChat.setBounds(1, 1, 60, 30);
+            actionCloseChat.setBackground(new Color(239, 222, 205));
+            actionCloseChat.addActionListener(this);
+            chat_panel.add(actionCloseChat);
+            chat_panel.add(l1);
+            chat_panel.add(t1);
+            chat_panel.add(b);
+            add(chat_panel);
+            chat_panel.setVisible(false);
+            actionOpenChat.setBounds(3, 1, 53, 53);
+            actionOpenChat.addActionListener(this);
+            add(actionOpenChat);
+
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
         }
@@ -211,7 +240,7 @@ public class Student extends User implements Interactive
 
                 //TODO Load attempt object from table and create the window from it
                 setVisible(false);
-/* FIXME
+                /* FIXME
                 JFrame window;
                 window = new Attempt.ReviewAttemptWindow();
                 window.setTitle("Review Quiz Grades");
@@ -221,6 +250,10 @@ public class Student extends User implements Interactive
                 window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 window.setVisible(true);
                 */
+            }
+            else if (e.getSource() == actionOpenChat)
+            {
+                chat_panel.setVisible(true);
             }
         }
     }
@@ -275,7 +308,10 @@ public class Student extends User implements Interactive
             return model;
         }
 
-        public void doAttempt()
+        /**
+         * @deprecated not used with GUI
+         */
+        public void doAttemptConsole()
         {
             Scanner sc = new Scanner(in);
             Duration d = new Duration();

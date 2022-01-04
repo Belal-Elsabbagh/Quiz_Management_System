@@ -29,7 +29,12 @@ public class Admin extends User implements Serializable
     @Override
     public void listMenu()
     {
-        AdminWindow.constructWindow();
+        JFrame window = new AdminWindow();
+        window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
+        window.setSize(550, 550);
+        window.setLocationRelativeTo(null); // to not have it open at the corner
+        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        window.setVisible(true);
     }
 
     /**
@@ -117,19 +122,19 @@ public class Admin extends User implements Serializable
     /**
      * @author Lojain45Mostafa
      */
-    static class AdminWindow extends JFrame implements ActionListener
+    class AdminWindow extends JFrame implements ActionListener
     {
-        static JFrame window;
-        static JPanel Background_panel = new JPanel(),
+        JFrame window;
+        JPanel Background_panel = new JPanel(),
                 Title_panel = new JPanel();
-        static JButton update_button = new JButton("Update"),
+        JButton update_button = new JButton("Update"),
                 Add_button = new JButton("Add"),
                 Delete_button = new JButton("Delete");
-        static JLabel Title = new JLabel("Admin");
-        static Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
-        static Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-        static JScrollPane scrollPane;
-        static JTable table;
+        JLabel Title = new JLabel("Admin");
+        Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+        Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+        JScrollPane scrollPane;
+        JTable table;
 
         public AdminWindow()
         {
@@ -178,15 +183,10 @@ public class Admin extends User implements Serializable
 
         public static void constructWindow()
         {
-            window = new AdminWindow();
-            window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-            window.setSize(550, 550);
-            window.setLocationRelativeTo(null); // to not have it open at the corner
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.setVisible(true);
+
         }
 
-        private static void constructData()
+        private void constructData()
         {
             DefaultTableModel data = new DefaultTableModel();
             String[] headers = {"User ID", "Username", "Position"};

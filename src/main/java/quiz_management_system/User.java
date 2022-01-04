@@ -80,7 +80,7 @@ public class User implements Serializable, Interactive
     @Override
     public void listMenu()
     {
-        LoginWindow.constructWindow();
+        JFrame window = new LoginWindow();
     }
 
     public enum Access
@@ -88,16 +88,14 @@ public class User implements Serializable, Interactive
         NONE, STUDENT, TEACHER, ADMIN
     }
 
-    static class LoginWindow extends JFrame
+    class LoginWindow extends JFrame implements ActionListener
     {
-        static JFrame window;
-        static JPanel Back, up;
-        static JLabel password_label, username_label, logo;
-        static JTextField username_text;
-        static JPasswordField password_text;
-        static JButton actionLogin;
+        JPanel Back, up;
+        JLabel password_label, username_label, logo;
+        JTextField username_text;
+        JPasswordField password_text;
+        JButton actionLogin;
 
-        static
         {
             Back = new JPanel();
             up = new JPanel();
@@ -134,8 +132,7 @@ public class User implements Serializable, Interactive
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
 
-            ActionLogin actionlogin = new ActionLogin();
-            actionLogin.addActionListener(actionlogin);
+            actionLogin.addActionListener(this);
 
             //Login Button activation
             DL(username_text);
@@ -143,39 +140,13 @@ public class User implements Serializable, Interactive
             {
                 actionLogin.setEnabled(false);
             }
-        }
 
-        public static void constructWindow()
-        {
-            window = new LoginWindow();
-            window.setTitle("Quiz Management System Login");
-            window.setSize(550, 550);
-            window.setLocationRelativeTo(null); // to not have it open at the corner
-            window.setResizable(false);
-            window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            window.setVisible(true);
-        }
-
-        static class ActionLogin implements ActionListener
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                String Username = username_text.getText();
-                String Password1 = String.valueOf(password_text.getPassword());
-
-                User newUser = User.login(Username, Password1);
-                if (newUser == null)
-                {
-                    JOptionPane.showMessageDialog(null, "Username or Password mismatch");
-                    return;
-                }
-                JOptionPane.showMessageDialog(null, "Login Successful");
-
-                Quiz_Management_System.setActiveUser(newUser);
-                window.setVisible(false);
-                Quiz_Management_System.getActiveUser().listMenu();
-            }
+            setTitle("Quiz Management System Login");
+            setSize(550, 550);
+            setLocationRelativeTo(null); // to not have it open at the corner
+            setResizable(false);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            setVisible(true);
         }
 
         public void DL(JTextField x)
@@ -190,15 +161,34 @@ public class User implements Serializable, Interactive
                 {
                     changed();
                 }
+
                 public void insertUpdate(DocumentEvent e)
                 {
                     changed();
                 }
+
                 public void changed()
                 {
                     actionLogin.setEnabled(!x.getText().equals(""));
                 }
             });
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            String Username = username_text.getText();
+            String Password1 = String.valueOf(password_text.getPassword());
+            User newUser = User.login(Username, Password1);
+            if (newUser == null)
+            {
+                JOptionPane.showMessageDialog(null, "Username or Password mismatch");
+                return;
+            }
+            JOptionPane.showMessageDialog(null, "Login Successful");
+            Quiz_Management_System.setActiveUser(newUser);
+            setVisible(false);
+            Quiz_Management_System.getActiveUser().listMenu();
         }
     }
 }

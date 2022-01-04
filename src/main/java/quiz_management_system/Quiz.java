@@ -3,6 +3,8 @@ package quiz_management_system;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.io.Serializable;
 import java.text.ParseException;
@@ -27,6 +29,7 @@ public class Quiz implements Serializable
     public Quiz()
     {
         questionBank = new ArrayList<>();
+        JFrame window = new CreateQuizWindow();
     }
 
     public Quiz(String quizID, String quizTitle, Teacher creator, int nQuestions)
@@ -246,7 +249,22 @@ public class Quiz implements Serializable
 
         public Question()
         {
-            
+            JFrame window = new CreateQuestionBank();
+        }
+
+        public String getPrompt()
+        {
+            return prompt;
+        }
+
+        public Choice getMCQ()
+        {
+            return mcq;
+        }
+
+        public double getGrade()
+        {
+            return grade;
         }
 
         /**
@@ -274,21 +292,6 @@ public class Quiz implements Serializable
             System.out.println("Question added successfully.");
         }
 
-        public String getPrompt()
-        {
-            return prompt;
-        }
-
-        public Choice getMCQ()
-        {
-            return mcq;
-        }
-
-        public double getGrade()
-        {
-            return grade;
-        }
-
         /**
          * @deprecated not used with GUI
          */
@@ -306,18 +309,35 @@ public class Quiz implements Serializable
             return inAnswer == mcq.answerKeyIndex;
         }
 
-        static class CreateQuestionBank extends JFrame
+        class CreateQuestionBank extends JFrame
         {
-            static JFrame window;
-            static JPanel Back, Title, down;
-            static Font myFont;
-            static JLabel Title_label, prompt_label, grade_label, choice_label, c1, c2, c3, c4, index_label, Q;
-            static JButton right_b, left_b;
-            static Icon icon_r, icon_l;
-            static JTextField Q_t, G_t, c1_t, c2_t, c3_t, c4_t, I_t;
-            static Border brdr;
+            JPanel Back,
+                    Title,
+                    down;
+            Font myFont;
+            JLabel Title_label,
+                    prompt_label,
+                    grade_label,
+                    choice_label,
+                    c1,
+                    c2,
+                    c3,
+                    c4,
+                    index_label,
+                    Q;
+            JButton right_b,
+                    left_b;
+            Icon icon_r,
+                    icon_l;
+            JTextField Q_t,
+                    G_t,
+                    c1_t,
+                    c2_t,
+                    c3_t,
+                    c4_t,
+                    I_t;
+            Border brdr;
 
-            static
             {
                 myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
                 Title_label = new JLabel("Question Creator");
@@ -402,17 +422,13 @@ public class Quiz implements Serializable
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
-            }
 
-            public static void constructWindow()
-            {
-                window = new CreateQuestionBank();
-                window.setTitle("Create Question Bank");
-                window.setSize(550, 550);
-                window.setResizable(false);
-                window.setLocationRelativeTo(null); // to not have it open at the corner
-                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                window.setVisible(true);
+                setTitle("Create Question Bank");
+                setSize(550, 550);
+                setResizable(false);
+                setLocationRelativeTo(null); // to not have it open at the corner
+                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                setVisible(true);
             }
         }
 
@@ -486,6 +502,89 @@ public class Quiz implements Serializable
                     }
                 }
                 System.out.println("Choices added successfully.");
+            }
+        }
+    }
+
+    class CreateQuizWindow extends JFrame implements ActionListener
+    {
+        JPanel title_panel, background;
+        Font myFont;
+        JLabel Title, label1, label2, label3, label4;
+        JButton button;
+        JTextField textField1, textField2, textField3, textField4;
+        Border brdr;
+
+        {
+            title_panel = new JPanel();
+            brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+            background = new JPanel();
+            myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+            Title = new JLabel("Create Quiz ");
+            button = new JButton("Create Questions");
+            textField1 = new JTextField();
+            textField2 = new JTextField();
+            textField3 = new JTextField();
+            textField4 = new JTextField();
+
+        }
+
+        public CreateQuizWindow()
+        {
+            Title.setFont(myFont);
+            title_panel.add(Title);
+            add(title_panel, BorderLayout.PAGE_START);
+            Title.setForeground(Color.BLACK);
+            title_panel.setBackground(Color.white);
+            title_panel.setBorder(brdr);
+            //submit button
+            button.setFont(new Font("Sans Serif", Font.PLAIN, 25));
+            button.setFocusable(false);
+            button.setBounds(280, 450, 240, 40);
+            button.addActionListener(e -> System.out.println("Saved"));
+            button.setBorder(BorderFactory.createEtchedBorder());
+            button.setBackground(new Color(222, 184, 150));
+            add(button);
+            //labels
+            label1 = new JLabel("Title: ");
+            label1.setBounds(10, 100, 60, 30);
+            label2 = new JLabel("Quiz Code: ");
+            label2.setBounds(10, 140, 1000, 30);
+            label3 = new JLabel("Duration: ");
+            label3.setBounds(10, 180, 60, 30);
+            label4 = new JLabel("Number of Questions: ");
+            label4.setBounds(10, 220, 140, 30);
+            add(label1);
+            add(label2);
+            add(label3);
+            add(label4);
+            //text fields
+            textField1.setBounds(200, 100, 200, 30);
+            textField2.setBounds(200, 140, 200, 30);
+            textField3.setBounds(200, 180, 200, 30);
+            textField4.setBounds(200, 220, 200, 30);
+            add(textField1);
+            add(textField2);
+            add(textField3);
+            add(textField4);
+            //Background
+            background.setBackground(Color.WHITE);
+            add(background, BorderLayout.CENTER);
+
+            setTitle("Create New Quiz");
+            setSize(550, 550);
+            setLocationRelativeTo(null); // to not have it open at the corner
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            setVisible(true);
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            if (e.getSource() == button)
+            {
+                setVisible(false);
+                Question x = new Question();
             }
         }
     }
