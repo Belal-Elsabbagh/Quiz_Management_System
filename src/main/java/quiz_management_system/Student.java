@@ -162,29 +162,6 @@ public class Student extends User implements Interactive
             Title.setBackground(Color.WHITE);
             Title.setBorder(brdr);
 
-            lb.setBounds(5, 70, 100, 30);
-
-            constructData();
-            attemptTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-            //attemptTable.setPreferredSize(new Dimension(250, 400));
-            JScrollPane lScroll = new JScrollPane(attemptTable);
-            lScroll.setPreferredSize(new Dimension(250, 80));
-            l.add(lScroll);
-            l.setBackground(new Color(239, 222, 205));
-            l.setBounds(5, 100, 280, 420);
-            add(l);
-            add(lb);
-
-            qID.setBounds(300, 100, 200, 30);
-            qID.setBackground(new Color(222, 184, 150));
-            add(qID);
-
-            //buttons
-            actionAttempt.setBounds(300, 150, 200, 30);
-            actionAttempt.setBackground(new Color(222, 184, 150));
-            actionAttempt.addActionListener(this);
-            add(actionAttempt);
-
             JButton b = new JButton("send");
             b.setBounds(153, 480, 80, 30);
             b.setBackground(new Color(222, 184, 150));
@@ -209,6 +186,29 @@ public class Student extends User implements Interactive
             actionOpenChat.setBounds(3, 1, 53, 53);
             actionOpenChat.addActionListener(this);
             add(actionOpenChat);
+
+            lb.setBounds(5, 70, 100, 30);
+
+            constructData();
+            attemptTable.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+            //attemptTable.setPreferredSize(new Dimension(250, 400));
+            JScrollPane lScroll = new JScrollPane(attemptTable);
+            lScroll.setPreferredSize(new Dimension(250, 80));
+            l.add(lScroll);
+            l.setBackground(new Color(239, 222, 205));
+            l.setBounds(5, 100, 280, 420);
+            add(l);
+            add(lb);
+
+            qID.setBounds(300, 100, 200, 30);
+            qID.setBackground(new Color(222, 184, 150));
+            add(qID);
+
+            //buttons
+            actionAttempt.setBounds(300, 150, 200, 30);
+            actionAttempt.setBackground(new Color(222, 184, 150));
+            actionAttempt.addActionListener(this);
+            add(actionAttempt);
 
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);

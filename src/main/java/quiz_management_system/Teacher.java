@@ -148,6 +148,31 @@ public class Teacher extends User
             Title.setBackground(Color.WHITE);
             Title.setBorder(brdr);
 
+            JButton b = new JButton("send");
+            b.setBounds(153, 480, 80, 30);
+            b.setBackground(new Color(222, 184, 150));
+            chat_panel.setBackground(new Color(239, 222, 205));
+            JTextField t1 = new JTextField();
+            chat_panel.setLayout(null);
+            t1.setBounds(1, 480, 150, 30);
+            chat_panel.setBounds(300, 1, 250, 550);
+            JTextArea l1 = new JTextArea(100, 50);
+            l1.setLineWrap(true);
+            l1.setEditable(false);
+            l1.setBounds(5, 35, 220, 440);
+            actionCloseChat.setBounds(1, 1, 60, 30);
+            actionCloseChat.setBackground(new Color(239, 222, 205));
+            actionCloseChat.addActionListener(this);
+            chat_panel.add(actionCloseChat);
+            chat_panel.add(l1);
+            chat_panel.add(t1);
+            chat_panel.add(b);
+            add(chat_panel);
+            chat_panel.setVisible(false);
+            actionOpenChat.setBounds(3, 1, 53, 53);
+            actionOpenChat.addActionListener(this);
+            add(actionOpenChat);
+
             lb.setBounds(5, 70, 100, 30);
 
             constructData();
@@ -175,31 +200,6 @@ public class Teacher extends User
             actionReview.setBackground(new Color(222, 184, 150));
             actionReview.addActionListener(this);
             add(actionReview);
-
-            JButton b = new JButton("send");
-            b.setBounds(153, 480, 80, 30);
-            b.setBackground(new Color(222, 184, 150));
-            chat_panel.setBackground(new Color(239, 222, 205));
-            JTextField t1 = new JTextField();
-            chat_panel.setLayout(null);
-            t1.setBounds(1, 480, 150, 30);
-            chat_panel.setBounds(300, 1, 250, 550);
-            JTextArea l1 = new JTextArea(100, 50);
-            l1.setLineWrap(true);
-            l1.setEditable(false);
-            l1.setBounds(5, 35, 220, 440);
-            actionCloseChat.setBounds(1, 1, 60, 30);
-            actionCloseChat.setBackground(new Color(239, 222, 205));
-            actionCloseChat.addActionListener(this);
-            chat_panel.add(actionCloseChat);
-            chat_panel.add(l1);
-            chat_panel.add(t1);
-            chat_panel.add(b);
-            add(chat_panel);
-            chat_panel.setVisible(false);
-            actionOpenChat.setBounds(3, 1, 53, 53);
-            actionOpenChat.addActionListener(this);
-            add(actionOpenChat);
 
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
