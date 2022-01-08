@@ -32,6 +32,13 @@ public class Quiz implements Serializable
         JFrame window = new CreateQuizWindow();
     }
 
+    public Quiz(Teacher author)
+    {
+        this.creator = author;
+        questionBank = new ArrayList<>();
+        JFrame window = new CreateQuizWindow();
+    }
+
     public Quiz(String quizID, String quizTitle, Teacher creator, int nQuestions)
     {
         this.quizID = quizID;
@@ -68,19 +75,19 @@ public class Quiz implements Serializable
         return quizID;
     }
 
+    public void setQuizID(String quizID)
+    {
+        this.quizID = quizID;
+    }
+
+    public ArrayList<Question> getQuestionBank()
+    {
+        return questionBank;
+    }
+
     public String getQuizTitle()
     {
         return quizTitle;
-    }
-
-    public int getNQuestions()
-    {
-        return nQuestions;
-    }
-
-    public Date quizDate()
-    {
-        return quizDate;
     }
 
     public long getTotalSec()
@@ -93,17 +100,20 @@ public class Quiz implements Serializable
         this.totalSec = TotalSec;
     }
 
-    public void setQuizID(String quizID)
+    public int getNQuestions()
     {
-        this.quizID = quizID;
+        return nQuestions;
     }
 
-    public ArrayList<Question> getQuestionBank()
+    public Date quizDate()
     {
-        return questionBank;
+        return quizDate;
     }
 
-    public void displayQuizProperties()
+    /**
+     * @deprecated Not used with GUI
+     */
+    public void displayQuizPropertiesConsole()
     {
         System.out.println("-----------Displaying quiz properties------------");
         System.out.println("Quiz ID: " + quizID);
@@ -112,16 +122,11 @@ public class Quiz implements Serializable
         System.out.println("Size of question bank: " + questionBank.size());
     }
 
-    @Override
-    public String toString()
-    {
-        return "Quiz{" + "quizID=" + quizID + ", quizTitle=" + quizTitle + ", nQuestions=" + nQuestions + ", questionBank.size()=" + questionBank.size() + '}';
-    }
-
     /**
      * @param author the creator of the quiz
+     * @deprecated Not Used with GUI
      */
-    public void createQuiz(Teacher author)
+    public void createQuizConsole(Teacher author)
     {
         Scanner sc = new Scanner(System.in);
         creator = author;
@@ -256,12 +261,10 @@ public class Quiz implements Serializable
         {
             return prompt;
         }
-
         public Choice getMCQ()
         {
             return mcq;
         }
-
         public double getGrade()
         {
             return grade;
@@ -309,8 +312,10 @@ public class Quiz implements Serializable
             return inAnswer == mcq.answerKeyIndex;
         }
 
-        class CreateQuestionBank extends JFrame
+        class CreateQuestionBank extends JFrame implements ActionListener
         {
+            private int currentQuestionIndex = 0;
+
             JPanel Back,
                     Title,
                     down;
@@ -324,7 +329,7 @@ public class Quiz implements Serializable
                     c3,
                     c4,
                     index_label,
-                    Q;
+                    currentQuestionLabel;
             JButton right_b,
                     left_b;
             Icon icon_r,
@@ -345,7 +350,7 @@ public class Quiz implements Serializable
                 Title = new JPanel();
                 brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
                 down = new JPanel();
-                Q = new JLabel("Question number: " + 1);
+                currentQuestionLabel = new JLabel("Question: " + (currentQuestionIndex + 1));
                 prompt_label = new JLabel("Enter prompt:");
                 grade_label = new JLabel("Enter grade: ");
                 choice_label = new JLabel("Enter choices: ");
@@ -386,7 +391,7 @@ public class Quiz implements Serializable
                 down.setBackground(Color.WHITE);
                 add(down, BorderLayout.PAGE_END);
                 //labels
-                Q.setBounds(5, 60, 200, 30);
+                currentQuestionLabel.setBounds(5, 60, 200, 30);
                 prompt_label.setBounds(5, 80, 100, 30);
                 grade_label.setBounds(5, 150, 100, 30);
                 choice_label.setBounds(5, 180, 100, 30);
@@ -395,7 +400,7 @@ public class Quiz implements Serializable
                 c2.setBounds(5, 260, 10, 10);
                 c3.setBounds(5, 300, 10, 10);
                 c4.setBounds(5, 340, 10, 10);
-                add(Q);
+                add(currentQuestionLabel);
                 add(prompt_label);
                 add(grade_label);
                 add(choice_label);
@@ -430,6 +435,32 @@ public class Quiz implements Serializable
                 setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 setVisible(true);
             }
+
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (e.getSource() == right_b)
+                {
+                    currentQuestionIndex++;
+                    if (currentQuestionIndex > 0)
+                    {
+                        left_b.setEnabled(true);
+                    }
+                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
+
+                }
+                else if (e.getSource() == left_b)
+                {
+                    currentQuestionIndex--;
+                    if (currentQuestionIndex == 0)
+                    {
+                        left_b.setEnabled(false);
+                    }
+                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
+                }
+                //TODO set String quizID to add to the quizzes
+            }
         }
 
         public class Choice implements Serializable
@@ -453,6 +484,16 @@ public class Quiz implements Serializable
             public String[] getChoices()
             {
                 return choices;
+            }
+
+            public int getAnswerKeyIndex()
+            {
+                return answerKeyIndex;
+            }
+
+            public void setAnswerKeyIndex(int answerKeyIndex)
+            {
+                this.answerKeyIndex = answerKeyIndex;
             }
 
             public String getChoiceAt(int index)
@@ -512,7 +553,7 @@ public class Quiz implements Serializable
         Font myFont;
         JLabel Title, label1, label2, label3, label4;
         JButton button;
-        JTextField textField1, textField2, textField3, textField4;
+        JTextField quizTitle_text, quizID_text, duration_text, nQuestions_text;
         Border brdr;
 
         {
@@ -520,12 +561,12 @@ public class Quiz implements Serializable
             brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
             background = new JPanel();
             myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-            Title = new JLabel("Create Quiz ");
+            Title = new JLabel("Create Quiz");
             button = new JButton("Create Questions");
-            textField1 = new JTextField();
-            textField2 = new JTextField();
-            textField3 = new JTextField();
-            textField4 = new JTextField();
+            quizTitle_text = new JTextField();
+            quizID_text = new JTextField();
+            duration_text = new JTextField();
+            nQuestions_text = new JTextField();
 
         }
 
@@ -559,14 +600,14 @@ public class Quiz implements Serializable
             add(label3);
             add(label4);
             //text fields
-            textField1.setBounds(200, 100, 200, 30);
-            textField2.setBounds(200, 140, 200, 30);
-            textField3.setBounds(200, 180, 200, 30);
-            textField4.setBounds(200, 220, 200, 30);
-            add(textField1);
-            add(textField2);
-            add(textField3);
-            add(textField4);
+            quizTitle_text.setBounds(200, 100, 200, 30);
+            quizID_text.setBounds(200, 140, 200, 30);
+            duration_text.setBounds(200, 180, 200, 30);
+            nQuestions_text.setBounds(200, 220, 200, 30);
+            add(quizTitle_text);
+            add(quizID_text);
+            add(duration_text);
+            add(nQuestions_text);
             //Background
             background.setBackground(Color.WHITE);
             add(background, BorderLayout.CENTER);
@@ -583,6 +624,9 @@ public class Quiz implements Serializable
         {
             if (e.getSource() == button)
             {
+                quizTitle = quizTitle_text.getText();
+
+                nQuestions = Integer.parseInt(nQuestions_text.getText());
                 setVisible(false);
                 Question x = new Question();
             }

@@ -18,6 +18,10 @@ public class User implements Serializable, Interactive
     private String username, password;
     private Access accessLevel;
 
+    public User()
+    {
+    }
+
     public User(String username, String password)
     {
         this.username = username;
@@ -30,6 +34,29 @@ public class User implements Serializable, Interactive
         this.username = username;
         this.password = password;
         this.accessLevel = accessLevel;
+    }
+
+    public Access getAccessLevel()
+    {
+        return accessLevel;
+    }
+    public String getUsername()
+    {
+        return username;
+    }
+    public int getUserID()
+    {
+        return userID;
+    }
+
+    public void setUserID(int userID)
+    {
+        this.userID = userID;
+    }
+
+    public String getPassword()
+    {
+        return password;
     }
 
     public static User login(String inUsername, String inPassword)
@@ -52,29 +79,14 @@ public class User implements Serializable, Interactive
         return null;
     }
 
-    public Access getAccessLevel()
+    public static User searchByID(int inID)
     {
-        return accessLevel;
-    }
-
-    public String getUsername()
-    {
-        return username;
-    }
-
-    public int getUserID()
-    {
-        return userID;
-    }
-
-    public void setUserID(int userID)
-    {
-        this.userID = userID;
-    }
-
-    public String getPassword()
-    {
-        return password;
+        for (User i : DataHandler.userData)
+        {
+            if (i.getUserID() == inID)
+                return i;
+        }
+        return null;
     }
 
     @Override
@@ -83,7 +95,7 @@ public class User implements Serializable, Interactive
         JFrame window = new LoginWindow();
     }
 
-    public enum Access
+    enum Access
     {
         NONE, STUDENT, TEACHER, ADMIN
     }

@@ -53,7 +53,7 @@ public class Admin extends User implements Serializable
                 return -1;
             case 1:
             {
-                listUsers();
+                listUsersConsole();
             }
             case 2:
             {
@@ -67,7 +67,10 @@ public class Admin extends User implements Serializable
         return 1;
     }
 
-    public void listUsers()
+    /**
+     * @deprecated Not used with GUI
+     */
+    public void listUsersConsole()
     {
         for (User i : DataHandler.userData)
             out.println(i.toString());
@@ -124,7 +127,6 @@ public class Admin extends User implements Serializable
      */
     class AdminWindow extends JFrame implements ActionListener
     {
-        JFrame window;
         JPanel Background_panel = new JPanel(),
                 Title_panel = new JPanel();
         JButton update_button = new JButton("Update"),
@@ -181,16 +183,10 @@ public class Admin extends User implements Serializable
             add(Background_panel);
         }
 
-        public static void constructWindow()
-        {
-
-        }
-
         private void constructData()
         {
             DefaultTableModel data = new DefaultTableModel();
-            String[] headers = {"User ID", "Username", "Position"};
-            data.setColumnIdentifiers(headers);
+            data.setColumnIdentifiers(new String[]{"User ID", "Username", "Position"});
             for (User i : DataHandler.userData)
             {
                 Object[] row = new Object[]{i.getUserID(), i.getUsername(), i.getAccessLevel()};

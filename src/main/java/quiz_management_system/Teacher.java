@@ -15,12 +15,22 @@ public class Teacher extends User
     @Serial
     private static final long serialVersionUID = 1L;
 
-    ArrayList<Quiz> createdQuizzes;
+    private ArrayList<Quiz> createdQuizzes;
 
     public Teacher(String username, String password, Access teacher)
     {
         super(username, password, teacher);
         createdQuizzes = new ArrayList<>();
+    }
+
+    public ArrayList<Quiz> getCreatedQuizzes()
+    {
+        return createdQuizzes;
+    }
+
+    public void setCreatedQuizzes(ArrayList<Quiz> createdQuizzes)
+    {
+        this.createdQuizzes = createdQuizzes;
     }
 
     @Override
@@ -47,7 +57,7 @@ public class Teacher extends User
                 return 0;
             case 1:
             {
-                listQuizzes();
+                listQuizzesConsole();
                 break;
             }
             case 2:
@@ -64,23 +74,17 @@ public class Teacher extends User
         return 1;
     }
 
-    public void listQuizzes()
+    public void listQuizzesConsole()
     {
         for (Quiz i : createdQuizzes)
         {
-            i.displayQuizProperties();
+            i.displayQuizPropertiesConsole();
         }
     }
 
     public void createNewQuiz()
     {
-        Quiz newQuiz = new Quiz();
-        newQuiz.createQuiz(this);
-
-        //TODO set String quizID to add to the quizzes
-
-        DataHandler.quizData.add(newQuiz);
-        createdQuizzes.add(newQuiz);
+        Quiz newQuiz = new Quiz(this);
     }
 
     /**
@@ -210,10 +214,9 @@ public class Teacher extends User
         {
             if (e.getSource() == actionReview)
             {
-                JFrame window;
                 try
                 {
-                    window = new ReviewQuizGrades(Quiz.searchByID(qID_review.getText()));
+                    JFrame window = new ReviewQuizGrades(Quiz.searchByID(qID_review.getText()));
                 } catch (NullPointerException nullPointerException)
                 {
                     JOptionPane.showMessageDialog(null, "No Quiz Found!", "Warning", JOptionPane.WARNING_MESSAGE);

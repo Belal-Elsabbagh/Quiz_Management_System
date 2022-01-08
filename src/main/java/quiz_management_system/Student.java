@@ -24,6 +24,11 @@ public class Student extends User implements Interactive
 
     private ArrayList<Attempt> attemptHistory;
 
+    public Student(int window)
+    {
+        Attempt newA = new Attempt(window);
+    }
+
     public Student(String username, String password, Access student)
     {
         super(username, password, student);
@@ -73,7 +78,7 @@ public class Student extends User implements Interactive
                     return 0;
                 }
                 out.println("Starting Quiz: ");
-                newQuiz.displayQuizProperties();
+                newQuiz.displayQuizPropertiesConsole();
                 startAttempt(newQuiz);
             }
             case 2:
@@ -239,7 +244,7 @@ public class Student extends User implements Interactive
 
                 //TODO Load attempt object from table and create the window from it
                 setVisible(false);
-                /* FIXME
+                /* FIXME Open ReviewAttemptWindow
                 JFrame window;
                 window = new Attempt.ReviewAttemptWindow();
                 window.setTitle("Review Quiz Grades");
@@ -263,42 +268,53 @@ public class Student extends User implements Interactive
 
     public class Attempt
     {
-        private final Quiz quiz;
+        private Quiz quiz;
         private Question[] model;
-        private int[] answerIndex;
+        private int[] answerIndexes;
         private double result;
+
+        public Attempt(int window)
+        {
+            if (window == 1)
+            {
+                JFrame w1 = new DoAttemptWindow();
+                return;
+            }
+            if (window == 2)
+            {
+                JFrame w2 = new ReviewAttemptWindow();
+                return;
+            }
+
+        }
 
         public Attempt(Quiz newQuiz)
         {
             quiz = newQuiz;
-            model = new Question[quiz.getNQuestions()];
+            model = newQuiz.generateQuizModel();
+            answerIndexes = new int[quiz.getNQuestions()];
             model = quiz.generateQuizModel();
             result = 0;
         }
 
-        public void setModel(Question[] model)
-        {
-            this.model = model;
-        }
-
         public int[] getAnswerIndex()
         {
-            return answerIndex;
+            return answerIndexes;
         }
 
         public void setAnswerIndex(int[] answerIndex)
         {
-            this.answerIndex = answerIndex;
-        }
-
-        public void setResult(double result)
-        {
-            this.result = result;
+            this.answerIndexes = answerIndex;
         }
 
         public double getResult()
         {
             return result;
+        }
+
+        public void setResult(double result)
+        {
+            this.result = result;
         }
 
         public Quiz getQuiz()
@@ -311,6 +327,21 @@ public class Student extends User implements Interactive
             return model;
         }
 
+        public void setModel(Question[] model)
+        {
+            this.model = model;
+        }
+
+        private void addThisAttemptToHistory()
+        {
+            attemptHistory.add(this);
+        }
+
+        private void saveCurrentAnswer(int index, String text)
+        {
+
+        }
+
         /**
          * @deprecated not used with GUI
          */
@@ -320,13 +351,13 @@ public class Student extends User implements Interactive
             Duration d = new Duration();
             d.run();
             out.println("Starting Quiz...Enter answer index after the prompt appears.");
-            answerIndex = new int[quiz.getNQuestions()];
+            answerIndexes = new int[quiz.getNQuestions()];
             for (int i = 0; i < quiz.getNQuestions(); i++)
             {
                 model[i].displayQuestionConsole();
-                answerIndex[i] = sc.nextInt();
+                answerIndexes[i] = sc.nextInt();
 
-                if (model[i].checkAnswer((short) answerIndex[i]))
+                if (model[i].checkAnswer((short) answerIndexes[i]))
                     result += model[i].getGrade();
 
             }
@@ -340,8 +371,8 @@ public class Student extends User implements Interactive
             for (int i = 0; i < quiz.getNQuestions(); i++)
             {
                 model[i].displayQuestionConsole();
-                out.println("Your Answer: " + answerIndex[i]);
-                if (model[i].checkAnswer((short) answerIndex[i]))
+                out.println("Your Answer: " + answerIndexes[i]);
+                if (model[i].checkAnswer((short) answerIndexes[i]))
                     out.println("Correct");
             }
         }
@@ -349,15 +380,22 @@ public class Student extends User implements Interactive
         /**
          * @author marma
          */
-        class DoAttemptWindow extends JFrame implements ActionListener
+        class DoAttemptWindow extends JFrame implements ActionListener, AttemptWindow
         {
-            private int currentQuestionIndex = 0;
-
-            JFrame window;
             JPanel Back = new JPanel(),
                     Title = new JPanel(),
                     down = new JPanel();
             Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+            JButton right_b = new JButton(new ImageIcon("UR.PNG")),
+                    left_b = new JButton(new ImageIcon("UL.PNG")),
+                    submit = new JButton("Submit");
+            Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+            JRadioButton c1_r = new JRadioButton("Choice 1"),   // get the text written in choice 1
+                    c2_r = new JRadioButton("Choice 2"),   // get the text written in choice 2
+                    c3_r = new JRadioButton("Choice 3"),   // get the text written in choice 3
+                    c4_r = new JRadioButton("Choice 4");   // get the text written in choice 4
+            ButtonGroup choices = new ButtonGroup();
+            private int currentQuestionIndex = 0;
             JLabel Title_label = new JLabel(quiz.getQuizTitle()),
                     prompt_label = new JLabel(model[0].getPrompt()),
                     choice_label = new JLabel("choices: "),
@@ -366,14 +404,8 @@ public class Student extends User implements Interactive
                     c3 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[2]),
                     c4 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[3]),
                     currentQuestionLabel = new JLabel("Question: " + (currentQuestionIndex + 1) + "/" + model.length),
+                    grade = new JLabel(" Grade: " + model[currentQuestionIndex].getGrade()),
                     timer = new JLabel("Timer");
-            JButton right_b = new JButton(new ImageIcon("UR.PNG")),
-                    left_b = new JButton(new ImageIcon("UL.PNG")), submit = new JButton("Submit");
-            Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
-            JRadioButton c1_r = new JRadioButton("Choice 1"),   // get the text written in choice 1
-                    c2_r = new JRadioButton("Choice 2"),   // get the text written in choice 2
-                    c3_r = new JRadioButton("Choice 3"),   // get the text written in choice 3
-                    c4_r = new JRadioButton("Choice 4");   // get the text written in choice 4
 
             public DoAttemptWindow()
             {
@@ -399,6 +431,8 @@ public class Student extends User implements Interactive
                 c2.setBounds(40, 220, 100, 30);
                 c3.setBounds(40, 260, 100, 30);
                 c4.setBounds(40, 300, 100, 30);
+                grade.setBorder(brdr);
+                grade.setBounds(400, 60, 100, 30);
                 timer.setBorder(brdr);
                 timer.setBounds(450, 60, 50, 30);
                 add(currentQuestionLabel);
@@ -408,17 +442,17 @@ public class Student extends User implements Interactive
                 add(c2);
                 add(c3);
                 add(c4);
+                add(grade);
                 add(timer);
                 //radio buttons
                 c1_r.setBackground(Color.WHITE);
                 c2_r.setBackground(Color.WHITE);
                 c3_r.setBackground(Color.WHITE);
                 c4_r.setBackground(Color.WHITE);
-                ButtonGroup g = new ButtonGroup();
-                g.add(c1_r);
-                g.add(c2_r);
-                g.add(c3_r);
-                g.add(c4_r);
+                choices.add(c1_r);
+                choices.add(c2_r);
+                choices.add(c3_r);
+                choices.add(c4_r);
                 c1_r.setBounds(5, 180, 20, 30);
                 c2_r.setBounds(5, 220, 20, 30);
                 c3_r.setBounds(5, 260, 20, 30);
@@ -437,17 +471,37 @@ public class Student extends User implements Interactive
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
+
+                setTitle(quiz.getQuizTitle());
+                setSize(550, 550);
+                setResizable(false);
+                setLocationRelativeTo(null); // to not have it open at the corner
+                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                setVisible(true);
             }
 
-            public void constructWindow()
+            @Override
+            public void goRight()
             {
-                window = new DoAttemptWindow();
-                window.setTitle(quiz.getQuizTitle());
-                window.setSize(550, 550);
-                window.setResizable(false);
-                window.setLocationRelativeTo(null); // to not have it open at the corner
-                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                window.setVisible(true);
+                currentQuestionIndex++;
+                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
+                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
+                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
+                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
+                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
+                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+            }
+
+            @Override
+            public void goLeft()
+            {
+                currentQuestionIndex--;
+                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
+                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
+                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
+                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
+                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
+                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
             }
 
             @Override
@@ -455,21 +509,41 @@ public class Student extends User implements Interactive
             {
                 if (e.getSource() == right_b)
                 {
-                    currentQuestionIndex++;
-                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                    c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                    c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                    c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                    c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+                    saveChoice();
+                    goRight();
                 }
                 else if (e.getSource() == left_b)
                 {
-                    currentQuestionIndex--;
-                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                    c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                    c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                    c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                    c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+                    saveChoice();
+                    goLeft();
+                }
+                else if (e.getSource() == submit)
+                {
+                    addThisAttemptToHistory();
+                }
+            }
+
+            private void saveChoice()
+            {
+                if (c1_r.isSelected())
+                {
+                    saveCurrentAnswer(currentQuestionIndex, c1.getText());
+                    answerIndexes[currentQuestionIndex] = 1;
+                }
+                else if (c2_r.isSelected())
+                {
+                    saveCurrentAnswer(currentQuestionIndex, c2.getText());
+                    answerIndexes[currentQuestionIndex] = 2;
+                }
+                else if (c3_r.isSelected())
+                {
+                    saveCurrentAnswer(currentQuestionIndex, c3.getText());
+                    answerIndexes[currentQuestionIndex] = 3;
+                }
+                else if (c4_r.isSelected())
+                {
+                    saveCurrentAnswer(currentQuestionIndex, c4.getText());
+                    answerIndexes[currentQuestionIndex] = 4;
                 }
             }
         }
@@ -477,25 +551,12 @@ public class Student extends User implements Interactive
         /**
          * @author marma
          */
-        class ReviewAttemptWindow extends JFrame implements ActionListener
+        class ReviewAttemptWindow extends JFrame implements ActionListener, AttemptWindow
         {
-            private int currentQuestionIndex = 0;
-
             JPanel Back = new JPanel(),
                     Title = new JPanel(),
                     down = new JPanel();
             Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-            JLabel Title_label = new JLabel("Quiz Title"),
-                    prompt_label = new JLabel("((((Question here))))"),
-                    choice_label = new JLabel("Choices: "),
-                    c1 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[0]),
-                    c2 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[1]),
-                    c3 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[2]),
-                    c4 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[3]),
-                    currentQuestionLabel = new JLabel("Question: " + (currentQuestionIndex + 1) + "/" + model.length),
-                    Q = new JLabel("Question number: " + 1),
-                    grade = new JLabel(" Grade: " + 1.5),
-                    answer = new JLabel(" The right answer is " + 1);
             JButton right_b = new JButton(new ImageIcon("UR.PNG")),
                     left_b = new JButton(new ImageIcon("UL.PNG")),
                     submit = new JButton("Close");
@@ -504,6 +565,19 @@ public class Student extends User implements Interactive
                     c2_r = new JRadioButton("Choice 1."),
                     c3_r = new JRadioButton("Choice 1."),
                     c4_r = new JRadioButton("Choice 1.");
+            ButtonGroup choices = new ButtonGroup();
+            private int currentQuestionIndex = 0;
+            JLabel Title_label = new JLabel("Quiz Title"),
+                    prompt_label = new JLabel("((((Question here))))"),
+                    choice_label = new JLabel("Choices: "),
+                    c1 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[0]),
+                    c2 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[1]),
+                    c3 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[2]),
+                    c4 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[3]),
+                    currentQuestionLabel = new JLabel("Question: " + (currentQuestionIndex + 1) + "/" + model.length),
+                    Q = new JLabel("Question number: " + (currentQuestionIndex + 1)),
+                    grade = new JLabel(" Grade: " + model[currentQuestionIndex].getGrade()),
+                    answer = new JLabel(" The right answer is " + 1);
 
             public ReviewAttemptWindow()
             {
@@ -544,14 +618,17 @@ public class Student extends User implements Interactive
                 add(answer);
                 //radio buttons
                 c1_r.setBackground(Color.WHITE);
+                c1_r.setEnabled(false);
                 c2_r.setBackground(Color.WHITE);
+                c2_r.setEnabled(false);
                 c3_r.setBackground(Color.WHITE);
+                c3_r.setEnabled(false);
                 c4_r.setBackground(Color.WHITE);
-                ButtonGroup g = new ButtonGroup();
-                g.add(c1_r);
-                g.add(c2_r);
-                g.add(c3_r);
-                g.add(c4_r);
+                c4_r.setEnabled(false);
+                choices.add(c1_r);
+                choices.add(c2_r);
+                choices.add(c3_r);
+                choices.add(c4_r);
                 c1_r.setBounds(5, 180, 20, 30);
                 c2_r.setBounds(5, 220, 20, 30);
                 c3_r.setBounds(5, 260, 20, 30);
@@ -577,24 +654,46 @@ public class Student extends User implements Interactive
             {
                 if (e.getSource() == right_b)
                 {
-                    currentQuestionIndex++;
-                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                    c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                    c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                    c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                    c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+                    goRight();
                 }
                 else if (e.getSource() == left_b)
                 {
-                    currentQuestionIndex--;
-                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                    c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                    c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                    c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                    c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+                    goLeft();
+                }
+                //TODO Change the submit button in Reviewing
+                else if (e.getSource() == submit)
+                {
+                    addThisAttemptToHistory();
                 }
             }
 
+            @Override
+            public void goRight()
+            {
+                currentQuestionIndex++;
+
+                answer.setText(String.valueOf(model[currentQuestionIndex].getMCQ().getAnswerKeyIndex() + 1));
+                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
+                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
+                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
+                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
+                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
+                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+            }
+
+            @Override
+            public void goLeft()
+            {
+                currentQuestionIndex--;
+
+                answer.setText(String.valueOf(model[currentQuestionIndex].getMCQ().getAnswerKeyIndex() + 1));
+                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
+                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
+                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
+                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
+                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
+                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+            }
         }
     }
 }
