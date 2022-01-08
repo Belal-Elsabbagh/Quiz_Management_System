@@ -24,11 +24,6 @@ public class Student extends User implements Interactive
 
     private ArrayList<Attempt> attemptHistory;
 
-    public Student(int window)
-    {
-        Attempt newA = new Attempt(window);
-    }
-
     public Student(String username, String password, Access student)
     {
         super(username, password, student);
@@ -38,6 +33,16 @@ public class Student extends User implements Interactive
     public ArrayList<Attempt> getAttemptHistory()
     {
         return attemptHistory;
+    }
+
+    public Attempt getAttempt(String qID)
+    {
+        for (Attempt i : attemptHistory)
+        {
+            if (i.getQuiz().getQuizID().equals(qID))
+                return i;
+        }
+        return null;
     }
 
     @Override
@@ -236,24 +241,16 @@ public class Student extends User implements Interactive
         {
             if (e.getSource() == actionReview)
             {
-                if (Quiz.searchByID(qID.getText()) == null)
+                Attempt toReview = getAttempt(qID.getText());
+                if (toReview == null)
                 {
                     JOptionPane.showMessageDialog(null, "Quiz not found.");
                     return;
                 }
 
                 //TODO Load attempt object from table and create the window from it
+                toReview.openReview();
                 setVisible(false);
-                /* FIXME Open ReviewAttemptWindow
-                JFrame window;
-                window = new Attempt.ReviewAttemptWindow();
-                window.setTitle("Review Quiz Grades");
-                window.setSize(400, 500);
-                window.setResizable(false);
-                window.setLocationRelativeTo(null); // to not have it open at the corner
-                window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                window.setVisible(true);
-                */
             }
             else if (e.getSource() == actionOpenChat)
             {
@@ -273,21 +270,6 @@ public class Student extends User implements Interactive
         private int[] answerIndexes;
         private double result;
 
-        public Attempt(int window)
-        {
-            if (window == 1)
-            {
-                JFrame w1 = new DoAttemptWindow();
-                return;
-            }
-            if (window == 2)
-            {
-                JFrame w2 = new ReviewAttemptWindow();
-                return;
-            }
-
-        }
-
         public Attempt(Quiz newQuiz)
         {
             quiz = newQuiz;
@@ -295,6 +277,11 @@ public class Student extends User implements Interactive
             answerIndexes = new int[quiz.getNQuestions()];
             model = quiz.generateQuizModel();
             result = 0;
+        }
+
+        public void openReview()
+        {
+            new ReviewAttemptWindow();
         }
 
         public int[] getAnswerIndex()
@@ -335,11 +322,6 @@ public class Student extends User implements Interactive
         private void addThisAttemptToHistory()
         {
             attemptHistory.add(this);
-        }
-
-        private void saveCurrentAnswer(int index, String text)
-        {
-
         }
 
         /**
@@ -526,25 +508,13 @@ public class Student extends User implements Interactive
             private void saveChoice()
             {
                 if (c1_r.isSelected())
-                {
-                    saveCurrentAnswer(currentQuestionIndex, c1.getText());
                     answerIndexes[currentQuestionIndex] = 1;
-                }
                 else if (c2_r.isSelected())
-                {
-                    saveCurrentAnswer(currentQuestionIndex, c2.getText());
                     answerIndexes[currentQuestionIndex] = 2;
-                }
                 else if (c3_r.isSelected())
-                {
-                    saveCurrentAnswer(currentQuestionIndex, c3.getText());
                     answerIndexes[currentQuestionIndex] = 3;
-                }
                 else if (c4_r.isSelected())
-                {
-                    saveCurrentAnswer(currentQuestionIndex, c4.getText());
                     answerIndexes[currentQuestionIndex] = 4;
-                }
             }
         }
 
@@ -647,6 +617,13 @@ public class Student extends User implements Interactive
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
+
+                setTitle("Review Quiz (" + quiz.getQuizTitle() + ") Grades");
+                setSize(400, 500);
+                setResizable(false);
+                setLocationRelativeTo(null); // to not have it open at the corner
+                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                setVisible(true);
             }
 
             @Override
