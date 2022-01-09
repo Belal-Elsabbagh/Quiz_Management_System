@@ -125,6 +125,7 @@ public class Teacher extends User
         // Buttons
         JButton actionCreate = new JButton("Create quiz");
         JButton actionReview = new JButton("Review quiz grades");
+        JButton Back_button = new JButton("Log out");
         //background
         JPanel Back = new JPanel();
         //chat
@@ -198,6 +199,11 @@ public class Teacher extends User
             actionReview.addActionListener(this);
             add(actionReview);
 
+            Back_button.setBounds(430, 470, 100, 30);
+            Back_button.setBackground(new Color(222, 184, 150));
+            Back_button.addActionListener(this);
+            add(Back_button);
+
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
 
@@ -224,17 +230,25 @@ public class Teacher extends User
                 }
                 setVisible(false);
             }
-            else if (e.getSource() == actionCreate)
+            if (e.getSource() == actionCreate)
             {
                 new Quiz();
             }
-            else if (e.getSource() == actionOpenChat)
+            if (e.getSource() == actionOpenChat)
             {
                 chat_panel.setVisible(true);
             }
-            else if (e.getSource() == actionCloseChat)
+            if (e.getSource() == actionCloseChat)
             {
                 chat_panel.setVisible(false);
+            }
+            if(e.getSource() == Back_button){
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION)
+                {
+                    setVisible(false);
+                    JFrame window = new LoginWindow();
+                }
             }
         }
 
@@ -249,7 +263,7 @@ public class Teacher extends User
     /**
      * @author Habiba1234567
      */
-    class ReviewQuizGrades extends JFrame
+    class ReviewQuizGrades extends JFrame implements ActionListener
     {
         int max = 100,
                 min = 0,
@@ -311,9 +325,16 @@ public class Teacher extends User
         Object[][] data = {{"Kathy", 5}, {"John", 4}};
         JTable table = new JTable(data, columnNames);
         JScrollPane scrollPane = new JScrollPane(table);
+        JButton Back_button = new JButton("Back");
 
         public ReviewQuizGrades(Quiz newQuiz)
         {
+            //button
+            Back_button.setBounds(430, 475, 100, 30);
+            Back_button.setBackground(new Color(222, 184, 150));
+            Back_button.addActionListener(this);
+            add(Back_button);
+            //Title
             Title.setFont(myFont);
             title_panel.add(Title);
             add(title_panel, BorderLayout.PAGE_START);
@@ -325,7 +346,7 @@ public class Teacher extends User
             Title.setBounds(10, 100, 60, 30);
             BestGrade_label.setBounds(340, 480, 200, 30);
             WorstGrade_label.setBounds(140, 480, 100, 30);
-            AverageGrade_label.setBounds(240, 480, 200, 30);
+            AverageGrade_label.setBounds(235, 480, 200, 30);
             label5.setBounds(10, 260, 60, 30);
             label6.setBounds(10, 300, 60, 30);
             zero.setBounds(80, 450, 60, 30);
@@ -425,6 +446,14 @@ public class Teacher extends User
                         data.addRow(row);
                     }
                 }
+            }
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == Back_button){
+                setVisible(false);
+                JFrame window = new TeacherWindow();
             }
         }
     }

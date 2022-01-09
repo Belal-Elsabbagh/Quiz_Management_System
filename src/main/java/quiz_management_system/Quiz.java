@@ -333,7 +333,9 @@ public class Quiz implements Serializable
                     index_label,
                     currentQuestionLabel;
             JButton right_b,
-                    left_b;
+                    left_b,
+            submit,
+                    Back_button;
             Icon icon_r,
                     icon_l;
             JTextField Q_t,
@@ -357,6 +359,7 @@ public class Quiz implements Serializable
                 grade_label = new JLabel("Enter grade: ");
                 choice_label = new JLabel("Enter choices: ");
                 index_label = new JLabel("Enter the index of right answer: ");
+                Back_button = new JButton("Back");
                 c1 = new JLabel("1.");
                 c2 = new JLabel("2.");
                 c3 = new JLabel("3.");
@@ -372,10 +375,22 @@ public class Quiz implements Serializable
                 c3_t = new JTextField();
                 c4_t = new JTextField();
                 I_t = new JTextField();
+                submit = new JButton("Submit");
             }
 
             public CreateQuestionBank()
             {
+                //button
+                Back_button.setBounds(20, 470, 100, 30);
+                Back_button.setBackground(new Color(222, 184, 150));
+                Back_button.addActionListener(this);
+                add(Back_button);
+
+                submit.setFocusable(false);
+                submit.setBounds(430, 470, 100, 30);
+                submit.setBorder(BorderFactory.createEtchedBorder());
+                submit.setBackground(new Color(222, 184, 150));
+                add(submit);
                 //Title
                 Title.add(Title_label);
                 add(Title, BorderLayout.PAGE_START);
@@ -452,7 +467,7 @@ public class Quiz implements Serializable
                     currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
 
                 }
-                else if (e.getSource() == left_b)
+                if (e.getSource() == left_b)
                 {
                     currentQuestionIndex--;
                     if (currentQuestionIndex == 0)
@@ -460,6 +475,11 @@ public class Quiz implements Serializable
                         left_b.setEnabled(false);
                     }
                     currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
+
+                }
+                if (e.getSource() == Back_button){
+                        setVisible(false);
+                        JFrame window = new CreateQuizWindow();
                 }
                 //TODO set String quizID to add to the quizzes
             }
@@ -554,7 +574,7 @@ public class Quiz implements Serializable
         JPanel title_panel, background;
         Font myFont;
         JLabel Title, label1, label2, label3, label4;
-        JButton button;
+        JButton button, Back_button;
         JTextField quizTitle_text, quizID_text, duration_text, nQuestions_text;
         Border brdr;
 
@@ -569,11 +589,18 @@ public class Quiz implements Serializable
             quizID_text = new JTextField();
             duration_text = new JTextField();
             nQuestions_text = new JTextField();
+            Back_button = new JButton("leave");
 
         }
 
         public CreateQuizWindow()
         {
+            //button
+            Back_button.setBounds(20, 470, 100, 30);
+            Back_button.setBackground(new Color(222, 184, 150));
+            Back_button.addActionListener(this);
+            add(Back_button);
+            //Title
             Title.setFont(myFont);
             title_panel.add(Title);
             add(title_panel, BorderLayout.PAGE_START);
@@ -583,29 +610,29 @@ public class Quiz implements Serializable
             //submit button
             button.setFont(new Font("Sans Serif", Font.PLAIN, 25));
             button.setFocusable(false);
-            button.setBounds(280, 450, 240, 40);
+            button.setBounds(70 , 260, 400, 40);
             button.addActionListener(e -> System.out.println("Saved"));
             button.setBorder(BorderFactory.createEtchedBorder());
             button.setBackground(new Color(222, 184, 150));
             add(button);
             //labels
             label1 = new JLabel("Title: ");
-            label1.setBounds(10, 100, 60, 30);
+            label1.setBounds(70, 100, 60, 30);
             label2 = new JLabel("Quiz Code: ");
-            label2.setBounds(10, 140, 1000, 30);
+            label2.setBounds(70, 140, 1000, 30);
             label3 = new JLabel("Duration: ");
-            label3.setBounds(10, 180, 60, 30);
+            label3.setBounds(70, 180, 60, 30);
             label4 = new JLabel("Number of Questions: ");
-            label4.setBounds(10, 220, 140, 30);
+            label4.setBounds(70, 220, 140, 30);
             add(label1);
             add(label2);
             add(label3);
             add(label4);
             //text fields
-            quizTitle_text.setBounds(200, 100, 200, 30);
-            quizID_text.setBounds(200, 140, 200, 30);
-            duration_text.setBounds(200, 180, 200, 30);
-            nQuestions_text.setBounds(200, 220, 200, 30);
+            quizTitle_text.setBounds(270, 100, 200, 30);
+            quizID_text.setBounds(270, 140, 200, 30);
+            duration_text.setBounds(270, 180, 200, 30);
+            nQuestions_text.setBounds(270, 220, 200, 30);
             add(quizTitle_text);
             add(quizID_text);
             add(duration_text);
@@ -631,6 +658,14 @@ public class Quiz implements Serializable
                 nQuestions = Integer.parseInt(nQuestions_text.getText());
                 setVisible(false);
                 Question x = new Question();
+            }
+            if (e.getSource() == Back_button){
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION)
+                {
+                    setVisible(false);
+                    //JFrame window = new ;
+                }
             }
         }
     }

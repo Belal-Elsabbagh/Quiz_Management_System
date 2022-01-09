@@ -166,6 +166,7 @@ public class Student extends User implements Interactive
         // Buttons
         JButton actionAttempt = new JButton("Attempt Now");
         JButton actionReview = new JButton("Review quiz grades");
+        JButton Back_button = new JButton("Log out");
         //background
         JPanel Back = new JPanel();
 
@@ -232,6 +233,11 @@ public class Student extends User implements Interactive
             actionAttempt.addActionListener(this);
             add(actionAttempt);
 
+            Back_button.setBounds(430, 470, 100, 30);
+            Back_button.setBackground(new Color(222, 184, 150));
+            Back_button.addActionListener(this);
+            add(Back_button);
+
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
 
@@ -272,7 +278,7 @@ public class Student extends User implements Interactive
                 toReview.openReview();
                 setVisible(false);
             }
-            else if (e.getSource() == actionAttempt)
+            if (e.getSource() == actionAttempt)
             {
                 Quiz newA;
                 try
@@ -285,13 +291,21 @@ public class Student extends User implements Interactive
                 }
                 new Attempt(newA);
             }
-            else if (e.getSource() == actionOpenChat)
+            if (e.getSource() == actionOpenChat)
             {
                 chat_panel.setVisible(true);
             }
-            else if (e.getSource() == actionCloseChat)
+            if (e.getSource() == actionCloseChat)
             {
                 chat_panel.setVisible(false);
+            }
+            if (e.getSource() == Back_button){
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION)
+                {
+                    setVisible(false);
+                    JFrame window = new LoginWindow();
+                }
             }
         }
     }
@@ -404,7 +418,8 @@ public class Student extends User implements Interactive
             Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
             JButton right_b = new JButton(new ImageIcon("UR.PNG")),
                     left_b = new JButton(new ImageIcon("UL.PNG")),
-                    submit = new JButton("Submit");
+                    submit = new JButton("Submit"),
+                    Back_button = new JButton("Leave");
             Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
             JRadioButton c1_r = new JRadioButton("Choice 1"),   // get the text written in choice 1
                     c2_r = new JRadioButton("Choice 2"),   // get the text written in choice 2
@@ -425,6 +440,18 @@ public class Student extends User implements Interactive
 
             public DoAttemptWindow()
             {
+                //button
+                submit.setFocusable(false);
+                submit.setBounds(430, 470, 100, 30);
+                submit.setBorder(BorderFactory.createEtchedBorder());
+                submit.setBackground(new Color(222, 184, 150));
+                add(submit);
+
+                Back_button.setBounds(20, 470, 100, 30);
+                Back_button.setBackground(new Color(222, 184, 150));
+                Back_button.addActionListener(this);
+                add(Back_button);
+
                 //Title
                 Title.add(Title_label);
                 add(Title, BorderLayout.PAGE_START);
@@ -453,7 +480,7 @@ public class Student extends User implements Interactive
                 c3.setBounds(40, 260, 100, 30);
                 c4.setBounds(40, 300, 100, 30);
                 grade.setBorder(brdr);
-                grade.setBounds(400, 60, 100, 30);
+                grade.setBounds(350, 60, 80, 30);
                 timer.setBorder(brdr);
                 timer.setBounds(450, 60, 50, 30);
                 add(currentQuestionLabel);
@@ -482,13 +509,7 @@ public class Student extends User implements Interactive
                 add(c2_r);
                 add(c3_r);
                 add(c4_r);
-                //button
-                submit.setFont(new Font("Sans Serif", Font.PLAIN, 25));
-                submit.setFocusable(false);
-                submit.setBounds(430, 460, 100, 40);
-                submit.setBorder(BorderFactory.createEtchedBorder());
-                submit.setBackground(new Color(222, 184, 150));
-                add(submit);
+
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
@@ -509,14 +530,23 @@ public class Student extends User implements Interactive
                     saveChoice();
                     goRight();
                 }
-                else if (e.getSource() == left_b)
+                if (e.getSource() == left_b)
                 {
                     saveChoice();
                     goLeft();
                 }
-                else if (e.getSource() == submit)
+                if (e.getSource() == submit)
                 {
                     addThisAttemptToHistory();
+                }
+                if (e.getSource() == Back_button){
+                    int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION)
+                    {
+                        setVisible(false);
+                        JFrame window = new StudentWindow();
+                    }
+
                 }
             }
 
@@ -584,7 +614,8 @@ public class Student extends User implements Interactive
             Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
             JButton right_b = new JButton(new ImageIcon("UR.PNG")),
                     left_b = new JButton(new ImageIcon("UL.PNG")),
-                    submit = new JButton("Close");
+                    submit = new JButton("Close"),
+                    Back_button = new JButton("Back");
             Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
             JRadioButton c1_r = new JRadioButton("Choice 1."),
                     c2_r = new JRadioButton("Choice 1."),
@@ -606,6 +637,11 @@ public class Student extends User implements Interactive
 
             public ReviewAttemptWindow()
             {
+                //button
+                Back_button.setBounds(430, 470, 100, 30);
+                Back_button.setBackground(new Color(222, 184, 150));
+                Back_button.addActionListener(this);
+                add(Back_button);
                 //Title
                 Title.add(Title_label);
                 add(Title, BorderLayout.PAGE_START);
@@ -662,13 +698,7 @@ public class Student extends User implements Interactive
                 add(c2_r);
                 add(c3_r);
                 add(c4_r);
-                //button
-                submit.setFont(new Font("Sans Serif", Font.PLAIN, 25));
-                submit.setFocusable(false);
-                submit.setBounds(430, 460, 100, 40);
-                submit.setBorder(BorderFactory.createEtchedBorder());
-                submit.setBackground(new Color(222, 184, 150));
-                add(submit);
+
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
@@ -688,14 +718,18 @@ public class Student extends User implements Interactive
                 {
                     goRight();
                 }
-                else if (e.getSource() == left_b)
+                if (e.getSource() == left_b)
                 {
                     goLeft();
                 }
                 //TODO Change the submit button in Reviewing
-                else if (e.getSource() == submit)
+                if (e.getSource() == submit)
                 {
                     addThisAttemptToHistory();
+                }
+                if(e.getSource() == Back_button){
+                    setVisible(false);
+                    JFrame window = new StudentWindow();
                 }
             }
 

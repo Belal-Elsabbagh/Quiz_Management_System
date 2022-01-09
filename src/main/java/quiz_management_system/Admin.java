@@ -131,12 +131,19 @@ public class Admin extends User implements Serializable
                 Title_panel = new JPanel();
         JButton update_button = new JButton("Update"),
                 Add_button = new JButton("Add"),
-                Delete_button = new JButton("Delete");
-        JLabel Title = new JLabel("Admin");
+                Delete_button = new JButton("Delete"),
+                Back_button = new JButton("Log out");
+        JLabel Title = new JLabel("Admin"),
+                name_label = new JLabel("Enter User Name"),
+                pass_label = new JLabel("Enter Password");
         Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
         Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
         JScrollPane scrollPane;
         JTable table;
+        JTextField name_Text = new JTextField(),
+                password_Text = new JTextField();
+        String[] accessString = { "Teacher" , "Student" , "Admin" };
+        JComboBox accessCombo = new JComboBox( accessString);
 
         public AdminWindow()
         {
@@ -147,35 +154,56 @@ public class Admin extends User implements Serializable
             Title_panel.setBorder(brdr);
             add(Title_panel, BorderLayout.PAGE_START);
 
-            update_button.setBounds(400, 100, 100, 50);
+            update_button.setBounds(350, 410, 180, 30);
             update_button.addActionListener(this);
             update_button.setFocusable(false);
             update_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
             update_button.setBackground(new Color(222, 184, 150));
             add(update_button);
 
-            Add_button.setBounds(400, 200, 100, 50);
+            Add_button.setBounds(350, 250, 180, 30);
             Add_button.addActionListener(this);
             Add_button.setFocusable(false);
             Add_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
             Add_button.setBackground(new Color(222, 184, 150));
             add(Add_button);
 
-            Delete_button.setBounds(400, 300, 100, 50);
+            Delete_button.setBounds(350, 360, 180, 30);
             Delete_button.addActionListener(this);
             Delete_button.setFocusable(false);
             Delete_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
             Delete_button.setBackground(new Color(222, 184, 150));
             add(Delete_button);
 
+            Back_button.setBounds(430, 470, 100, 30);
+            Back_button.setBackground(new Color(222, 184, 150));
+            Back_button.addActionListener(this);
+            add(Back_button);
+
+            name_Text.setBounds(350, 90, 180, 30);
+            add(name_Text);
+
+            password_Text.setBounds(350, 150, 180, 30);
+            add(password_Text);
+
+            name_label.setBounds(400, 60, 180, 30);
+            add(name_label);
+
+            pass_label.setBounds(400, 120 , 180, 30);
+            add(pass_label);
+
+            accessCombo.setBounds(350, 200 , 180, 30);
+            accessCombo.setBackground(new Color(239, 222, 205));
+            add(accessCombo);
+
             constructData();
             table.setFillsViewportHeight(true);
             table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-            table.setBounds(0, 50, 350, 100);
+            table.setBounds(0, 50, 350, 400);
 
             table.setBackground(new Color(239, 222, 205));
             scrollPane = new JScrollPane(table);
-            scrollPane.setBounds(0, 50, 350, 100);
+            scrollPane.setBounds(0, 50, 350, 400);
             add(scrollPane);
 
             Background_panel.setBackground(Color.WHITE);
@@ -211,6 +239,14 @@ public class Admin extends User implements Serializable
             if (e.getSource() == Delete_button)
             {
                 System.out.println("Data is deleted");
+            }
+            if(e.getSource() == Back_button){
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION)
+                {
+                    setVisible(false);
+                    JFrame window = new LoginWindow();
+                }
             }
         }
     }
