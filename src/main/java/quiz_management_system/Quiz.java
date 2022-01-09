@@ -664,7 +664,7 @@ public class Quiz implements Serializable
                 if (reply == JOptionPane.YES_OPTION)
                 {
                     setVisible(false);
-                    //JFrame window = new ;
+                    Quiz_Management_System.getActiveUser().listMenu();
                 }
             }
         }

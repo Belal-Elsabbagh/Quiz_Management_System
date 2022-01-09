@@ -450,10 +450,12 @@ public class Teacher extends User
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == Back_button){
+        public void actionPerformed(ActionEvent e)
+        {
+            if (e.getSource() == Back_button)
+            {
                 setVisible(false);
-                JFrame window = new TeacherWindow();
+                Quiz_Management_System.getActiveUser().listMenu();
             }
         }
     }
