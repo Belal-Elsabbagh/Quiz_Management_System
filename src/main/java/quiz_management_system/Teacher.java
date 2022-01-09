@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Teacher extends User
@@ -251,13 +252,50 @@ public class Teacher extends User
      */
     class ReviewQuizGrades extends JFrame
     {
+        int max = 100  , min = 0 , avg = 50 , h1 = min * 2, h2  = avg * 2 , h3 = max * 2 ;
+/*
+        int [] arr = { 35 , 90 , 78};
+        public void sort() {
+            int temp;
+            for (int i = 0; i < arr.length; i++)
+            {
+                for (int j = i + 1; j < arr.length; j++)
+                {
+                    if (arr[i] > arr[j])
+                    {
+                        temp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = temp;
+                    }
+                }
+            }
+            min = arr[0];
+        }
+        public void Average() {
+            double sum = 0;
+            int i=0;
+            while(i < arr.length) {
+                sum += arr[i];
+                i++;
+            }
+            avg = (sum / arr.length);
+
+        }
+ */
         JPanel title_panel = new JPanel(),
+                table_panel = new JPanel(),
                 background = new JPanel();
         Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
         JLabel Title = new JLabel("Review Quiz Grades "),
-                BestGrade_label = new JLabel("Best Grade : "),
-                WorstGrade_label = new JLabel("Worst Grade : "),
-                AverageGrade_label = new JLabel("Average Grade : "),
+                BestGrade_label = new JLabel("Best Grade"),
+                WorstGrade_label = new JLabel("Worst Grade"),
+                AverageGrade_label = new JLabel("Average Grade"),
+                zero = new JLabel("0"),
+                fifty =  new JLabel("50"),
+                hundred = new JLabel("100"),
+                g1 = new JLabel("min: " + min),
+                g2 =  new JLabel("Avg:" + avg),
+                g3 = new JLabel("Max: " + max),
                 label4 = new JLabel(" "),
                 label5 = new JLabel(" "),
                 label6 = new JLabel(" ");
@@ -278,34 +316,71 @@ public class Teacher extends User
 
             //labels
             Title.setBounds(10, 100, 60, 30);
-            BestGrade_label.setBounds(10, 140, 100, 30);
-            WorstGrade_label.setBounds(10, 180, 200, 30);
-            AverageGrade_label.setBounds(10, 220, 200, 30);
+            BestGrade_label.setBounds(340, 480, 200, 30);
+            WorstGrade_label.setBounds(140, 480, 100, 30);
+            AverageGrade_label.setBounds(240, 480, 200, 30);
             label5.setBounds(10, 260, 60, 30);
             label6.setBounds(10, 300, 60, 30);
+            zero.setBounds(80, 450, 60, 30);
+            fifty.setBounds(70, 350, 60, 30);
+            hundred.setBounds(65, 260, 60, 30);
+            g1.setBounds(140, 440 - h1 , 60, 30);
+            g2.setBounds(240, 440 - h2, 60, 30);
+            g3.setBounds(340, 440 - h3, 60, 30);
             add(BestGrade_label);
             add(WorstGrade_label);
             add(AverageGrade_label);
             add(label4);
             add(label5);
             add(label6);
+            add(zero);
+            add(fifty);
+            add(hundred);
+            add(g1);
+            add(g2);
+            add(g3);
+            //Table
+            constructData(newQuiz);
+            table_panel.setBounds(0, 60, 550, 180);
+            table_panel.setBackground(Color.WHITE);
+            table_panel.setLayout(null);
+            table.setBounds(0, 0, 550, 180);
+            table.setBackground(new Color(222, 184, 150));
+            table_panel.add(table);
+            table.add(scrollPane);
+            add(table_panel);
+            table.setFillsViewportHeight(true);
 
             //Background
             background.setBackground(Color.WHITE);
             add(background, BorderLayout.CENTER);
 
-            //Table
-            constructData(newQuiz);
-            table.setFillsViewportHeight(true);
-            table.setBounds(100, 300, 300, 500);
-            table.setBackground(new Color(222, 184, 150));
-            add(scrollPane);
+
 
             setTitle("Review Quiz Grades");
-            setSize(400, 500);
+            setSize(550, 550);
+            setResizable(false);
             setLocationRelativeTo(null); // to not have it open at the corner
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setVisible(true);
+        }
+        @Override
+        public void paint(Graphics g) {
+            super.paintComponents(g);
+
+            g.setColor(Color.red);
+            g.fillRect(150, 500 -h1, 50,  0 + h1);
+
+            g.setColor(Color.YELLOW);
+            g.fillRect(250, 500 - h2 , 50,  0 + h2);
+
+            g.setColor(Color.green);
+            g.fillRect(350 , 500 - h3 , 50,  0 + h3);
+
+            g.setColor(Color.BLACK);
+            g.fillRect(100, 500, 350 ,  2);
+            g.setColor(Color.BLACK);
+            g.fillRect(100, 300 , 2 ,  200);
         }
 
         public void constructData(Quiz newQuiz)
