@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Teacher extends User
@@ -252,7 +251,12 @@ public class Teacher extends User
      */
     class ReviewQuizGrades extends JFrame
     {
-        int max = 100  , min = 0 , avg = 50 , h1 = min * 2, h2  = avg * 2 , h3 = max * 2 ;
+        int max = 100,
+                min = 0,
+                avg = 50,
+                h1 = min * 2,
+                h2 = avg * 2,
+                h3 = max * 2;
 /*
         int [] arr = { 35 , 90 , 78};
         public void sort() {
@@ -282,6 +286,9 @@ public class Teacher extends User
 
         }
  */
+
+        ArrayList<Student> students = new ArrayList<>();
+
         JPanel title_panel = new JPanel(),
                 table_panel = new JPanel(),
                 background = new JPanel();
@@ -340,7 +347,7 @@ public class Teacher extends User
             add(g2);
             add(g3);
             //Table
-            constructData(newQuiz);
+            constructTable(newQuiz);
             table_panel.setBounds(0, 60, 550, 180);
             table_panel.setBackground(Color.WHITE);
             table_panel.setLayout(null);
@@ -364,6 +371,7 @@ public class Teacher extends User
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setVisible(true);
         }
+
         @Override
         public void paint(Graphics g) {
             super.paintComponents(g);
@@ -375,15 +383,32 @@ public class Teacher extends User
             g.fillRect(250, 500 - h2 , 50,  0 + h2);
 
             g.setColor(Color.green);
-            g.fillRect(350 , 500 - h3 , 50,  0 + h3);
+            g.fillRect(350, 500 - h3, 50, 0 + h3);
 
             g.setColor(Color.BLACK);
-            g.fillRect(100, 500, 350 ,  2);
+            g.fillRect(100, 500, 350, 2);
             g.setColor(Color.BLACK);
-            g.fillRect(100, 300 , 2 ,  200);
+            g.fillRect(100, 300, 2, 200);
         }
 
-        public void constructData(Quiz newQuiz)
+        private void getStudents(Quiz newQuiz)
+        {
+            for (User i : DataHandler.userData)
+            {
+                if (!(i instanceof Student))
+                    continue;
+
+                for (Student.Attempt j : ((Student) i).getAttemptHistory())
+                {
+                    if (j.getQuiz().equals(newQuiz))
+                    {
+                        students.add((Student) i);
+                    }
+                }
+            }
+        }
+
+        public void constructTable(Quiz newQuiz)
         {
             DefaultTableModel data = new DefaultTableModel(0, 3);
             data.setColumnIdentifiers(new String[]{"Student ID", "Student Name", "Grade"});

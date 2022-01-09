@@ -47,6 +47,7 @@ public class Quiz implements Serializable
         this.nQuestions = nQuestions;
 
         this.questionBank = new ArrayList<>();
+        questionBank.add(new Question(1, "What is this planet?", 1.5));
     }
 
     public LocalTime openTime()
@@ -250,6 +251,7 @@ public class Quiz implements Serializable
             this.questionID = questionID;
             this.prompt = prompt;
             this.grade = grade;
+            this.mcq = new Choice(new String[]{"Earth", "Mars", "Venus", "Jupiter"}, 1);
         }
 
         public Question()

@@ -14,8 +14,8 @@ public class Quiz_Management_System
     {
         new DataHandler();
         activeUser = new User("", "");
-        activeUser.listMenu();
-        //buildData();
+        //activeUser.listMenu();
+        buildData();
     }
 
 
@@ -34,28 +34,9 @@ public class Quiz_Management_System
         u3.setUserID(u3.hashCode());
         DataHandler.userData.add(u3);
 
-        Quiz newQuiz = new Quiz("2020-MID", "Planets of the Solar System", (Teacher) u2, 3);
-
-
-        //((Teacher) u2).createNewQuiz();
-        //((Student)u1).startAttempt(Quiz.searchByID("1"));
+        Quiz newQuiz = new Quiz("2020-MID", "Planets of the Solar System", (Teacher) u2, 1);
+        DataHandler.quizData.add(newQuiz);
+        ((Student) u1).createNewAttempt(newQuiz);
         DataHandler.save();
-    }
-
-    /**
-     * @deprecated
-     */
-    public static void consoleLogin()
-    {
-        Scanner sc = new Scanner(System.in);
-        String inUsername, inPassword;
-        System.out.println("*****Quiz Management System*****");
-        System.out.println("Enter username:");
-        inUsername = sc.next();
-        System.out.println("Enter password:");
-        inPassword = sc.next();
-        activeUser = User.login(inUsername, inPassword);
-        while (activeUser != null)
-            activeUser.listMenu();
     }
 }
