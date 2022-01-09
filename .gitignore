@@ -32,3 +32,5 @@
 /target/classes/quiz_management_system/User$LoginWindow.class
 /target/classes/quiz_management_system/User.class
 /target/classes/quiz_management_system/Quiz$CreateQuizWindow.class
+/target/classes/quiz_management_system/Client.class
+/target/classes/quiz_management_system/Server.class
