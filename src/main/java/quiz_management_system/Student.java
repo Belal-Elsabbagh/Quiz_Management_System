@@ -13,6 +13,7 @@ import java.io.Serial;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TimerTask;
 
 import static java.lang.System.*;
 
@@ -445,7 +446,7 @@ public class Student extends User implements Interactive
                     c4 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[3]),
                     currentQuestionLabel = new JLabel("Question: " + (currentQuestionIndex + 1) + "/" + model.length),
                     grade = new JLabel(" Grade: " + model[currentQuestionIndex].getGrade()),
-                    timer = new JLabel("Timer");
+                    timer_label = new JLabel("Timer");
 
             public DoAttemptWindow()
             {
@@ -490,8 +491,8 @@ public class Student extends User implements Interactive
                 c4.setBounds(40, 300, 100, 30);
                 grade.setBorder(brdr);
                 grade.setBounds(350, 60, 80, 30);
-                timer.setBorder(brdr);
-                timer.setBounds(450, 60, 50, 30);
+                timer_label.setBorder(brdr);
+                timer_label.setBounds(450, 60, 50, 30);
                 add(currentQuestionLabel);
                 add(prompt_label);
                 add(choice_label);
@@ -500,7 +501,7 @@ public class Student extends User implements Interactive
                 add(c3);
                 add(c4);
                 add(grade);
-                add(timer);
+                add(timer_label);
                 //radio buttons
                 c1_r.setBackground(Color.WHITE);
                 c2_r.setBackground(Color.WHITE);
@@ -529,6 +530,23 @@ public class Student extends User implements Interactive
                 setLocationRelativeTo(null); // to not have it open at the corner
                 setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 setVisible(true);
+
+                Timer timer = new Timer(1000);
+
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    long i = quiz.getDuration();
+
+                    public void run() {
+
+                        timer_label.setText("Time left: " + i);
+                        i--;
+
+                        if (i < 0) {
+                            timer.cancel();
+                            timer_label.setText("Time Over");
+                        }
+                    }
+                }, 0, 1000);
             }
 
             @Override
