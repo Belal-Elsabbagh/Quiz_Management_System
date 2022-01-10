@@ -8,7 +8,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.Serial;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -293,6 +295,13 @@ public class Student extends User implements Interactive
             }
             if (e.getSource() == actionOpenChat)
             {
+                try
+                {
+                    ClientHandler activeClient = new ClientHandler(new Socket("127.0.0.1", 1010));
+                } catch (IOException ex)
+                {
+                    ex.printStackTrace();
+                }
                 chat_panel.setVisible(true);
             }
             if (e.getSource() == actionCloseChat)
@@ -544,7 +553,6 @@ public class Student extends User implements Interactive
                     if (reply == JOptionPane.YES_OPTION)
                     {
                         setVisible(false);
-                        JFrame window = new StudentWindow();
                     }
 
                 }

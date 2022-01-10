@@ -2,6 +2,8 @@ package quiz_management_system;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,23 +22,21 @@ public class Quiz implements Serializable
     private String quizID;
     private String quizTitle;
     private Teacher creator;
+    private long duration;
     private int nQuestions;
-    public Date quizDate;
-    public LocalTime openTime;
     private ArrayList<Question> questionBank;
-    private long totalSec;
 
     public Quiz()
     {
         questionBank = new ArrayList<>();
-        JFrame window = new CreateQuizWindow();
+        new CreateQuizWindow();
     }
 
     public Quiz(Teacher author)
     {
         this.creator = author;
         questionBank = new ArrayList<>();
-        JFrame window = new CreateQuizWindow();
+        new CreateQuizWindow();
     }
 
     public Quiz(String quizID, String quizTitle, Teacher creator, int nQuestions)
@@ -47,12 +47,7 @@ public class Quiz implements Serializable
         this.nQuestions = nQuestions;
 
         this.questionBank = new ArrayList<>();
-        questionBank.add(new Question(1, "What is this planet?", 1.5));
-    }
-
-    public LocalTime openTime()
-    {
-        return openTime;
+        questionBank.add(new Question(1, "What is this planet?", 1.5, new String[]{"Mars", "Earth", "Venus", "Jupiter"}, 1));
     }
 
     /**
@@ -91,24 +86,19 @@ public class Quiz implements Serializable
         return quizTitle;
     }
 
-    public long getTotalSec()
+    public long getDuration()
     {
-        return totalSec;
+        return duration;
     }
 
-    public void setTotalSec(long TotalSec)
+    public void setDuration(long d)
     {
-        this.totalSec = TotalSec;
+        this.duration = d;
     }
 
     public int getNQuestions()
     {
         return nQuestions;
-    }
-
-    public Date quizDate()
-    {
-        return quizDate;
     }
 
     /**
@@ -204,8 +194,6 @@ public class Quiz implements Serializable
         {
             Date date = dateIn.parse(takeDate);
             System.out.println("The quiz will be on: " + new SimpleDateFormat("dd-MM-yyyy").format(date));
-            quizDate = dateIn.parse(takeDate);
-
         }
         catch (ParseException e)
         {
@@ -218,8 +206,6 @@ public class Quiz implements Serializable
         {
             LocalTime Time = LocalTime.parse(time);
             System.out.println("The quiz time: " + Time);
-            openTime = LocalTime.parse(time);
-
         }
         catch (Exception e)
         {
@@ -236,7 +222,7 @@ public class Quiz implements Serializable
         int sec;
         sec = sc.nextInt();
         System.out.println("The quiz duration will be:" + hour + ":" + min + ":" + sec);
-        totalSec = ((long) hour * 60 * 60) + (min * 60) + sec;
+        duration = ((long) hour * 60 * 60) + (min * 60) + sec;
     }
 
     public class Question implements Serializable
@@ -246,17 +232,25 @@ public class Quiz implements Serializable
         private double grade;
         private Choice mcq;
 
-        public Question(int questionID, String prompt, double grade)
+        public Question(int questionID, String prompt, double grade, Choice mcq)
         {
             this.questionID = questionID;
             this.prompt = prompt;
             this.grade = grade;
-            this.mcq = new Choice(new String[]{"Earth", "Mars", "Venus", "Jupiter"}, 1);
+            this.mcq = mcq;
+        }
+
+        public Question(int questionID, String prompt, double grade, String[] choices, int correctIndex)
+        {
+            this.questionID = questionID;
+            this.prompt = prompt;
+            this.grade = grade;
+            this.mcq = new Choice(choices, correctIndex);
         }
 
         public Question()
         {
-            JFrame window = new CreateQuestionBank();
+            new CreateQuestionBank();
         }
 
         public String getPrompt()
@@ -334,7 +328,7 @@ public class Quiz implements Serializable
                     currentQuestionLabel;
             JButton right_b,
                     left_b,
-            submit,
+                    submit,
                     Back_button;
             Icon icon_r,
                     icon_l;
@@ -453,22 +447,37 @@ public class Quiz implements Serializable
                 setVisible(true);
             }
 
+            private void setNewQuestion()
+            {
+                try
+                {
+                    questionBank.ensureCapacity(currentQuestionIndex);
+                    questionBank.set(currentQuestionIndex, new Question(currentQuestionIndex + 1, Q_t.getText(), Double.parseDouble(G_t.getText()), new String[]{c1_t.getText(), c2_t.getText(), c3_t.getText(), c4_t.getText()}, Integer.parseInt(I_t.getText())));
+                } catch (NumberFormatException numberFormatException)
+                {
+                    JOptionPane.showInternalMessageDialog(null, "This is not a valid number", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+            }
 
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 if (e.getSource() == right_b)
                 {
+                    setNewQuestion();
+
                     currentQuestionIndex++;
                     if (currentQuestionIndex > 0)
                     {
                         left_b.setEnabled(true);
                     }
                     currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
-
                 }
-                if (e.getSource() == left_b)
+                else if (e.getSource() == left_b)
                 {
+                    setNewQuestion();
+
                     currentQuestionIndex--;
                     if (currentQuestionIndex == 0)
                     {
@@ -478,10 +487,9 @@ public class Quiz implements Serializable
 
                 }
                 if (e.getSource() == Back_button){
-                        setVisible(false);
-                        JFrame window = new CreateQuizWindow();
+                    setVisible(false);
+                    new CreateQuizWindow();
                 }
-                //TODO set String quizID to add to the quizzes
             }
         }
 
@@ -569,7 +577,7 @@ public class Quiz implements Serializable
         }
     }
 
-    class CreateQuizWindow extends JFrame implements ActionListener
+    class CreateQuizWindow extends JFrame implements ActionListener, DocumentListener
     {
         JPanel title_panel, background;
         Font myFont;
@@ -590,7 +598,6 @@ public class Quiz implements Serializable
             duration_text = new JTextField();
             nQuestions_text = new JTextField();
             Back_button = new JButton("leave");
-
         }
 
         public CreateQuizWindow()
@@ -629,6 +636,7 @@ public class Quiz implements Serializable
             add(label3);
             add(label4);
             //text fields
+            quizID_text.getDocument().addDocumentListener(this);
             quizTitle_text.setBounds(270, 100, 200, 30);
             quizID_text.setBounds(270, 140, 200, 30);
             duration_text.setBounds(270, 180, 200, 30);
@@ -654,18 +662,57 @@ public class Quiz implements Serializable
             if (e.getSource() == button)
             {
                 quizTitle = quizTitle_text.getText();
+                try
+                {
+                    nQuestions = Integer.parseInt(nQuestions_text.getText());
+                    duration = Long.parseLong(duration_text.getText());
+                } catch (NumberFormatException formatException)
+                {
+                    JOptionPane.showMessageDialog(null, "This is not a valid number", "WARNING", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-                nQuestions = Integer.parseInt(nQuestions_text.getText());
+                quizID = quizID_text.getText();
+
+                questionBank = new ArrayList<>(nQuestions);
                 setVisible(false);
                 Question x = new Question();
             }
-            if (e.getSource() == Back_button){
-                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+            if (e.getSource() == Back_button)
+            {
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?\n This Quiz will be deleted.", "Close?", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION)
                 {
                     setVisible(false);
                     Quiz_Management_System.getActiveUser().listMenu();
                 }
+            }
+        }
+
+        @Override
+        public void insertUpdate(DocumentEvent e)
+        {
+
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e)
+        {
+
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e)
+        {
+            if (Quiz.searchByID(quizID_text.getText()) != null)
+            {
+                button.setEnabled(false);
+                button.setText("ID Unavailable");
+            }
+            else
+            {
+                button.setEnabled(true);
+                button.setText("Create Questions");
             }
         }
     }

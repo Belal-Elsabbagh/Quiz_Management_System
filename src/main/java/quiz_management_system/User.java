@@ -92,7 +92,7 @@ public class User implements Serializable, Interactive
     @Override
     public void listMenu()
     {
-        JFrame window = new LoginWindow();
+        new LoginWindow();
     }
 
     enum Access

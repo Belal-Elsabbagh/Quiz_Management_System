@@ -1,5 +1,8 @@
 package quiz_management_system;
 
+import javax.swing.*;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,6 +15,17 @@ public class Quiz_Management_System
 
     public static void main(String[] args)
     {
+//        ServerSocket serverSocket = null;
+//        try
+//        {
+//            serverSocket = new ServerSocket(1010);
+//        } catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        Server server = new Server(serverSocket);
+//        server.startServer();
+
         new DataHandler();
         activeUser = new User("", "");
         activeUser.listMenu();

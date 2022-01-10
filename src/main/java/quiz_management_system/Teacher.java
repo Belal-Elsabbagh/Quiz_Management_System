@@ -222,13 +222,12 @@ public class Teacher extends User
             {
                 try
                 {
-                    JFrame window = new ReviewQuizGrades(Quiz.searchByID(qID_review.getText()));
+                    new ReviewQuizGrades(Quiz.searchByID(qID_review.getText()));
                 } catch (NullPointerException nullPointerException)
                 {
                     JOptionPane.showMessageDialog(null, "No Quiz Found!", "Warning", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                setVisible(false);
             }
             if (e.getSource() == actionCreate)
             {
@@ -247,7 +246,7 @@ public class Teacher extends User
                 if (reply == JOptionPane.YES_OPTION)
                 {
                     setVisible(false);
-                    JFrame window = new LoginWindow();
+                    new LoginWindow();
                 }
             }
         }
