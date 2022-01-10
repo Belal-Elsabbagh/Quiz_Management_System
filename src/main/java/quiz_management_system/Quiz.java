@@ -39,13 +39,13 @@ public class Quiz implements Serializable
         new CreateQuizWindow();
     }
 
-    public Quiz(String quizID, String quizTitle, Teacher creator, int nQuestions)
+    public Quiz(String quizID, String quizTitle, Teacher creator, int nQuestions, long duration)
     {
         this.quizID = quizID;
         this.quizTitle = quizTitle;
         this.creator = creator;
         this.nQuestions = nQuestions;
-
+        this.duration = duration;
         this.questionBank = new ArrayList<>();
         questionBank.add(new Question(1, "What is this planet?", 1.5, new String[]{"Mars", "Earth", "Venus", "Jupiter"}, 1));
     }

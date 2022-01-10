@@ -492,7 +492,7 @@ public class Student extends User implements Interactive
                 grade.setBorder(brdr);
                 grade.setBounds(350, 60, 80, 30);
                 timer_label.setBorder(brdr);
-                timer_label.setBounds(450, 60, 50, 30);
+                timer_label.setBounds(450, 60, 100, 30);
                 add(currentQuestionLabel);
                 add(prompt_label);
                 add(choice_label);
@@ -565,6 +565,8 @@ public class Student extends User implements Interactive
                 if (e.getSource() == submit)
                 {
                     addThisAttemptToHistory();
+                    User.updateUser();
+                    DataHandler.save();
                 }
                 if (e.getSource() == Back_button){
                     int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);

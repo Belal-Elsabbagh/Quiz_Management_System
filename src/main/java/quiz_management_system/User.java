@@ -79,6 +79,11 @@ public class User implements Serializable, Interactive
         return null;
     }
 
+    public static void updateUser()
+    {
+        DataHandler.userData.set(DataHandler.userData.indexOf(Quiz_Management_System.getLastReference()), Quiz_Management_System.getActiveUser());
+    }
+
     public static User searchByID(int inID)
     {
         for (User i : DataHandler.userData)
@@ -199,6 +204,7 @@ public class User implements Serializable, Interactive
             }
             JOptionPane.showMessageDialog(null, "Login Successful");
             Quiz_Management_System.setActiveUser(newUser);
+            Quiz_Management_System.setLastReference(newUser);
             setVisible(false);
             Quiz_Management_System.getActiveUser().listMenu();
         }

@@ -8,10 +8,27 @@ import java.util.Scanner;
 
 public class Quiz_Management_System
 {
-    private static User activeUser;
+    private static User activeUser, lastReference;
 
-    public static User getActiveUser() { return activeUser; }
-    public static void setActiveUser(User activeUser) { Quiz_Management_System.activeUser = activeUser; }
+    public static User getLastReference()
+    {
+        return lastReference;
+    }
+
+    public static void setLastReference(User lastReference)
+    {
+        Quiz_Management_System.lastReference = lastReference;
+    }
+
+    public static User getActiveUser()
+    {
+        return activeUser;
+    }
+
+    public static void setActiveUser(User activeUser)
+    {
+        Quiz_Management_System.activeUser = activeUser;
+    }
 
     public static void main(String[] args)
     {
@@ -48,7 +65,7 @@ public class Quiz_Management_System
         u3.setUserID(u3.hashCode());
         DataHandler.userData.add(u3);
 
-        Quiz newQuiz = new Quiz("2020-MID", "Planets of the Solar System", (Teacher) u2, 1);
+        Quiz newQuiz = new Quiz("2020-MID", "Planets of the Solar System", (Teacher) u2, 1, 10000);
         DataHandler.quizData.add(newQuiz);
         ((Student) u1).createNewAttempt(newQuiz);
         DataHandler.save();
