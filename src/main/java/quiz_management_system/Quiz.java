@@ -139,6 +139,11 @@ public class Quiz implements Serializable
         System.out.println("Quiz created successfully.");
     }
 
+    private void saveQuiz()
+    {
+        creator.getCreatedQuizzes().add(this);
+    }
+
     public void createQuestionBank()
     {
         questionBank = new ArrayList<>();
@@ -486,9 +491,14 @@ public class Quiz implements Serializable
                     currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
 
                 }
-                if (e.getSource() == Back_button){
+                else if (e.getSource() == Back_button)
+                {
                     setVisible(false);
                     new CreateQuizWindow();
+                }
+                else if (e.getSource() == submit)
+                {
+                    saveQuiz();
                 }
             }
         }
@@ -676,7 +686,7 @@ public class Quiz implements Serializable
 
                 questionBank = new ArrayList<>(nQuestions);
                 setVisible(false);
-                Question x = new Question();
+                new Question();
             }
             if (e.getSource() == Back_button)
             {

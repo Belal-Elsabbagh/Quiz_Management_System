@@ -104,7 +104,6 @@ public class Admin extends User implements Serializable
             status = true;
         } while (!status);
 
-
         System.out.println("Set Access Level.\n 1 for student\n2 for teacher\n3 for Admin:");
         aLevel = sc.nextInt();
         // TODO Set an ID for the user

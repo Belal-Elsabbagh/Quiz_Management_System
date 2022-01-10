@@ -531,7 +531,7 @@ public class Student extends User implements Interactive
                 setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 setVisible(true);
 
-                Timer timer = new Timer(1000);
+                java.util.Timer timer = new java.util.Timer(String.valueOf(1000));
 
                 timer.scheduleAtFixedRate(new TimerTask() {
                     long i = quiz.getDuration();
