@@ -171,6 +171,8 @@ public class Student extends User implements Interactive, Serializable
         JButton actionAttempt = new JButton("Attempt Now");
         JButton actionReview = new JButton("Review quiz grades");
         JButton Back_button = new JButton("Log out");
+
+        JButton Review_button = new JButton("Review quiz");
         //background
         JPanel Back = new JPanel();
 
@@ -236,6 +238,11 @@ public class Student extends User implements Interactive, Serializable
             actionAttempt.setBackground(new Color(222, 184, 150));
             actionAttempt.addActionListener(this);
             add(actionAttempt);
+
+            Review_button.setBounds(300, 190, 200, 30);
+            Review_button.setBackground(new Color(222, 184, 150));
+            Review_button.addActionListener(this);
+            add(Review_button);
 
             Back_button.setBounds(430, 470, 100, 30);
             Back_button.setBackground(new Color(222, 184, 150));
@@ -316,6 +323,18 @@ public class Student extends User implements Interactive, Serializable
                 {
                     setVisible(false);
                     JFrame window = new LoginWindow();
+                }
+            }
+            if (e.getSource() == Review_button){
+                Quiz newA;
+                try
+                {
+                    newA = Quiz.searchByID(qID.getText());
+
+                } catch (NullPointerException a)
+                {
+                    JOptionPane.showMessageDialog(null, "Quiz not found", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
                 }
             }
         }
