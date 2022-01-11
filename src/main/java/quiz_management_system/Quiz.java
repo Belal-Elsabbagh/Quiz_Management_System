@@ -715,6 +715,7 @@ public class Quiz implements Serializable
             setTitle("Create New Quiz");
             setSize(550, 550);
             setLocationRelativeTo(null); // to not have it open at the corner
+            setResizable(false);
             setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             setVisible(true);
         }
