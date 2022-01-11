@@ -241,8 +241,9 @@ public class Teacher extends User
             {
                 chat_panel.setVisible(false);
             }
-            if(e.getSource() == Back_button){
-                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+            if (e.getSource() == Back_button)
+            {
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION)
                 {
                     setVisible(false);

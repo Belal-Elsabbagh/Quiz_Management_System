@@ -84,6 +84,7 @@ public class DataHandler
         } catch (IOException ex)
         {
             ex.printStackTrace();
+            System.err.println("Cannot Write");
         }
     }
 }

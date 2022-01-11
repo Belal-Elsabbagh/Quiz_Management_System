@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serial;
+import java.io.Serializable;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,7 +21,7 @@ import static java.lang.System.*;
 /**
  * @author belsa
  */
-public class Student extends User implements Interactive
+public class Student extends User implements Interactive, Serializable
 {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -259,7 +260,7 @@ public class Student extends User implements Interactive
             data.setColumnIdentifiers(headers);
             for (Attempt i : attemptHistory)
             {
-                Object[] row = new Object[]{i.getQuiz().getQuizTitle(), i.getResult()};
+                Object[] row = new Object[]{i.getQuiz().getQuizID(), i.getQuiz().getQuizTitle(), i.getResult()};
                 data.addRow(row);
             }
             attemptTable = new JTable(data);
@@ -287,12 +288,12 @@ public class Student extends User implements Interactive
                 try
                 {
                     newA = Quiz.searchByID(qID.getText());
+                    new Attempt(newA);
                 } catch (NullPointerException a)
                 {
                     JOptionPane.showMessageDialog(null, "Quiz not found", "Error", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
-                new Attempt(newA);
             }
             if (e.getSource() == actionOpenChat)
             {
@@ -320,7 +321,7 @@ public class Student extends User implements Interactive
         }
     }
 
-    public class Attempt
+    public class Attempt implements Serializable
     {
         private Quiz quiz;
         private Question[] model;
@@ -332,14 +333,13 @@ public class Student extends User implements Interactive
             quiz = newQuiz;
             model = newQuiz.generateQuizModel();
             answerIndexes = new int[quiz.getNQuestions()];
-            model = quiz.generateQuizModel();
             result = 0;
             new DoAttemptWindow();
         }
 
         public void openReview()
         {
-            new ReviewAttemptWindow();
+            new ReviewQuestionAccess();
         }
 
         public int[] getAnswerIndex()
@@ -377,9 +377,20 @@ public class Student extends User implements Interactive
             this.model = model;
         }
 
+        public void calculateResult()
+        {
+            for (int i = 0; i < quiz.getNQuestions(); i++)
+            {
+                if (model[i].getMCQ().getAnswerKeyIndex() == answerIndexes[i])
+                    result += model[i].getGrade();
+            }
+        }
+
         private void addThisAttemptToHistory()
         {
             attemptHistory.add(this);
+            User.updateUser();
+            DataHandler.save();
         }
 
         /**
@@ -420,7 +431,7 @@ public class Student extends User implements Interactive
         /**
          * @author marma
          */
-        class DoAttemptWindow extends JFrame implements ActionListener, AttemptWindow
+        class DoAttemptWindow extends JFrame implements ActionListener, QuestionAccess
         {
             JPanel Back = new JPanel(),
                     Title = new JPanel(),
@@ -455,6 +466,7 @@ public class Student extends User implements Interactive
                 submit.setBounds(430, 470, 100, 30);
                 submit.setBorder(BorderFactory.createEtchedBorder());
                 submit.setBackground(new Color(222, 184, 150));
+                submit.addActionListener(this);
                 add(submit);
 
                 Back_button.setBounds(20, 470, 100, 30);
@@ -477,6 +489,8 @@ public class Student extends User implements Interactive
                 }
                 left_b.setBackground(Color.WHITE);
                 left_b.setEnabled(false);
+                right_b.addActionListener(this);
+                left_b.addActionListener(this);
                 down.add(left_b, BorderLayout.EAST);
                 down.add(right_b, BorderLayout.PAGE_END);
                 down.setBackground(Color.WHITE);
@@ -564,9 +578,8 @@ public class Student extends User implements Interactive
                 }
                 if (e.getSource() == submit)
                 {
+                    calculateResult();
                     addThisAttemptToHistory();
-                    User.updateUser();
-                    DataHandler.save();
                 }
                 if (e.getSource() == Back_button){
                     int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
@@ -590,10 +603,8 @@ public class Student extends User implements Interactive
                     answerIndexes[currentQuestionIndex] = 4;
             }
 
-            @Override
-            public void goRight()
+            public void buttonsSet()
             {
-                currentQuestionIndex++;
                 if (currentQuestionIndex == quiz.getNQuestions() - 1)
                 {
                     right_b.setEnabled(false);
@@ -602,18 +613,6 @@ public class Student extends User implements Interactive
                 {
                     right_b.setEnabled(true);
                 }
-                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
-                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
-            }
-
-            @Override
-            public void goLeft()
-            {
-                currentQuestionIndex--;
                 if (currentQuestionIndex == 0)
                 {
                     left_b.setEnabled(false);
@@ -622,8 +621,30 @@ public class Student extends User implements Interactive
                 {
                     left_b.setEnabled(true);
                 }
-                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
+            }
+
+            @Override
+            public void goRight()
+            {
+                currentQuestionIndex++;
+                buttonsSet();
+                refresh();
+            }
+
+            @Override
+            public void goLeft()
+            {
+                currentQuestionIndex--;
+                buttonsSet();
+                refresh();
+            }
+
+            @Override
+            public void refresh()
+            {
+                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + getQuiz().getNQuestions());
+                prompt_label.setText(model[currentQuestionIndex].getPrompt());
+                grade.setText(" Grade: " + (model[currentQuestionIndex].getGrade()));
                 c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
                 c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
                 c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
@@ -634,7 +655,7 @@ public class Student extends User implements Interactive
         /**
          * @author marma
          */
-        class ReviewAttemptWindow extends JFrame implements ActionListener, AttemptWindow
+        class ReviewQuestionAccess extends JFrame implements ActionListener, QuestionAccess
         {
             JPanel Back = new JPanel(),
                     Title = new JPanel(),
@@ -663,7 +684,7 @@ public class Student extends User implements Interactive
                     grade = new JLabel(" Grade: " + model[currentQuestionIndex].getGrade()),
                     answer = new JLabel(" The right answer is " + 1);
 
-            public ReviewAttemptWindow()
+            public ReviewQuestionAccess()
             {
                 //button
                 Back_button.setBounds(430, 470, 100, 30);
@@ -765,21 +786,19 @@ public class Student extends User implements Interactive
             public void goRight()
             {
                 currentQuestionIndex++;
-
-                answer.setText(String.valueOf(model[currentQuestionIndex].getMCQ().getAnswerKeyIndex() + 1));
-                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
-                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+                refresh();
             }
 
             @Override
             public void goLeft()
             {
                 currentQuestionIndex--;
+                refresh();
+            }
 
+            @Override
+            public void refresh()
+            {
                 answer.setText(String.valueOf(model[currentQuestionIndex].getMCQ().getAnswerKeyIndex() + 1));
                 currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
                 grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
