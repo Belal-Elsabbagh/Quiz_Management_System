@@ -36,7 +36,7 @@ public class Teacher extends User
     @Override
     public void listMenu()
     {
-        JFrame window = new TeacherWindow();
+        new TeacherWindow();
     }
 
     /**
@@ -74,6 +74,9 @@ public class Teacher extends User
         return 1;
     }
 
+    /**
+     * @deprecated
+     */
     public void listQuizzesConsole()
     {
         for (Quiz i : createdQuizzes)

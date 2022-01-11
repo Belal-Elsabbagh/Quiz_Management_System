@@ -389,7 +389,7 @@ public class Student extends User implements Interactive, Serializable
         private void addThisAttemptToHistory()
         {
             attemptHistory.add(this);
-            User.updateUser();
+            User.updateActiveUser();
             DataHandler.save();
         }
 

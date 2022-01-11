@@ -79,7 +79,7 @@ public class User implements Serializable, Interactive
         return null;
     }
 
-    public static void updateUser()
+    public static void updateActiveUser()
     {
         DataHandler.userData.set(DataHandler.userData.indexOf(Quiz_Management_System.getLastReference()), Quiz_Management_System.getActiveUser());
     }
@@ -152,28 +152,13 @@ public class User implements Serializable, Interactive
             actionLogin.addActionListener(this);
 
             //Login Button activation
-            DL(username_text);
-            if (username_text.getText().isEmpty())
-            {
-                actionLogin.setEnabled(false);
-            }
-
-            setTitle("Quiz Management System Login");
-            setSize(550, 550);
-            setLocationRelativeTo(null); // to not have it open at the corner
-            setResizable(false);
-            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            setVisible(true);
-        }
-
-        public void DL(JTextField x)
-        {
-            x.getDocument().addDocumentListener(new DocumentListener()
+            username_text.getDocument().addDocumentListener(new DocumentListener()
             {
                 public void changedUpdate(DocumentEvent e)
                 {
                     changed();
                 }
+
                 public void removeUpdate(DocumentEvent e)
                 {
                     changed();
@@ -186,9 +171,20 @@ public class User implements Serializable, Interactive
 
                 public void changed()
                 {
-                    actionLogin.setEnabled(!x.getText().equals(""));
+                    actionLogin.setEnabled(!username_text.getText().equals(""));
                 }
             });
+            if (username_text.getText().isEmpty())
+            {
+                actionLogin.setEnabled(false);
+            }
+
+            setTitle("Quiz Management System Login");
+            setSize(550, 550);
+            setLocationRelativeTo(null); // to not have it open at the corner
+            setResizable(false);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            setVisible(true);
         }
 
         @Override

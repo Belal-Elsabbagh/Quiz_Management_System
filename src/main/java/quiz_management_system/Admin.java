@@ -2,6 +2,8 @@ package quiz_management_system;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -29,12 +31,7 @@ public class Admin extends User implements Serializable
     @Override
     public void listMenu()
     {
-        JFrame window = new AdminWindow();
-        window.setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
-        window.setSize(550, 550);
-        window.setLocationRelativeTo(null); // to not have it open at the corner
-        window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.setVisible(true);
+        new AdminWindow();
     }
 
     /**
@@ -141,8 +138,8 @@ public class Admin extends User implements Serializable
         JTable table;
         JTextField name_Text = new JTextField(),
                 password_Text = new JTextField();
-        String[] accessString = { "Teacher" , "Student" , "Admin" };
-        JComboBox accessCombo = new JComboBox( accessString);
+        Access[] accessString = {Access.STUDENT, Access.TEACHER, Access.ADMIN};
+        JComboBox<Access> accessCombo = new JComboBox<>(accessString);
 
         public AdminWindow()
         {
@@ -166,6 +163,7 @@ public class Admin extends User implements Serializable
             Add_button.setFocusable(false);
             Add_button.setFont(new Font("Comic Sans", Font.BOLD, 16));
             Add_button.setBackground(new Color(222, 184, 150));
+            Add_button.addActionListener(this);
             add(Add_button);
 
             Delete_button.setBounds(350, 290, 180, 30);
@@ -189,10 +187,10 @@ public class Admin extends User implements Serializable
             name_label.setBounds(400, 60, 180, 30);
             add(name_label);
 
-            pass_label.setBounds(400, 120 , 180, 30);
+            pass_label.setBounds(400, 120, 180, 30);
             add(pass_label);
 
-            accessCombo.setBounds(350, 200 , 180, 30);
+            accessCombo.setBounds(350, 200, 180, 30);
             accessCombo.setBackground(new Color(239, 222, 205));
             add(accessCombo);
 
@@ -209,6 +207,12 @@ public class Admin extends User implements Serializable
             Background_panel.setBackground(Color.WHITE);
             Background_panel.setBounds(0, 0, 550, 550);
             add(Background_panel);
+
+            setTitle("Logged in as " + Quiz_Management_System.getActiveUser().getUsername());
+            setSize(550, 550);
+            setLocationRelativeTo(null); // to not have it open at the corner
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            setVisible(true);
         }
 
         private void constructData()
@@ -226,8 +230,9 @@ public class Admin extends User implements Serializable
         @Override
         public void actionPerformed(ActionEvent e)
         {
-            if(e.getSource() == Back_button){
-                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+            if (e.getSource() == Back_button)
+            {
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION)
                 {
                     setVisible(false);
@@ -235,100 +240,156 @@ public class Admin extends User implements Serializable
                 }
 
             }
-            if(e.getSource() == update_button){
-                setVisible(false);
-                JFrame window = new UpdateWindow();
+            if (e.getSource() == update_button)
+            {
+                new UpdateWindow();
+            }
+            if (e.getSource() == Add_button)
+            {
+                Access newAccess = (Access) accessCombo.getSelectedItem();
+                if (newAccess == Access.ADMIN)
+                    DataHandler.userData.add(new Admin(name_Text.getText(), password_Text.getText(), newAccess));
+                else if (newAccess == Access.TEACHER)
+                    DataHandler.userData.add(new Teacher(name_Text.getText(), password_Text.getText(), newAccess));
+                else if (newAccess == Access.STUDENT)
+                    DataHandler.userData.add(new Student(name_Text.getText(), password_Text.getText(), newAccess));
+
+                DataHandler.save();
+                constructData();
+            }
+            if (e.getSource() == Delete_button)
+            {
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?", "Close?", JOptionPane.YES_NO_OPTION);
+                if (reply != JOptionPane.YES_OPTION)
+                    return;
+                DataHandler.userData.remove(table.getSelectedRow());
+                DataHandler.save();
             }
         }
-    }
 
-    /**
-     *
-     * @author marma
-     */
-    public class UpdateWindow extends JFrame implements ActionListener {
-
-        JPanel title_panel, background;
-        Font myFont;
-        JLabel Title, label1, label2;
-        JButton Back_button, save;
-        JTextField quizTitle_text, quizID_text;
-        Border brdr;
-        String[] accessString = {"Teacher", "Student", "Admin"};
-        JComboBox accessCombo = new JComboBox(accessString);
-
+        /**
+         * @author marma
+         */
+        public class UpdateWindow extends JFrame implements ActionListener
         {
-            title_panel = new JPanel();
-            brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
-            background = new JPanel();
-            myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
-            Title = new JLabel("EDIT");
-            quizTitle_text = new JTextField();
-            quizID_text = new JTextField();
-            Back_button = new JButton("Cancel");
-            save = new JButton("Save");
-        }
+            JPanel title_panel, background;
+            Font myFont;
+            JLabel Title, label1, label2;
+            JButton Back_button, save;
+            JTextField username_text,
+                    password_text;
+            Border brdr;
+            Access[] accessString = {Access.STUDENT, Access.TEACHER, Access.ADMIN};
+            JComboBox<Access> accessCombo = new JComboBox(accessString);
 
-        public UpdateWindow() {
-            //button
-            Back_button.setBounds(380 , 280, 90, 30);
-            Back_button.setBackground(new Color(222, 184, 150));
-            Back_button.addActionListener(this);
-            add(Back_button);
+            {
+                title_panel = new JPanel();
+                brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
+                background = new JPanel();
+                myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
+                Title = new JLabel("EDIT");
+                username_text = new JTextField(DataHandler.userData.get(table.getSelectedRow()).getUsername());
+                password_text = new JTextField(DataHandler.userData.get(table.getSelectedRow()).getPassword());
+                accessCombo.setSelectedItem(DataHandler.userData.get(table.getSelectedRow()).getAccessLevel());
+                Back_button = new JButton("Cancel");
+                save = new JButton("Save");
+            }
 
-            save.setBounds(270, 280, 90, 30);
-            save.setBackground(new Color(222, 184, 150));
-            save.addActionListener(this);
-            add(save);
-            //Title
-            Title.setFont(myFont);
-            title_panel.add(Title);
-            add(title_panel, BorderLayout.PAGE_START);
-            Title.setForeground(Color.BLACK);
-            title_panel.setBackground(Color.white);
-            title_panel.setBorder(brdr);
-            //submit button
+            public UpdateWindow()
+            {
+                //button
+                Back_button.setBounds(380, 280, 90, 30);
+                Back_button.setBackground(new Color(222, 184, 150));
+                Back_button.addActionListener(this);
+                add(Back_button);
 
-            //labels
-            label1 = new JLabel("New User Name: ");
-            label1.setBounds(70, 100, 150, 30);
-            label2 = new JLabel("New Password: ");
-            label2.setBounds(70, 140, 100, 30);
+                save.setBounds(270, 280, 90, 30);
+                save.setBackground(new Color(222, 184, 150));
+                save.addActionListener(this);
+                add(save);
+                //Title
+                Title.setFont(myFont);
+                title_panel.add(Title);
+                add(title_panel, BorderLayout.PAGE_START);
+                Title.setForeground(Color.BLACK);
+                title_panel.setBackground(Color.white);
+                title_panel.setBorder(brdr);
+                //submit button
 
-            add(label1);
-            add(label2);
-            //text fields
-            quizTitle_text.setBounds(270, 100, 200, 30);
-            quizID_text.setBounds(270, 140, 200, 30);
-            add(quizTitle_text);
-            add(quizID_text);
+                //labels
+                label1 = new JLabel("New User Name: ");
+                label1.setBounds(70, 100, 150, 30);
+                label2 = new JLabel("New Password: ");
+                label2.setBounds(70, 140, 100, 30);
 
-            accessCombo.setBounds(270, 180, 200, 30);
-            accessCombo.setBackground(new Color(239, 222, 205));
-            add(accessCombo);
-            //Background
-            background.setBackground(Color.WHITE);
-            add(background, BorderLayout.CENTER);
+                add(label1);
+                add(label2);
 
-            setTitle("Edit");
-            setSize(550, 550);
-            setLocationRelativeTo(null); // to not have it open at the corner
-            setResizable(false);
-            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            setVisible(true);
-        }
+                username_text.getDocument().addDocumentListener(new DocumentListener()
+                {
+                    public void changedUpdate(DocumentEvent e)
+                    {
+                        changed();
+                    }
 
-        @Override
-        public void actionPerformed(ActionEvent e) {
+                    public void removeUpdate(DocumentEvent e)
+                    {
+                        changed();
+                    }
 
-            if (e.getSource() == Back_button) {
-                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel?", "Close?", JOptionPane.YES_NO_OPTION);
-                if (reply == JOptionPane.YES_OPTION) {
-                    setVisible(false);
-                    JFrame window = new AdminWindow();
+                    public void insertUpdate(DocumentEvent e)
+                    {
+                        changed();
+                    }
+
+                    public void changed()
+                    {
+                        Add_button.setEnabled(!username_text.getText().equals(""));
+                    }
+                });
+                if (username_text.getText().isEmpty())
+                {
+                    Add_button.setEnabled(false);
+                }
+
+                //text fields
+                username_text.setBounds(270, 100, 200, 30);
+                password_text.setBounds(270, 140, 200, 30);
+
+                add(username_text);
+                add(password_text);
+
+                accessCombo.setBounds(270, 180, 200, 30);
+                accessCombo.setBackground(new Color(239, 222, 205));
+                add(accessCombo);
+                //Background
+                background.setBackground(Color.WHITE);
+                add(background, BorderLayout.CENTER);
+
+                setTitle("Edit");
+                setSize(550, 550);
+                setLocationRelativeTo(null); // to not have it open at the corner
+                setResizable(false);
+                setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                setVisible(true);
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                if (e.getSource() == save)
+                {
+
+                }
+                if (e.getSource() == Back_button)
+                {
+                    int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel?", "Close?", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION)
+                    {
+                        setVisible(false);
+                    }
                 }
             }
         }
-
     }
 }

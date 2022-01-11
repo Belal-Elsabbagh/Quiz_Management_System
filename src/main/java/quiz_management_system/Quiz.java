@@ -143,7 +143,7 @@ public class Quiz implements Serializable
     {
         creator.getCreatedQuizzes().add(this);
         DataHandler.quizData.add(this);
-        User.updateUser();
+        User.updateActiveUser();
         DataHandler.save();
     }
 
