@@ -42,6 +42,7 @@ public class Teacher extends User
     /**
      * @deprecated
      */
+    @Override
     public int listMenuConsole()
     {
         System.out.println("----------Teacher Operations Main Menu-----------");
@@ -315,19 +316,17 @@ public class Teacher extends User
                 WorstGrade_label = new JLabel("Worst Grade"),
                 AverageGrade_label = new JLabel("Average Grade"),
                 zero = new JLabel("0"),
-                fifty =  new JLabel("50"),
+                fifty = new JLabel("50"),
                 hundred = new JLabel("100"),
                 g1 = new JLabel("min: " + min),
-                g2 =  new JLabel("Avg:" + avg),
+                g2 = new JLabel("Avg:" + avg),
                 g3 = new JLabel("Max: " + max),
                 label4 = new JLabel(" "),
                 label5 = new JLabel(" "),
                 label6 = new JLabel(" ");
         Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
-        String[] columnNames = {"Student", "Grade"};
-        Object[][] data = {{"Kathy", 5}, {"John", 4}};
-        JTable table = new JTable(data, columnNames);
-        JScrollPane scrollPane = new JScrollPane(table);
+        JTable table;
+        JScrollPane scrollPane;
         JButton Back_button = new JButton("Back");
 
         public ReviewQuizGrades(Quiz newQuiz)
@@ -385,8 +384,6 @@ public class Teacher extends User
             //Background
             background.setBackground(Color.WHITE);
             add(background, BorderLayout.CENTER);
-
-
 
             setTitle("Review Quiz Grades");
             setSize(550, 550);
@@ -450,6 +447,7 @@ public class Teacher extends User
                     }
                 }
             }
+            table = new JTable(data);
         }
 
         @Override

@@ -100,6 +100,12 @@ public class User implements Serializable, Interactive
         new LoginWindow();
     }
 
+    @Override
+    public int listMenuConsole()
+    {
+        return 0;
+    }
+
     enum Access
     {
         NONE, STUDENT, TEACHER, ADMIN

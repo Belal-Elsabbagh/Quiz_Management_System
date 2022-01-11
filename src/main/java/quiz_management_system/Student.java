@@ -74,6 +74,7 @@ public class Student extends User implements Interactive, Serializable
     /**
      * @deprecated
      */
+    @Override
     public int listMenuConsole()
     {
         out.println("*****Logged in as " + Quiz_Management_System.getActiveUser().getUsername() + "*****");
@@ -132,6 +133,18 @@ public class Student extends User implements Interactive, Serializable
     public void createNewAttempt(Quiz x)
     {
         new Attempt(x);
+    }
+
+    public Attempt searchAttemptHistoryByQuiz(Quiz x)
+    {
+        for (Attempt i : attemptHistory)
+        {
+            if (x.getQuizID() == i.getQuiz().getQuizID())
+            {
+                return i;
+            }
+        }
+        return null;
     }
 
     public void startAttempt(Quiz newQuiz)
@@ -317,20 +330,20 @@ public class Student extends User implements Interactive, Serializable
             {
                 chat_panel.setVisible(false);
             }
-            if (e.getSource() == Back_button){
-                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+            if (e.getSource() == Back_button)
+            {
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION)
                 {
                     setVisible(false);
                     JFrame window = new LoginWindow();
                 }
             }
-            if (e.getSource() == Review_button){
-                Quiz newA;
+            if (e.getSource() == Review_button)
+            {
                 try
                 {
-                    newA = Quiz.searchByID(qID.getText());
-
+                    searchAttemptHistoryByQuiz(Quiz.searchByID(qID.getText())).openReview();
                 } catch (NullPointerException a)
                 {
                     JOptionPane.showMessageDialog(null, "Quiz not found", "Error", JOptionPane.WARNING_MESSAGE);

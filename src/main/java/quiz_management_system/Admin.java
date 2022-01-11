@@ -37,6 +37,7 @@ public class Admin extends User implements Serializable
     /**
      * @deprecated
      */
+    @Override
     public int listMenuConsole()
     {
         Scanner sc = new Scanner(in);
