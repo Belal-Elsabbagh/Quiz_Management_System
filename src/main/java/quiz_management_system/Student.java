@@ -15,6 +15,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.*;
 
@@ -531,14 +532,14 @@ public class Student extends User implements Interactive, Serializable
                 currentQuestionLabel.setBounds(5, 60, 200, 30);
                 prompt_label.setBounds(5, 100, 500, 30);
                 choice_label.setBounds(5, 140, 100, 30);
-                c1.setBounds(40, 180, 100, 30);
-                c2.setBounds(40, 220, 100, 30);
-                c3.setBounds(40, 260, 100, 30);
-                c4.setBounds(40, 300, 100, 30);
+                c1.setBounds(40, 180, 300, 30);
+                c2.setBounds(40, 220, 300, 30);
+                c3.setBounds(40, 260, 300, 30);
+                c4.setBounds(40, 300, 300, 30);
                 grade.setBorder(brdr);
-                grade.setBounds(350, 60, 80, 30);
+                grade.setBounds(250, 60, 80, 30);
                 timer_label.setBorder(brdr);
-                timer_label.setBounds(450, 60, 100, 30);
+                timer_label.setBounds(350, 60, 150, 30);
                 add(currentQuestionLabel);
                 add(prompt_label);
                 add(choice_label);
@@ -584,8 +585,14 @@ public class Student extends User implements Interactive, Serializable
 
                     public void run() {
 
-                        timer_label.setText("Time left: " + i);
+
+                        long hr, min, sec, totalSec;
+                        min = TimeUnit.SECONDS.toMinutes(i);
+                        sec = i - (min * 60);
+                        hr = TimeUnit.MINUTES.toHours(min);
+                        min = min - (hr * 60);
                         i--;
+                        timer_label.setText("Time left: " + hr + ":" + min + ":" + sec);
 
                         if (i < 0) {
                             timer.cancel();
