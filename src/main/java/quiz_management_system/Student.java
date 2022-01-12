@@ -8,16 +8,21 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.Serial;
+import java.io.Serializable;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.System.*;
 
 /**
  * @author belsa
  */
-public class Student extends User implements Interactive
+public class Student extends User implements Interactive, Serializable
 {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,6 +33,22 @@ public class Student extends User implements Interactive
     {
         super(username, password, student);
         attemptHistory = new ArrayList<>();
+    }
+
+    /**
+     * @deprecated
+     */
+    public static void consoleLogin()
+    {
+        Scanner sc = new Scanner(System.in);
+        String inUsername, inPassword;
+        System.out.println("*****Quiz Management System*****");
+        System.out.println("Enter username:");
+        inUsername = sc.next();
+        System.out.println("Enter password:");
+        inPassword = sc.next();
+        Quiz_Management_System.setActiveUser(login(inUsername, inPassword));
+        Quiz_Management_System.getActiveUser().listMenu();
     }
 
     public ArrayList<Attempt> getAttemptHistory()
@@ -54,6 +75,7 @@ public class Student extends User implements Interactive
     /**
      * @deprecated
      */
+    @Override
     public int listMenuConsole()
     {
         out.println("*****Logged in as " + Quiz_Management_System.getActiveUser().getUsername() + "*****");
@@ -109,11 +131,27 @@ public class Student extends User implements Interactive
         return 1;
     }
 
+    public void createNewAttempt(Quiz x)
+    {
+        new Attempt(x);
+    }
+
+    public Attempt searchAttemptHistoryByQuiz(Quiz x)
+    {
+        for (Attempt i : attemptHistory)
+        {
+            if (x.getQuizID() == i.getQuiz().getQuizID())
+            {
+                return i;
+            }
+        }
+        return null;
+    }
+
     public void startAttempt(Quiz newQuiz)
     {
         Attempt newAttempt = new Attempt(newQuiz);
     }
-
 
     /**
      * @deprecated not used with GUI.
@@ -146,6 +184,9 @@ public class Student extends User implements Interactive
         // Buttons
         JButton actionAttempt = new JButton("Attempt Now");
         JButton actionReview = new JButton("Review quiz grades");
+        JButton Back_button = new JButton("Log out");
+
+        JButton Review_button = new JButton("Review quiz");
         //background
         JPanel Back = new JPanel();
 
@@ -212,6 +253,16 @@ public class Student extends User implements Interactive
             actionAttempt.addActionListener(this);
             add(actionAttempt);
 
+            Review_button.setBounds(300, 190, 200, 30);
+            Review_button.setBackground(new Color(222, 184, 150));
+            Review_button.addActionListener(this);
+            add(Review_button);
+
+            Back_button.setBounds(430, 470, 100, 30);
+            Back_button.setBackground(new Color(222, 184, 150));
+            Back_button.addActionListener(this);
+            add(Back_button);
+
             Back.setBackground(Color.WHITE);
             add(Back, BorderLayout.CENTER);
 
@@ -230,7 +281,7 @@ public class Student extends User implements Interactive
             data.setColumnIdentifiers(headers);
             for (Attempt i : attemptHistory)
             {
-                Object[] row = new Object[]{i.getQuiz().getQuizTitle(), i.getResult()};
+                Object[] row = new Object[]{i.getQuiz().getQuizID(), i.getQuiz().getQuizTitle(), i.getResult()};
                 data.addRow(row);
             }
             attemptTable = new JTable(data);
@@ -252,18 +303,59 @@ public class Student extends User implements Interactive
                 toReview.openReview();
                 setVisible(false);
             }
-            else if (e.getSource() == actionOpenChat)
+            if (e.getSource() == actionAttempt)
             {
-                chat_panel.setVisible(true);
+                Quiz newA;
+                try
+                {
+                    newA = Quiz.searchByID(qID.getText());
+                    new Attempt(newA);
+                } catch (NullPointerException a)
+                {
+                    JOptionPane.showMessageDialog(null, "Quiz not found", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
             }
-            else if (e.getSource() == actionCloseChat)
+            if (e.getSource() == actionOpenChat)
+            {
+
+                setVisible(false);
+                JFrame window = new ClientHandler();
+            }
+            if (e.getSource() == actionCloseChat)
             {
                 chat_panel.setVisible(false);
+            }
+            if (e.getSource() == Back_button)
+            {
+                int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?", JOptionPane.YES_NO_OPTION);
+                if (reply == JOptionPane.YES_OPTION)
+                {
+                    try
+                    {
+                        ClientHandler activeClient = new ClientHandler(new Socket("localhost", 1010));
+                    } catch (IOException ex)
+                    {
+                        ex.printStackTrace();
+                    }
+                    JFrame window = new LoginWindow();
+                }
+            }
+            if (e.getSource() == Review_button)
+            {
+                try
+                {
+                    searchAttemptHistoryByQuiz(Quiz.searchByID(qID.getText())).openReview();
+                } catch (NullPointerException a)
+                {
+                    JOptionPane.showMessageDialog(null, "Quiz not found", "Error", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
             }
         }
     }
 
-    public class Attempt
+    public class Attempt implements Serializable
     {
         private Quiz quiz;
         private Question[] model;
@@ -275,13 +367,13 @@ public class Student extends User implements Interactive
             quiz = newQuiz;
             model = newQuiz.generateQuizModel();
             answerIndexes = new int[quiz.getNQuestions()];
-            model = quiz.generateQuizModel();
             result = 0;
+            new DoAttemptWindow();
         }
 
         public void openReview()
         {
-            new ReviewAttemptWindow();
+            new ReviewQuestionAccess();
         }
 
         public int[] getAnswerIndex()
@@ -319,9 +411,20 @@ public class Student extends User implements Interactive
             this.model = model;
         }
 
+        public void calculateResult()
+        {
+            for (int i = 0; i < quiz.getNQuestions(); i++)
+            {
+                if (model[i].getMCQ().getAnswerKeyIndex() == answerIndexes[i])
+                    result += model[i].getGrade();
+            }
+        }
+
         private void addThisAttemptToHistory()
         {
             attemptHistory.add(this);
+            User.updateActiveUser();
+            DataHandler.save();
         }
 
         /**
@@ -362,7 +465,7 @@ public class Student extends User implements Interactive
         /**
          * @author marma
          */
-        class DoAttemptWindow extends JFrame implements ActionListener, AttemptWindow
+        class DoAttemptWindow extends JFrame implements ActionListener, QuestionAccess
         {
             JPanel Back = new JPanel(),
                     Title = new JPanel(),
@@ -370,7 +473,8 @@ public class Student extends User implements Interactive
             Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
             JButton right_b = new JButton(new ImageIcon("UR.PNG")),
                     left_b = new JButton(new ImageIcon("UL.PNG")),
-                    submit = new JButton("Submit");
+                    submit = new JButton("Submit"),
+                    Back_button = new JButton("Leave");
             Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
             JRadioButton c1_r = new JRadioButton("Choice 1"),   // get the text written in choice 1
                     c2_r = new JRadioButton("Choice 2"),   // get the text written in choice 2
@@ -387,10 +491,23 @@ public class Student extends User implements Interactive
                     c4 = new JLabel(model[currentQuestionIndex].getMCQ().getChoices()[3]),
                     currentQuestionLabel = new JLabel("Question: " + (currentQuestionIndex + 1) + "/" + model.length),
                     grade = new JLabel(" Grade: " + model[currentQuestionIndex].getGrade()),
-                    timer = new JLabel("Timer");
+                    timer_label = new JLabel("Timer");
 
             public DoAttemptWindow()
             {
+                //button
+                submit.setFocusable(false);
+                submit.setBounds(430, 470, 100, 30);
+                submit.setBorder(BorderFactory.createEtchedBorder());
+                submit.setBackground(new Color(222, 184, 150));
+                submit.addActionListener(this);
+                add(submit);
+
+                Back_button.setBounds(20, 470, 100, 30);
+                Back_button.setBackground(new Color(222, 184, 150));
+                Back_button.addActionListener(this);
+                add(Back_button);
+
                 //Title
                 Title.add(Title_label);
                 add(Title, BorderLayout.PAGE_START);
@@ -400,7 +517,14 @@ public class Student extends User implements Interactive
                 Title.setBorder(brdr);
                 // right/left buttons
                 right_b.setBackground(Color.WHITE);
+                if (currentQuestionIndex == quiz.getNQuestions() - 1)
+                {
+                    right_b.setEnabled(false);
+                }
                 left_b.setBackground(Color.WHITE);
+                left_b.setEnabled(false);
+                right_b.addActionListener(this);
+                left_b.addActionListener(this);
                 down.add(left_b, BorderLayout.EAST);
                 down.add(right_b, BorderLayout.PAGE_END);
                 down.setBackground(Color.WHITE);
@@ -409,14 +533,14 @@ public class Student extends User implements Interactive
                 currentQuestionLabel.setBounds(5, 60, 200, 30);
                 prompt_label.setBounds(5, 100, 500, 30);
                 choice_label.setBounds(5, 140, 100, 30);
-                c1.setBounds(40, 180, 100, 30);
-                c2.setBounds(40, 220, 100, 30);
-                c3.setBounds(40, 260, 100, 30);
-                c4.setBounds(40, 300, 100, 30);
+                c1.setBounds(40, 180, 300, 30);
+                c2.setBounds(40, 220, 300, 30);
+                c3.setBounds(40, 260, 300, 30);
+                c4.setBounds(40, 300, 300, 30);
                 grade.setBorder(brdr);
-                grade.setBounds(400, 60, 100, 30);
-                timer.setBorder(brdr);
-                timer.setBounds(450, 60, 50, 30);
+                grade.setBounds(250, 60, 80, 30);
+                timer_label.setBorder(brdr);
+                timer_label.setBounds(350, 60, 150, 30);
                 add(currentQuestionLabel);
                 add(prompt_label);
                 add(choice_label);
@@ -425,7 +549,7 @@ public class Student extends User implements Interactive
                 add(c3);
                 add(c4);
                 add(grade);
-                add(timer);
+                add(timer_label);
                 //radio buttons
                 c1_r.setBackground(Color.WHITE);
                 c2_r.setBackground(Color.WHITE);
@@ -443,13 +567,7 @@ public class Student extends User implements Interactive
                 add(c2_r);
                 add(c3_r);
                 add(c4_r);
-                //button
-                submit.setFont(new Font("Sans Serif", Font.PLAIN, 25));
-                submit.setFocusable(false);
-                submit.setBounds(430, 460, 100, 40);
-                submit.setBorder(BorderFactory.createEtchedBorder());
-                submit.setBackground(new Color(222, 184, 150));
-                add(submit);
+
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
@@ -460,30 +578,29 @@ public class Student extends User implements Interactive
                 setLocationRelativeTo(null); // to not have it open at the corner
                 setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                 setVisible(true);
-            }
 
-            @Override
-            public void goRight()
-            {
-                currentQuestionIndex++;
-                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
-                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
-            }
+                java.util.Timer timer = new java.util.Timer(String.valueOf(1000));
 
-            @Override
-            public void goLeft()
-            {
-                currentQuestionIndex--;
-                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
-                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+                timer.scheduleAtFixedRate(new TimerTask() {
+                    long i = quiz.getDuration();
+
+                    public void run() {
+
+
+                        long hr, min, sec, totalSec;
+                        min = TimeUnit.SECONDS.toMinutes(i);
+                        sec = i - (min * 60);
+                        hr = TimeUnit.MINUTES.toHours(min);
+                        min = min - (hr * 60);
+                        i--;
+                        timer_label.setText("Time left: " + hr + ":" + min + ":" + sec);
+
+                        if (i < 0) {
+                            timer.cancel();
+                            timer_label.setText("Time Over");
+                        }
+                    }
+                }, 0, 1000);
             }
 
             @Override
@@ -494,14 +611,23 @@ public class Student extends User implements Interactive
                     saveChoice();
                     goRight();
                 }
-                else if (e.getSource() == left_b)
+                if (e.getSource() == left_b)
                 {
                     saveChoice();
                     goLeft();
                 }
-                else if (e.getSource() == submit)
+                if (e.getSource() == submit)
                 {
+                    calculateResult();
                     addThisAttemptToHistory();
+                }
+                if (e.getSource() == Back_button){
+                    int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?",  JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION)
+                    {
+                        setVisible(false);
+                    }
+
                 }
             }
 
@@ -516,12 +642,60 @@ public class Student extends User implements Interactive
                 else if (c4_r.isSelected())
                     answerIndexes[currentQuestionIndex] = 4;
             }
+
+            public void buttonsSet()
+            {
+                if (currentQuestionIndex == quiz.getNQuestions() - 1)
+                {
+                    right_b.setEnabled(false);
+                }
+                else
+                {
+                    right_b.setEnabled(true);
+                }
+                if (currentQuestionIndex == 0)
+                {
+                    left_b.setEnabled(false);
+                }
+                else
+                {
+                    left_b.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void goRight()
+            {
+                currentQuestionIndex++;
+                buttonsSet();
+                refresh();
+            }
+
+            @Override
+            public void goLeft()
+            {
+                currentQuestionIndex--;
+                buttonsSet();
+                refresh();
+            }
+
+            @Override
+            public void refresh()
+            {
+                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + getQuiz().getNQuestions());
+                prompt_label.setText(model[currentQuestionIndex].getPrompt());
+                grade.setText(" Grade: " + (model[currentQuestionIndex].getGrade()));
+                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
+                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
+                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
+                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+            }
         }
 
         /**
          * @author marma
          */
-        class ReviewAttemptWindow extends JFrame implements ActionListener, AttemptWindow
+        class ReviewQuestionAccess extends JFrame implements ActionListener, QuestionAccess
         {
             JPanel Back = new JPanel(),
                     Title = new JPanel(),
@@ -529,7 +703,8 @@ public class Student extends User implements Interactive
             Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 30);
             JButton right_b = new JButton(new ImageIcon("UR.PNG")),
                     left_b = new JButton(new ImageIcon("UL.PNG")),
-                    submit = new JButton("Close");
+                    submit = new JButton("Close"),
+                    Back_button = new JButton("Back");
             Border brdr = BorderFactory.createLineBorder(new Color(222, 184, 150));
             JRadioButton c1_r = new JRadioButton("Choice 1."),
                     c2_r = new JRadioButton("Choice 1."),
@@ -549,8 +724,13 @@ public class Student extends User implements Interactive
                     grade = new JLabel(" Grade: " + model[currentQuestionIndex].getGrade()),
                     answer = new JLabel(" The right answer is " + 1);
 
-            public ReviewAttemptWindow()
+            public ReviewQuestionAccess()
             {
+                //button
+                Back_button.setBounds(430, 470, 100, 30);
+                Back_button.setBackground(new Color(222, 184, 150));
+                Back_button.addActionListener(this);
+                add(Back_button);
                 //Title
                 Title.add(Title_label);
                 add(Title, BorderLayout.PAGE_START);
@@ -607,13 +787,7 @@ public class Student extends User implements Interactive
                 add(c2_r);
                 add(c3_r);
                 add(c4_r);
-                //button
-                submit.setFont(new Font("Sans Serif", Font.PLAIN, 25));
-                submit.setFocusable(false);
-                submit.setBounds(430, 460, 100, 40);
-                submit.setBorder(BorderFactory.createEtchedBorder());
-                submit.setBackground(new Color(222, 184, 150));
-                add(submit);
+
                 //background
                 Back.setBackground(Color.WHITE);
                 add(Back, BorderLayout.CENTER);
@@ -633,14 +807,18 @@ public class Student extends User implements Interactive
                 {
                     goRight();
                 }
-                else if (e.getSource() == left_b)
+                if (e.getSource() == left_b)
                 {
                     goLeft();
                 }
                 //TODO Change the submit button in Reviewing
-                else if (e.getSource() == submit)
+                if (e.getSource() == submit)
                 {
                     addThisAttemptToHistory();
+                }
+                if(e.getSource() == Back_button){
+                    setVisible(false);
+                    JFrame window = new StudentWindow();
                 }
             }
 
@@ -648,21 +826,19 @@ public class Student extends User implements Interactive
             public void goRight()
             {
                 currentQuestionIndex++;
-
-                answer.setText(String.valueOf(model[currentQuestionIndex].getMCQ().getAnswerKeyIndex() + 1));
-                currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
-                grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));
-                c1.setText(model[currentQuestionIndex].getMCQ().getChoices()[0]);
-                c2.setText(model[currentQuestionIndex].getMCQ().getChoices()[1]);
-                c3.setText(model[currentQuestionIndex].getMCQ().getChoices()[2]);
-                c4.setText(model[currentQuestionIndex].getMCQ().getChoices()[3]);
+                refresh();
             }
 
             @Override
             public void goLeft()
             {
                 currentQuestionIndex--;
+                refresh();
+            }
 
+            @Override
+            public void refresh()
+            {
                 answer.setText(String.valueOf(model[currentQuestionIndex].getMCQ().getAnswerKeyIndex() + 1));
                 currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1) + "/" + model.length);
                 grade.setText(String.valueOf(model[currentQuestionIndex].getGrade()));

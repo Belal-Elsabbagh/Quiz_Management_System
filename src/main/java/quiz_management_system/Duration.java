@@ -16,7 +16,7 @@ public class Duration extends TimerTask
     public void convertTime()
     {
         Quiz q = new Quiz();
-        totalSec = q.getTotalSec();
+        totalSec = q.getDuration();
 
         min = TimeUnit.SECONDS.toMinutes(totalSec);
         sec = totalSec - (min * 60);

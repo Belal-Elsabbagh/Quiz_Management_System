@@ -1,8 +1,10 @@
 package quiz_management_system;
 
-public interface AttemptWindow
+public interface QuestionAccess
 {
     void goRight();
 
     void goLeft();
+
+    void refresh();
 }

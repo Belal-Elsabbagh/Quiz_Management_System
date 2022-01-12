@@ -79,6 +79,11 @@ public class User implements Serializable, Interactive
         return null;
     }
 
+    public static void updateActiveUser()
+    {
+        DataHandler.userData.set(DataHandler.userData.indexOf(Quiz_Management_System.getLastReference()), Quiz_Management_System.getActiveUser());
+    }
+
     public static User searchByID(int inID)
     {
         for (User i : DataHandler.userData)
@@ -92,7 +97,13 @@ public class User implements Serializable, Interactive
     @Override
     public void listMenu()
     {
-        JFrame window = new LoginWindow();
+        new LoginWindow();
+    }
+
+    @Override
+    public int listMenuConsole()
+    {
+        return 0;
     }
 
     enum Access
@@ -147,28 +158,13 @@ public class User implements Serializable, Interactive
             actionLogin.addActionListener(this);
 
             //Login Button activation
-            DL(username_text);
-            if (username_text.getText().isEmpty())
-            {
-                actionLogin.setEnabled(false);
-            }
-
-            setTitle("Quiz Management System Login");
-            setSize(550, 550);
-            setLocationRelativeTo(null); // to not have it open at the corner
-            setResizable(false);
-            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            setVisible(true);
-        }
-
-        public void DL(JTextField x)
-        {
-            x.getDocument().addDocumentListener(new DocumentListener()
+            username_text.getDocument().addDocumentListener(new DocumentListener()
             {
                 public void changedUpdate(DocumentEvent e)
                 {
                     changed();
                 }
+
                 public void removeUpdate(DocumentEvent e)
                 {
                     changed();
@@ -181,9 +177,20 @@ public class User implements Serializable, Interactive
 
                 public void changed()
                 {
-                    actionLogin.setEnabled(!x.getText().equals(""));
+                    actionLogin.setEnabled(!username_text.getText().equals(""));
                 }
             });
+            if (username_text.getText().isEmpty())
+            {
+                actionLogin.setEnabled(false);
+            }
+
+            setTitle("Quiz Management System Login");
+            setSize(550, 550);
+            setLocationRelativeTo(null); // to not have it open at the corner
+            setResizable(false);
+            setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            setVisible(true);
         }
 
         @Override
@@ -199,6 +206,7 @@ public class User implements Serializable, Interactive
             }
             JOptionPane.showMessageDialog(null, "Login Successful");
             Quiz_Management_System.setActiveUser(newUser);
+            Quiz_Management_System.setLastReference(newUser);
             setVisible(false);
             Quiz_Management_System.getActiveUser().listMenu();
         }

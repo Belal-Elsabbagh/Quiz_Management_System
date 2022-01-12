@@ -1,44 +1,64 @@
 package quiz_management_system;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server implements Runnable
+public class Server
 {
-    ServerSocket skt;
+    public int port = 1010;
+    private ServerSocket serverSocket;
+    private Socket socket;
+    private BufferedReader bufferedReader;
+    private BufferedWriter bufferedWriter;
 
-    static Socket s;
-    static DataInputStream dataIn;
-    static DataOutputStream dataOut;
 
     public Server()
     {
         try
         {
-            skt = new ServerSocket(2611);
+            this.serverSocket = new ServerSocket(port);
+            this.socket = serverSocket.accept();
+            this.bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            this.bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (IOException e)
+        {
+            System.out.println("Error creating server..");
+            e.printStackTrace();
+        }
+    }
+
+    public void startServer()
+    {
+        try
+        {
+            while (!serverSocket.isClosed())
+            {
+                Socket socket = serverSocket.accept();
+                System.out.println("A student has connected");
+                ClientHandler clientHandler = new ClientHandler(socket);
+
+                Thread thread = new Thread(clientHandler);
+                thread.start();
+
+            }
         } catch (IOException e)
         {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void run()
+    public void closeServerSocket()
     {
         try
         {
-            while (true)
+            if (serverSocket != null)
             {
-                s = skt.accept();
-                dataIn = new DataInputStream(s.getInputStream());
-                dataOut = new DataOutputStream(s.getOutputStream());
+                serverSocket.close();
             }
         } catch (IOException e)
         {
-
+            e.printStackTrace();
         }
     }
 }

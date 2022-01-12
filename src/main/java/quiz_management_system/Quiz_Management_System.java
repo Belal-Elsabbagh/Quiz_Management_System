@@ -1,17 +1,48 @@
 package quiz_management_system;
 
+import javax.swing.*;
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Quiz_Management_System
 {
-    private static User activeUser;
+    private static User activeUser, lastReference;
 
-    public static User getActiveUser() { return activeUser; }
-    public static void setActiveUser(User activeUser) { Quiz_Management_System.activeUser = activeUser; }
+    public static User getLastReference()
+    {
+        return lastReference;
+    }
+
+    public static void setLastReference(User lastReference)
+    {
+        Quiz_Management_System.lastReference = lastReference;
+    }
+
+    public static User getActiveUser()
+    {
+        return activeUser;
+    }
+
+    public static void setActiveUser(User activeUser)
+    {
+        Quiz_Management_System.activeUser = activeUser;
+    }
 
     public static void main(String[] args)
     {
+//        ServerSocket serverSocket = null;
+//        try
+//        {
+//            serverSocket = new ServerSocket(1010);
+//        } catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        Server server = new Server(serverSocket);
+//        server.startServer();
+
         new DataHandler();
         activeUser = new User("", "");
         activeUser.listMenu();
@@ -34,28 +65,9 @@ public class Quiz_Management_System
         u3.setUserID(u3.hashCode());
         DataHandler.userData.add(u3);
 
-        Quiz newQuiz = new Quiz("2020-MID", "Planets of the Solar System", (Teacher) u2, 3);
-
-
-        //((Teacher) u2).createNewQuiz();
-        //((Student)u1).startAttempt(Quiz.searchByID("1"));
+        Quiz newQuiz = new Quiz("2020-MID", "Planets of the Solar System", (Teacher) u2, 1, 10000);
+        DataHandler.quizData.add(newQuiz);
+        ((Student) u1).createNewAttempt(newQuiz);
         DataHandler.save();
-    }
-
-    /**
-     * @deprecated
-     */
-    public static void consoleLogin()
-    {
-        Scanner sc = new Scanner(System.in);
-        String inUsername, inPassword;
-        System.out.println("*****Quiz Management System*****");
-        System.out.println("Enter username:");
-        inUsername = sc.next();
-        System.out.println("Enter password:");
-        inPassword = sc.next();
-        activeUser = User.login(inUsername, inPassword);
-        while (activeUser != null)
-            activeUser.listMenu();
     }
 }
