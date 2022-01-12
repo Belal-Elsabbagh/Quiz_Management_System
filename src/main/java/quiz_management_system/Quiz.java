@@ -21,7 +21,7 @@ public class Quiz implements Serializable
 
     private String quizID;
     private String quizTitle;
-    private Teacher creator = (Teacher) Quiz_Management_System.getActiveUser();
+    private Teacher creator;
     private long duration;
     private int nQuestions;
     private ArrayList<Question> questionBank;
@@ -141,7 +141,7 @@ public class Quiz implements Serializable
 
     private void saveQuiz()
     {
-        creator.getCreatedQuizzes().add(this);
+        ((Teacher) Quiz_Management_System.getActiveUser()).getCreatedQuizzes().add(this);
         DataHandler.quizData.add(this);
         User.updateActiveUser();
         DataHandler.save();
@@ -472,7 +472,7 @@ public class Quiz implements Serializable
                     questionBank.set(currentQuestionIndex, new Question(currentQuestionIndex + 1, Q_t.getText(), Double.parseDouble(G_t.getText()), new String[]{c1_t.getText(), c2_t.getText(), c3_t.getText(), c4_t.getText()}, Integer.parseInt(I_t.getText())));
                 } catch (IndexOutOfBoundsException indexOutOfBoundsException)
                 {
-                    questionBank.add(currentQuestionIndex, new Question(currentQuestionIndex + 1, Q_t.getText(), Double.parseDouble(G_t.getText()), new String[]{c1_t.getText(), c2_t.getText(), c3_t.getText(), c4_t.getText()}, Integer.parseInt(I_t.getText())));
+                    questionBank.add(new Question(currentQuestionIndex + 1, Q_t.getText(), Double.parseDouble(G_t.getText()), new String[]{c1_t.getText(), c2_t.getText(), c3_t.getText(), c4_t.getText()}, Integer.parseInt(I_t.getText())));
                 } catch (NumberFormatException e)
                 {
                     if ((G_t.getText().equals("") && I_t.getText().equals("")))
@@ -488,20 +488,19 @@ public class Quiz implements Serializable
             {
                 if (e.getSource() == right_b)
                 {
-                    setNewQuestion();
                     goRight();
                 }
                 else if (e.getSource() == left_b)
                 {
-                    setNewQuestion();
                     goLeft();
                     currentQuestionIndex--;
+                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
                     if (currentQuestionIndex == 0)
                     {
                         left_b.setEnabled(false);
+                        return;
                     }
-                    currentQuestionLabel.setText("Question: " + (currentQuestionIndex + 1));
-
+                    left_b.setEnabled(true);
                 }
                 else if (e.getSource() == Back_button)
                 {
@@ -526,7 +525,7 @@ public class Quiz implements Serializable
             public void goLeft()
             {
                 setNewQuestion();
-                currentQuestionIndex++;
+                currentQuestionIndex--;
                 refresh();
             }
 
