@@ -318,14 +318,9 @@ public class Student extends User implements Interactive, Serializable
             }
             if (e.getSource() == actionOpenChat)
             {
-                try
-                {
-                    ClientHandler activeClient = new ClientHandler(new Socket("127.0.0.1", 1010));
-                } catch (IOException ex)
-                {
-                    ex.printStackTrace();
-                }
-                chat_panel.setVisible(true);
+
+                setVisible(false);
+                JFrame window = new ClientHandler();
             }
             if (e.getSource() == actionCloseChat)
             {
@@ -336,7 +331,13 @@ public class Student extends User implements Interactive, Serializable
                 int reply = JOptionPane.showConfirmDialog(null, "Are you sure you want to close?", "Close?", JOptionPane.YES_NO_OPTION);
                 if (reply == JOptionPane.YES_OPTION)
                 {
-                    setVisible(false);
+                    try
+                    {
+                        ClientHandler activeClient = new ClientHandler(new Socket("localhost", 1010));
+                    } catch (IOException ex)
+                    {
+                        ex.printStackTrace();
+                    }
                     JFrame window = new LoginWindow();
                 }
             }
