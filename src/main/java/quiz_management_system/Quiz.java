@@ -141,6 +141,7 @@ public class Quiz implements Serializable
 
     private void saveQuiz()
     {
+        creator.getCreatedQuizzes().add(this);
         ((Teacher) Quiz_Management_System.getActiveUser()).getCreatedQuizzes().add(this);
         DataHandler.quizData.add(this);
         User.updateActiveUser();

@@ -443,7 +443,6 @@ public class Student extends User implements Interactive, Serializable
 
                 if (model[i].checkAnswer((short) answerIndexes[i]))
                     result += model[i].getGrade();
-
             }
         }
 
