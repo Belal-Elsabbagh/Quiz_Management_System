@@ -247,11 +247,7 @@ public class Teacher extends User
             }
             if (e.getSource() == actionOpenChat)
             {
-                chat_panel.setVisible(true);
-            }
-            if (e.getSource() == actionCloseChat)
-            {
-                chat_panel.setVisible(false);
+                JFrame window = new ClientHandler();
             }
             if (e.getSource() == Back_button)
             {
