@@ -113,6 +113,14 @@ public class Teacher extends User
         }
     }
 
+    public Quiz searchCreatedQuizzesByID(String id)
+    {
+        for (Quiz i : createdQuizzes)
+            if (i.getQuizID().equals(id))
+                return i;
+        return null;
+    }
+
     /**
      * @author marma
      */
@@ -235,7 +243,7 @@ public class Teacher extends User
             }
             if (e.getSource() == actionCreate)
             {
-                new Quiz();
+                new Quiz((Teacher) Quiz_Management_System.getActiveUser());
             }
             if (e.getSource() == actionOpenChat)
             {
@@ -300,8 +308,6 @@ public class Teacher extends User
 
         }
  */
-
-        ArrayList<Student> students = new ArrayList<>();
 
         JPanel title_panel = new JPanel(),
                 table_panel = new JPanel(),
@@ -406,23 +412,6 @@ public class Teacher extends User
             g.fillRect(100, 500, 350, 2);
             g.setColor(Color.BLACK);
             g.fillRect(100, 300, 2, 200);
-        }
-
-        private void getStudents(Quiz newQuiz)
-        {
-            for (User i : DataHandler.userData)
-            {
-                if (!(i instanceof Student))
-                    continue;
-
-                for (Student.Attempt j : ((Student) i).getAttemptHistory())
-                {
-                    if (j.getQuiz().equals(newQuiz))
-                    {
-                        students.add((Student) i);
-                    }
-                }
-            }
         }
 
         public void constructTable(Quiz newQuiz)
